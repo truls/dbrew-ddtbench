@@ -31,3 +31,9 @@
 # Debug files
 *.dSYM/
 *.su
+
+# Other
+.projectile
+compile_commands.json
+*.out
+ddtbench_c
