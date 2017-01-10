@@ -80,7 +80,7 @@ void timing_milc_su3_zdown_ddt( int DIM2, int DIM3, int DIM4, int DIM5, int oute
       }
 
     } //! inner loop
-      
+
     MPI_Type_free( &dtype_su3_zdown_t );
 
     if ( myrank == 0 ) {
@@ -92,7 +92,7 @@ void timing_milc_su3_zdown_ddt( int DIM2, int DIM3, int DIM4, int DIM5, int oute
   if ( myrank == 0 ) {
     timing_print( 1 );
   }
-  
+
   free( array );
 }
 
@@ -202,7 +202,7 @@ void timing_milc_su3_zdown_manual( int DIM2, int DIM3, int DIM4, int DIM5, int o
       }
 
     } //! inner loop
-      
+
     free( buffer );
 
     if ( myrank == 0 ) {
@@ -300,7 +300,7 @@ void timing_milc_su3_zdown_mpi_pack_ddt( int DIM2, int DIM3, int DIM4, int DIM5,
       }
 
     } //! inner loop
-      
+
     MPI_Type_free( &dtype_su3_zdown_t );
 
     free( buffer );

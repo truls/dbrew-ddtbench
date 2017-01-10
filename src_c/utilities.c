@@ -48,7 +48,7 @@ void utilities_fill_unique_array_1D_float( float* array, int DIM1, int base ) {
 }
 
 void utilities_fill_unique_array_2D_float( float* array, int DIM1, int DIM2, int base ) {
-      
+
   int i, j;
 
   for( j=0 ; j<DIM2 ; j++ ) {
@@ -86,7 +86,7 @@ void utilities_fill_unique_array_4D_float( float* array, int DIM1, int DIM2, int
   }
 }
 
-void utilities_fill_unique_array_5D_float( float* array, int DIM1, int DIM2, int DIM3, int DIM4, int DIM5, int base ) { 
+void utilities_fill_unique_array_5D_float( float* array, int DIM1, int DIM2, int DIM3, int DIM4, int DIM5, int base ) {
 
   int i, j, k, l, m;
 

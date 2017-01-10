@@ -44,7 +44,7 @@ static double HRT_GET_USEC(unsigned long long ticks) {
 }
 
 static int hrtimer_sanity_check(int print) {
-	
+
 	HRT_TIMESTAMP_T t1, t2;
 	uint64_t s, s2, s3;
 	int sanity = 1;

@@ -15,7 +15,7 @@
 #include "hrtimer.h"
 
 int main(int argc, char **argv) {
-	
+
   int sane = sanity_check(1);
 
   if(sane) exit(EXIT_SUCCESS);

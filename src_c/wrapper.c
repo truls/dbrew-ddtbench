@@ -57,7 +57,7 @@ void wrapper_timing_wrf_vec( int number_2D, int number_3D, int number_4D, int im
 
 void wrapper_timing_wrf_sa( int number_2D, int number_3D, int number_4D, int ims, int ime, int jms, int jme, int kms, int kme, int* limit_4D_arrays, int is, int ie, int js, int je,
   int ks, int ke, int param_first_scalar, int outer_loop, int inner_loop, MPI_File filehandle_correctness, MPI_File filehandle_debug, char* ptestname, MPI_Comm local_communicator ) {
-      
+
   int correct_flag;
   int typesize;
   char testname[50];
@@ -135,7 +135,7 @@ void wrapper_timing_milc_su3_zdown( int DIM2, int DIM3, int DIM4, int DIM5, int 
 }
 
 void wrapper_timing_nas_lu_x( int DIM2, int DIM3, int outer_loop, int inner_loop, MPI_File filehandle_correctness, MPI_File filehandle_debug, char* ptestname, MPI_Comm local_communicator ) {
-      
+
   int correct_flag;
   int typesize;
   char testname[50];
@@ -203,7 +203,7 @@ void wrapper_timing_nas_lu( int DIM2, int DIM3, int outer_loop, int inner_loop, 
 }
 
 void wrapper_timing_nas_mg_x( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, MPI_File filehandle_correctness, MPI_File filehandle_debug, char* ptestname, MPI_Comm local_communicator ) {
-      
+
   int correct_flag;
   int typesize;
   char testname[50];
@@ -234,7 +234,7 @@ void wrapper_timing_nas_mg_x( int DIM1, int DIM2, int DIM3, int outer_loop, int 
 }
 
 void wrapper_timing_nas_mg_y( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, MPI_File filehandle_correctness, MPI_File filehandle_debug, char* ptestname, MPI_Comm local_communicator ) {
-      
+
   int correct_flag;
   int typesize;
   char testname[50];
@@ -289,7 +289,7 @@ void wrapper_timing_nas_mg_z( int DIM1, int DIM2, int DIM3, int outer_loop, int 
 
 //! not necessarily correct, since it assumes that a double uses twice
 //! the bytes a real does
-  
+
   nelements = (DIM1-2) * (DIM2-2) * 2;
   loops = outer_loop * inner_loop;
   timing_basic_ping_pong_nelements( nelements, loops, &testname[0], local_communicator );
@@ -385,7 +385,7 @@ void wrapper_timing_lammps_full( int DIM1, int icount, int outer_loop, int inner
 //! just some statements to prevent compiler warnings of unused variables
 //! those parameter are included for future features
 //  typesize = filehandle_correctness
-  
+
   list = malloc( icount * outer_loop * sizeof(int) );
 
   if ( strlen(ptestname) == 0 ) {

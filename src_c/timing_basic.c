@@ -53,10 +53,10 @@ void timing_basic_ping_pong_nelements( int DIM1, int loop, char* testname, MPI_C
 }
 
 void timing_basic_alltoall_nelements( int DIM1, int procs, int loop, char* testname, MPI_Comm local_communicator) {
-      
+
   float* send_array;
   float* recv_array;
-  
+
   int myrank;
   int base, typesize, bytes, i;
   char method[50];
@@ -71,7 +71,7 @@ void timing_basic_alltoall_nelements( int DIM1, int procs, int loop, char* testn
 
   if ( myrank == 0 ) {
     snprintf(method, 50, "reference");
-        
+
     MPI_Type_size( MPI_FLOAT, &typesize );
     bytes = typesize * DIM1 * procs;
 
@@ -92,4 +92,4 @@ void timing_basic_alltoall_nelements( int DIM1, int procs, int loop, char* testn
 
   free(send_array);
   free(recv_array);
-}     
+}

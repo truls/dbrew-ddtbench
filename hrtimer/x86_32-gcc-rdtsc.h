@@ -16,7 +16,7 @@
 #define HRT_INIT(print, freq) do {\
   if(print) printf("# initializing x86-32 timer (takes some seconds)\n"); \
   HRT_CALIBRATE(freq); \
-} while(0) 
+} while(0)
 
 #define HRT_TIMESTAMP_T uint64_t
 

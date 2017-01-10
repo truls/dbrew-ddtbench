@@ -24,7 +24,7 @@ void timing_basic_ping_pong_nelements( int DIM1, int loop, char* testname, MPI_C
   array = malloc( DIM1 * sizeof(float) );
   MPI_Win_create( array, DIM1 * sizeof(float), sizeof(float), MPI_INFO_NULL, local_communicator, &win );
   MPI_Win_fence( 0 /* assert */, win ); /* initial fence to open epoch */
-  
+
   base = myrank * DIM1 + 1;
   utilities_fill_unique_array_1D_float( &array[0], DIM1, base );
 
@@ -60,10 +60,10 @@ void timing_basic_ping_pong_nelements( int DIM1, int loop, char* testname, MPI_C
 }
 
 void timing_basic_alltoall_nelements( int DIM1, int procs, int loop, char* testname, MPI_Comm local_communicator) {
-      
+
   float* send_array;
   float* recv_array;
-  
+
   int myrank;
   int commsize;
   int base, typesize, bytes, i, j;
@@ -88,7 +88,7 @@ void timing_basic_alltoall_nelements( int DIM1, int procs, int loop, char* testn
 
   if ( myrank == 0 ) {
     snprintf(method, 50, "reference");
-        
+
     MPI_Type_size( MPI_FLOAT, &typesize );
     bytes = typesize * DIM1 * procs;
 

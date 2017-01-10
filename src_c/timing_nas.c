@@ -29,14 +29,14 @@ void timing_nas_lu_y_ddt( int DIM2, int DIM3, int outer_loop, int inner_loop, in
 
   char method[50];
 
-//! just some statements to prevent compiler warnings of unused variables      
+//! just some statements to prevent compiler warnings of unused variables
 //! those parameter are included for future features
   *correct_flag = 0;
   *ptypesize = 0;
   //typesize = filehandle_debug;
-  
+
   array = malloc( DIM1*(DIM2+2)*(DIM3+2) * sizeof(double) );
-      
+
   MPI_Comm_rank( local_communicator, &myrank );
 
   base = myrank * DIM1 * (DIM2+2) * (DIM3+2) + 1;
@@ -83,7 +83,7 @@ void timing_nas_lu_y_ddt( int DIM2, int DIM3, int outer_loop, int inner_loop, in
       timing_record(5);
     }
 
-  } 
+  }
 
   if ( myrank == 0 ) {
     timing_print( 1 );
@@ -104,7 +104,7 @@ void timing_nas_lu_y_manual( int DIM2, int DIM3, int outer_loop, int inner_loop,
 
   char method[50];
 
-//! just some statements to prevent compiler warnings of unused variables      
+//! just some statements to prevent compiler warnings of unused variables
 //! those parameter are included for future features
   *correct_flag = 0;
   *ptypesize = 0;
@@ -116,7 +116,7 @@ void timing_nas_lu_y_manual( int DIM2, int DIM3, int outer_loop, int inner_loop,
 
   base = myrank * DIM1 * (DIM2+2) * (DIM3+2) + 1;
   utilities_fill_unique_array_3D_double( &array[0], DIM1, DIM2+2, DIM3+2, base );
-      
+
   if ( myrank == 0 ) {
     snprintf(method, 50, "manual");
 
@@ -129,7 +129,7 @@ void timing_nas_lu_y_manual( int DIM2, int DIM3, int outer_loop, int inner_loop,
   for( i=0 ; i<outer_loop ; i++ ) {
 
     buffer = malloc( DIM1 * DIM3 * sizeof(double));
-        
+
     if ( myrank == 0 ) {
        timing_record(1);
     }
@@ -185,7 +185,7 @@ void timing_nas_lu_y_manual( int DIM2, int DIM3, int outer_loop, int inner_loop,
   if ( myrank == 0 ) {
     timing_print( 1 );
   }
-    
+
   free(array);
 }
 
@@ -203,14 +203,14 @@ void timing_nas_lu_y_mpi_pack_ddt( int DIM2, int DIM3, int outer_loop, int inner
 
   char method[50];
 
-//! just some statements to prevent compiler warnings of unused variables      
+//! just some statements to prevent compiler warnings of unused variables
 //! those parameter are included for future features
   *correct_flag = 0;
   *ptypesize = 0;
 //  typesize = filehandle_debug
-  
+
   array = malloc( DIM1 * (DIM2+2) * (DIM3+2) * sizeof(double));
-     
+
   MPI_Comm_rank( local_communicator, &myrank );
 
   base = myrank * DIM1 * (DIM2+2) * (DIM3+2) + 1;
@@ -221,7 +221,7 @@ void timing_nas_lu_y_mpi_pack_ddt( int DIM2, int DIM3, int outer_loop, int inner
 
     MPI_Type_size( MPI_DOUBLE, &typesize );
     bytes = DIM1 * DIM3 * typesize;
-         
+
     timing_init( testname, &method[0], bytes );
   }
 
@@ -236,7 +236,7 @@ void timing_nas_lu_y_mpi_pack_ddt( int DIM2, int DIM3, int outer_loop, int inner
     MPI_Type_commit( &dtype_y_t );
 
     MPI_Type_free( &dtype_temp_t );
-       
+
     if ( myrank == 0 ) {
       timing_record(1);
     }
@@ -274,7 +274,7 @@ void timing_nas_lu_y_mpi_pack_ddt( int DIM2, int DIM3, int outer_loop, int inner
       timing_record(5);
     }
 
-  } //! outer loop 
+  } //! outer loop
 
   if ( myrank == 0 ) {
     timing_print( 1 );
@@ -287,7 +287,7 @@ void timing_nas_lu_y_mpi_pack_ddt( int DIM2, int DIM3, int outer_loop, int inner
 void timing_nas_lu_x_ddt( int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
 
   int DIM1 = 5;
-    
+
   double* array;
 
   int myrank;
@@ -297,7 +297,7 @@ void timing_nas_lu_x_ddt( int DIM2, int DIM3, int outer_loop, int inner_loop, in
 
   char method[50];
 
-//! just some statements to prevent compiler warnings of unused variables      
+//! just some statements to prevent compiler warnings of unused variables
 //! those parameter are included for future features
   *correct_flag = 0;
   *ptypesize = 0;
@@ -367,7 +367,7 @@ void timing_nas_lu_x_manual( int DIM2, int DIM3, int outer_loop, int inner_loop,
 
   char method[50];
 
-//! just some statements to prevent compiler warnings of unused variables      
+//! just some statements to prevent compiler warnings of unused variables
 //! those parameter are included for future features
   *correct_flag = 0;
   *ptypesize = 0;
@@ -391,9 +391,9 @@ void timing_nas_lu_x_manual( int DIM2, int DIM3, int outer_loop, int inner_loop,
   }
 
   for( i=0 ; i<outer_loop ; i++ ) {
-    
+
     buffer = malloc(DIM1 * DIM2 * sizeof(double));
-        
+
     if ( myrank == 0 ) {
       timing_record(1);
     }
@@ -426,7 +426,7 @@ void timing_nas_lu_x_manual( int DIM2, int DIM3, int outer_loop, int inner_loop,
         for( k=1 ; k<DIM2+1 ; k++ ) {
           for( l=0 ; l<DIM1 ; l++ ) {
             array[idx3D(l,k,0,DIM1,DIM2+2)] = buffer[base++];
-          }              
+          }
         }
 //! pack the data
         base = 0;
@@ -444,7 +444,7 @@ void timing_nas_lu_x_manual( int DIM2, int DIM3, int outer_loop, int inner_loop,
     if ( myrank == 0 ) {
       timing_record(5);
     }
-    
+
   } //! outer loop
 
   if ( myrank == 0 ) {
@@ -468,14 +468,14 @@ void timing_nas_lu_x_mpi_pack_ddt( int DIM2, int DIM3, int outer_loop, int inner
 
   char method[50];
 
-//! just some statements to prevent compiler warnings of unused variables      
+//! just some statements to prevent compiler warnings of unused variables
 //! those parameter are included for future features
   *correct_flag = 0;
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
   array = malloc( DIM1 * (DIM2+2) * (DIM3+2) * sizeof(double));
-       
+
   MPI_Comm_rank( local_communicator, &myrank );
 
   base = myrank * DIM1 * (DIM2+2) * (DIM3+2) + 1;
@@ -483,13 +483,13 @@ void timing_nas_lu_x_mpi_pack_ddt( int DIM2, int DIM3, int outer_loop, int inner
 
   if ( myrank == 0 ) {
     snprintf(method, 50, "mpi_pack_ddt");
-        
+
     MPI_Type_size( MPI_DOUBLE, &typesize );
     bytes = DIM1 * DIM2 * typesize;
 
     timing_init( testname, &method[0], bytes );
   }
-  
+
   for( i=0 ; i<outer_loop ; i++ ) {
 
     buffer = malloc( DIM1 * DIM2 * sizeof(double));
@@ -547,7 +547,7 @@ void timing_nas_lu_x_mpi_pack_ddt( int DIM2, int DIM3, int outer_loop, int inner
 void timing_nas_mg_x_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
 
   double* array;
-      
+
   int myrank;
   int base, i, j, typesize, bytes;
 
@@ -556,12 +556,12 @@ void timing_nas_mg_x_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inne
 
   char method[50];
 
-//! just some statements to prevent compiler warnings of unused variables      
+//! just some statements to prevent compiler warnings of unused variables
 //! those parameter are included for future features
   *correct_flag = 0;
   *ptypesize = 0;
 //  typesize = filehandle_debug
-  
+
   array = malloc( DIM1 * DIM2 * DIM3 * sizeof(double));
 
   MPI_Comm_rank( local_communicator, &myrank );
@@ -571,7 +571,7 @@ void timing_nas_mg_x_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inne
 
   if ( myrank == 0 ) {
     snprintf(method, 50, "mpi_ddt");
-  
+
     MPI_Type_size( MPI_DOUBLE, &typesize );
     bytes = (DIM2-2)*(DIM3-2) * typesize;
 
@@ -579,7 +579,7 @@ void timing_nas_mg_x_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inne
   }
 
   for( i=0 ; i<outer_loop ; i++ ) {
-  
+
     MPI_Type_vector( DIM2-2, 1, DIM1, MPI_DOUBLE, &dtype_temp_t );
 
     MPI_Type_size( MPI_DOUBLE, &typesize );
@@ -623,7 +623,7 @@ void timing_nas_mg_x_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inne
 }
 
 void timing_nas_mg_x_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
-      
+
   double* array;
   double* buffer;
 
@@ -632,7 +632,7 @@ void timing_nas_mg_x_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int i
 
   char method[50];
 
-//! just some statements to prevent compiler warnings of unused variables      
+//! just some statements to prevent compiler warnings of unused variables
 //! those parameter are included for future features
   *correct_flag = 0;
   *ptypesize = 0;
@@ -715,12 +715,12 @@ void timing_nas_mg_x_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int i
 
   free(array);
 }
-      
+
 void timing_nas_mg_x_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
-      
+
   double* array;
   double* buffer;
-      
+
   int myrank;
   int base, i, j, typesize, bytes, pos;
 
@@ -729,7 +729,7 @@ void timing_nas_mg_x_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop,
 
   char method[50];
 
-//! just some statements to prevent compiler warnings of unused variables      
+//! just some statements to prevent compiler warnings of unused variables
 //! those parameter are included for future features
   *correct_flag = 0;
   *ptypesize = 0;
@@ -756,7 +756,7 @@ void timing_nas_mg_x_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop,
     buffer = malloc( (DIM2-2) * (DIM3-2) * sizeof(double) );
     MPI_Type_size( MPI_DOUBLE, &typesize );
     bytes = (DIM2-2)*(DIM3-2) * typesize;
-  
+
     MPI_Type_vector( DIM2-2, 1, DIM1, MPI_DOUBLE, &dtype_temp_t );
 
     MPI_Type_size( MPI_DOUBLE, &typesize );
@@ -812,7 +812,7 @@ void timing_nas_mg_x_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop,
 }
 
 void timing_nas_mg_y_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
-      
+
   double* array;
 
   int myrank;
@@ -822,14 +822,14 @@ void timing_nas_mg_y_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inne
 
   char method[50];
 
-//! just some statements to prevent compiler warnings of unused variables      
+//! just some statements to prevent compiler warnings of unused variables
 //! those parameter are included for future features
   *correct_flag = 0;
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
   array = malloc( DIM1 * DIM2 * DIM3 * sizeof(double) );
-  
+
   MPI_Comm_rank( local_communicator, &myrank );
 
   base = myrank * DIM1 * DIM2 * DIM3 + 1;
@@ -845,7 +845,7 @@ void timing_nas_mg_y_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inne
   }
 
   for( i=0 ; i<outer_loop ; i++ ) {
-  
+
     MPI_Type_vector( DIM3-2, DIM1-2, DIM1*DIM2, MPI_DOUBLE, &dtype_face_y_t );
 
     MPI_Type_commit( &dtype_face_y_t );
@@ -892,12 +892,12 @@ void timing_nas_mg_y_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int i
 
  char method[50];
 
-//! just some statements to prevent compiler warnings of unused variables      
+//! just some statements to prevent compiler warnings of unused variables
 //! those parameter are included for future features
  *correct_flag = 0;
  *ptypesize = 0;
 // typesize = filehandle_debug
-  
+
   array = malloc( DIM1 * DIM2 * DIM3 * sizeof(double) );
 
   MPI_Comm_rank( local_communicator, &myrank );
@@ -976,7 +976,7 @@ void timing_nas_mg_y_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int i
 
   free(array);
 }
-      
+
 void timing_nas_mg_y_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
 
   double* array;
@@ -989,7 +989,7 @@ void timing_nas_mg_y_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop,
 
   char method[50];
 
-//! just some statements to prevent compiler warnings of unused variables      
+//! just some statements to prevent compiler warnings of unused variables
 //! those parameter are included for future features
   *correct_flag = 0;
   *ptypesize = 0;
@@ -1016,7 +1016,7 @@ void timing_nas_mg_y_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop,
     buffer = malloc( (DIM1-2) * (DIM3-2) * sizeof(double) );
     MPI_Type_size( MPI_DOUBLE, &typesize );
     bytes = (DIM1-2) * (DIM3-2) * typesize;
-  
+
     MPI_Type_vector( DIM3-2, DIM1-2, DIM1*DIM2, MPI_DOUBLE, &dtype_face_y_t );
     MPI_Type_commit( &dtype_face_y_t );
 
@@ -1075,14 +1075,14 @@ void timing_nas_mg_z_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inne
 
   char method[50];
 
-//! just some statements to prevent compiler warnings of unused variables      
+//! just some statements to prevent compiler warnings of unused variables
 //! those parameter are included for future features
   *correct_flag = 0;
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
   array = malloc( DIM1 * DIM2 * DIM3 * sizeof(double));
-  
+
   MPI_Comm_rank( local_communicator, &myrank );
 
   base = myrank * DIM1 * DIM2 * DIM3 + 1;
@@ -1098,7 +1098,7 @@ void timing_nas_mg_z_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inne
   }
 
   for( i=0 ; i<outer_loop ; i++ ) {
-  
+
     MPI_Type_vector( DIM2-2, DIM1-2, DIM1, MPI_DOUBLE, &dtype_face_z_t );
     MPI_Type_commit( &dtype_face_z_t );
 
@@ -1130,7 +1130,7 @@ void timing_nas_mg_z_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inne
   if ( myrank == 0 ) {
     timing_print( 1 );
   }
-  
+
   free(array);
 }
 
@@ -1144,7 +1144,7 @@ void timing_nas_mg_z_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int i
 
   char method[50];
 
-//! just some statements to prevent compiler warnings of unused variables      
+//! just some statements to prevent compiler warnings of unused variables
 //! those parameter are included for future features
   *correct_flag = 0;
   *ptypesize = 0;
@@ -1162,7 +1162,7 @@ void timing_nas_mg_z_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int i
 
     MPI_Type_size( MPI_DOUBLE, &typesize );
     bytes = (DIM1-2) * (DIM2-2) * typesize;
-         
+
     timing_init( testname, &method[0], bytes );
   }
 
@@ -1228,7 +1228,7 @@ void timing_nas_mg_z_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int i
 
   free(array);
 }
-      
+
 void timing_nas_mg_z_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
 
   double* array;
@@ -1241,13 +1241,13 @@ void timing_nas_mg_z_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop,
 
   char method[50];
 
-//! just some statements to prevent compiler warnings of unused variables      
+//! just some statements to prevent compiler warnings of unused variables
 //! those parameter are included for future features
   *correct_flag = 0;
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  array = malloc( DIM1 * DIM2 * DIM3 * sizeof(double) );  
+  array = malloc( DIM1 * DIM2 * DIM3 * sizeof(double) );
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -1268,7 +1268,7 @@ void timing_nas_mg_z_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop,
     buffer = malloc( (DIM1-2) * (DIM2-2) * sizeof(double) );
     MPI_Type_size( MPI_DOUBLE, &typesize );
     bytes = (DIM1-2) * (DIM2-2) * typesize;
-  
+
     MPI_Type_vector( DIM2-2, DIM1-2, DIM1, MPI_DOUBLE, &dtype_face_z_t );
     MPI_Type_commit( &dtype_face_z_t );
 

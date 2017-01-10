@@ -148,7 +148,7 @@ void timing_print( int last ) {
 //! at the end of the test, we print for each unused epoch a line with a timing of zero micro seconds
     for( i=0; i<5 ; i++ ) {
       if (epoch_used[i] == 0) {
-        
+
         /* handling of event counter that are not set */
         if (strncmp(PapiEventName1, comparand, 20) == 0 ) {
           snprintf( eventcount1, 20, "NA");
@@ -161,8 +161,8 @@ void timing_print( int last ) {
           snprintf( eventcount2, 20, "0");
         }
 
-#if TEST_TYPE != 2 
-        snprintf( time_str, 20, "%20.4f", 0.0 ); 
+#if TEST_TYPE != 2
+        snprintf( time_str, 20, "%20.4f", 0.0 );
 #else
         snprintf( time_str, 20, "NA" ); // don't record time
 #endif
@@ -211,7 +211,7 @@ void timing_record( int id ) {
 //! opens a file handle, to where the timing values are written
 
 void timing_open_file( char* filename ) {
-      
+
   char line[256];
   int ier;
 
@@ -265,14 +265,14 @@ void init_papi() {
       switch( retval ) {
         case PAPI_ENOTPRESET:   fprintf(stderr,"The event code provided in the environmental variable PAPI_EVT1 is not a valid PAPI preset!\n"); break;
         case PAPI_ENOEVNT:      fprintf(stderr,"The event provided in the environmental variable PAPI_EVT1 is not available on the underlying hardware!\n"); break;
-        default:                fprintf(stderr,"The event code provided in the environmental variable PAPI_EVT1 is not correct!\n"); 
+        default:                fprintf(stderr,"The event code provided in the environmental variable PAPI_EVT1 is not correct!\n");
       }
       MPI_Abort( MPI_COMM_WORLD, 1 );
     }
     strncpy( PapiEventName1, papi_evt1, 20 );
 
     PapiNumberEvents++;
-    
+
     if (PAPI_add_event(PapiEventSet, PapiEventCode[0]) != PAPI_OK) {
       fprintf(stderr,"PAPI could not add counter to event set!\n");
       MPI_Abort( MPI_COMM_WORLD, 1 );
@@ -285,19 +285,19 @@ void init_papi() {
       switch( retval ) {
         case PAPI_ENOTPRESET:   fprintf(stderr,"The event code provided in the environmental variable PAPI_EVT2 is not a valid PAPI preset!\n"); break;
         case PAPI_ENOEVNT:      fprintf(stderr,"The event provided in the environmental variable PAPI_EVT2 is not available on the underlying hardware!\n"); break;
-        default:                fprintf(stderr,"The event code provided in the environmental variable PAPI_EVT2 is not correct!\n"); 
+        default:                fprintf(stderr,"The event code provided in the environmental variable PAPI_EVT2 is not correct!\n");
       }
       MPI_Abort( MPI_COMM_WORLD, 1 );
     }
     strncpy( PapiEventName2, papi_evt2, 20 );
 
     PapiNumberEvents++;
-  
+
     if ( PAPI_add_event(PapiEventSet, PapiEventCode[1]) != PAPI_OK) {
       fprintf(stderr,"PAPI could not add counter to event set!\n");
       MPI_Abort( MPI_COMM_WORLD, 1 );
     }
-  } 
+  }
 
   if ( PapiNumberEvents == 0 ) {
     fprintf(stderr, "Althrough the TEST_TYPE parameter in Makefile.inc indicated a measurement with PAPI counters, the environmental variables PAPI_EVT1 and PAPI_EVT2 are not set.\n");

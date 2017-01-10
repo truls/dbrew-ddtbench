@@ -8,7 +8,7 @@
 
 #include "mpi.h"
 #include "../src_c/ddtbench.h"
-      
+
 void timing_fft2d_ddt( int DIM1, int procs, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
 
   double* matrix;
@@ -48,16 +48,16 @@ void timing_fft2d_ddt( int DIM1, int procs, int outer_loop, int inner_loop, int*
 
   base = myrank * DIM1 * DIM1/procs * 2 + 1;
   utilities_fill_unique_array_2D_double( &matrix[0], 2*DIM1, DIM1/procs, base );
- 
+
   if ( myrank == 0 ) {
     snprintf( &method[0], 50, "mpi_ddt" );
 
     MPI_Type_size( MPI_DOUBLE, &typesize );
     bytes = DIM1/procs * DIM1 * 2 * typesize;
- 
+
     timing_init( testname, &method[0], bytes );
   }
-     
+
   for( i=0 ; i<outer_loop ; i++ ) {
 
     MPI_Type_contiguous( 2, MPI_DOUBLE, &dtype_complex_t );
@@ -168,12 +168,12 @@ void timing_fft2d_manual( int DIM1, int procs, int outer_loop, int inner_loop, i
 
     timing_init( testname, &method[0], bytes );
   }
-     
+
   for( i=0 ; i<outer_loop ; i++ ) {
 
     for( j=0 ; j<inner_loop ; j++ ) {
       int block_size = DIM1/procs * DIM1/procs;
-      
+
 //! pack the data
       for( k=0 ; k < procs ; k++ ) {
         for( l=0 ; l<DIM1/procs ; l++ ) {
@@ -196,7 +196,7 @@ void timing_fft2d_manual( int DIM1, int procs, int outer_loop, int inner_loop, i
         }
       }
 
-//! pack the data            
+//! pack the data
       for( k=0 ; k < procs ; k++ ) {
         for( l=0 ; l<DIM1/procs ; l++ ) {
           memcpy( &buffer2[2*(k * DIM1/procs * DIM1/procs + l * DIM1/procs)], &matrix[2*(k * DIM1/procs + l * DIM1)], 2 * DIM1/procs * sizeof(double) );
@@ -242,7 +242,7 @@ void timing_fft2d_mpi_pack_ddt( int DIM1, int procs, int outer_loop, int inner_l
 
   double* matrix;
   double* buffer1;
-  double* buffer2;      
+  double* buffer2;
 
   int myrank;
   int commsize;
@@ -269,7 +269,7 @@ void timing_fft2d_mpi_pack_ddt( int DIM1, int procs, int outer_loop, int inner_l
 
   buffer1 = malloc( DIM1 * DIM1/procs * 2 * sizeof(double) );
   buffer2 = malloc( DIM1 * DIM1/procs * 2 * sizeof(double) );
-  
+
   MPI_Win_create( buffer1, DIM1 * DIM1/procs * 2 * sizeof(double), 2 * sizeof(double), MPI_INFO_NULL, local_communicator, &win1 );
   MPI_Win_create( buffer2, DIM1 * DIM1/procs * 2 * sizeof(double), 2 * sizeof(double), MPI_INFO_NULL, local_communicator, &win2 );
 
@@ -280,7 +280,7 @@ void timing_fft2d_mpi_pack_ddt( int DIM1, int procs, int outer_loop, int inner_l
 
   base = myrank * DIM1 * DIM1/procs * 2 + 1;
   utilities_fill_unique_array_2D_double( &matrix[0], 2*DIM1, DIM1/procs, base );
- 
+
   if ( myrank == 0 ) {
     snprintf( &method[0], 50, "mpi_pack_ddt" );
 
@@ -289,7 +289,7 @@ void timing_fft2d_mpi_pack_ddt( int DIM1, int procs, int outer_loop, int inner_l
 
     timing_init( testname, &method[0], bytes );
   }
-     
+
   for( i=0 ; i<outer_loop ; i++ ) {
 
     MPI_Type_size( MPI_DOUBLE, &typesize );
@@ -371,7 +371,7 @@ void timing_fft2d_mpi_pack_ddt( int DIM1, int procs, int outer_loop, int inner_l
 
   MPI_Win_free( &win1 );
   MPI_Win_free( &win2 );
-    
+
   free(matrix);
   free(buffer1);
   free(buffer2);

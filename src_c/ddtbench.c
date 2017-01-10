@@ -18,10 +18,10 @@ int main( int argc, char **argv, char *envp[]) {
   int max_epochs;
 
   MPI_Comm local_comm_pp, local_comm_all2all;
-      
+
 //! variables for file handling
   char filename[50];
-  char testname[3][50];   
+  char testname[3][50];
   MPI_File filehandle_correctness, filehandle_debug;
 
   int DIM1, DIM2, DIM3, DIM4;
@@ -53,7 +53,7 @@ int main( int argc, char **argv, char *envp[]) {
 #if TEST_TYPE != 2
   timing_hrt_init();
 #endif
- 
+
   MPI_Comm_rank( MPI_COMM_WORLD, &myrank );
 
   MPI_Comm_dup( MPI_COMM_WORLD, &local_comm_all2all );
@@ -93,7 +93,7 @@ int main( int argc, char **argv, char *envp[]) {
     init_papi();
 #endif
 //! set the maximum test number for the progression bar
-//! ddt has 1 epoch in inner loop, 2 epochs in outer loop, and 2 epochs 
+//! ddt has 1 epoch in inner loop, 2 epochs in outer loop, and 2 epochs
 //! for each test
 //! manual has 3 epochs in inner loop, 2 epochs in outer loop
 //! mpi_pack_ddt has 3 epochs in inner loop, 2 epochs in outer looper
@@ -219,7 +219,7 @@ int main( int argc, char **argv, char *envp[]) {
     for (i = 0 ; i < number_4D ; i++) {
       limit_4D_arrays[i] = 2;
     }
-    
+
     is = 8;
     ie = 18;
     ks = 1;
@@ -319,14 +319,14 @@ int main( int argc, char **argv, char *envp[]) {
     DIM4 = 16;
 
     wrapper_timing_milc_su3_zdown( DIM1, DIM2, DIM3, DIM4, outer_loop, inner_loop, filehandle_correctness, filehandle_debug, &testname[0][0], local_comm_pp );
- 
+
     DIM1 = 8;
     DIM2 = 16;
     DIM3 = 16;
     DIM4 = 16;
 
     wrapper_timing_milc_su3_zdown( DIM1, DIM2, DIM3, DIM4, outer_loop, inner_loop, filehandle_correctness, filehandle_debug, &testname[0][0], local_comm_pp );
-  
+
     DIM1 = 8;
     DIM2 = 8;
     DIM3 = 8;

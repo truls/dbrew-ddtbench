@@ -18,18 +18,18 @@
  * bits/wordsize.h . Maybe there is something in autoconf ... */
 #define BITS 64
 
-#if defined(__xlc__) || defined( __xlC__) 
+#if defined(__xlc__) || defined( __xlC__)
 #define __volatile__ volatile
 #define __asm__ asm
 #define FENCE __fence();
-#else 
-#define FENCE 
+#else
+#define FENCE
 #endif
 
 #define HRT_INIT(print, freq) do {\
   if(print) printf("# initializing ppc timer (takes some seconds)\n"); \
   HRT_CALIBRATE(freq); \
-} while(0) 
+} while(0)
 
 
 #if BITS == 64
@@ -44,7 +44,7 @@ typedef struct {
 
 #define HRT_TIMESTAMP_T ppc_timeval_t
 
-#if BITS == 64 
+#if BITS == 64
 #define HRT_GET_TIMESTAMP(t1) 	FENCE \
 do { \
   __asm__ __volatile__ ("mftb %0" : "=r" (t1) ); \

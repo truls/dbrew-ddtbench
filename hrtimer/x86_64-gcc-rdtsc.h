@@ -17,7 +17,7 @@
   if (print) printf("# initializing x86-64 timer (takes some seconds)\n"); \
   HRT_CALIBRATE(freq); \
   hrtimer_sanity_check(print); \
-} while(0) 
+} while(0)
 
 
 typedef struct {
@@ -27,7 +27,7 @@ typedef struct {
 
 #define HRT_TIMESTAMP_T x86_64_timeval_t
 
-/* TODO: Do we need a while loop here? aka Is rdtsc atomic? - check in the documentation */	
+/* TODO: Do we need a while loop here? aka Is rdtsc atomic? - check in the documentation */
 #define HRT_GET_TIMESTAMP(t1)  __asm__ __volatile__ ("rdtsc" : "=a" (t1.l), "=d" (t1.h));
 
 #define HRT_GET_ELAPSED_TICKS(t1, t2, numptr)	*numptr = (((( UINT64_T ) t2.h) << 32) | t2.l) - \

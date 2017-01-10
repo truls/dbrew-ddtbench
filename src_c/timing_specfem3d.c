@@ -17,7 +17,7 @@ static inline int idx2D(int x, int y, int DIM1) {
 }
 
 void timing_specfem3D_oc_ddt( int DIM1, int icount, int* list, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
-      
+
   float *array;
 
   int i, j, bytes, base, typesize;
@@ -76,7 +76,7 @@ void timing_specfem3D_oc_ddt( int DIM1, int icount, int* list, int outer_loop, i
 //! =============== ping pong communication =================
 
       if ( myrank == 0 ) {
-//! send the data from rank 0 to rank 1          
+//! send the data from rank 0 to rank 1
         MPI_Send( &array[0], 1, dtype_indexed_t, 1, itag, local_communicator );
 //! receive the data from rank 1 back
         MPI_Recv( &array[0], 1, dtype_indexed_t, 1, itag, local_communicator, MPI_STATUS_IGNORE );
@@ -169,7 +169,7 @@ void timing_specfem3D_oc_manual( int DIM1, int icount, int* list, int outer_loop
           buffer[k] = array[displacement[idx2D(k,i,icount)]];
         }
         timing_record(2);
-//! send the data from rank 0 to rank 1          
+//! send the data from rank 0 to rank 1
         MPI_Send( buffer, icount, MPI_FLOAT, 1, itag, local_communicator );
 //! receive the data from rank 1 back
         MPI_Recv( buffer, icount, MPI_FLOAT, 1, itag, local_communicator, MPI_STATUS_IGNORE );
@@ -281,7 +281,7 @@ void timing_specfem3D_oc_mpi_pack_ddt( int DIM1, int icount, int* list, int oute
         pos = 0;
         MPI_Pack( &array[0], 1, dtype_indexed_t, &buffer[0], bytes, &pos, local_communicator );
         timing_record(2);
-//! send the data from rank 0 to rank 1          
+//! send the data from rank 0 to rank 1
         MPI_Send( &buffer[0], pos, MPI_PACKED, 1, itag, local_communicator );
 //! receive the data from rank 1 back
         MPI_Recv( &buffer[0], bytes, MPI_PACKED, 1, itag, local_communicator, MPI_STATUS_IGNORE );
@@ -324,10 +324,10 @@ void timing_specfem3D_oc_mpi_pack_ddt( int DIM1, int icount, int* list, int oute
 }
 
 void timing_specfem3D_cm_ddt( int DIM2_cm, int DIM2_ic, int icount_cm, int icount_ic, int* list_cm, int* list_ic, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
-      
+
   float* array_cm;
   float* array_ic;
-      
+
   int i, j, base, bytes, typesize;
   int myrank, maximum;
 
@@ -347,7 +347,7 @@ void timing_specfem3D_cm_ddt( int DIM2_cm, int DIM2_ic, int icount_cm, int icoun
   *correct_flag = 0;
   *ptypesize = 0;
  //typesize = filehandle_debug
- 
+
   array_cm = malloc( 3 * DIM2_cm * sizeof(float) );
   array_ic = malloc( 3 * DIM2_ic * sizeof(float) );
 
@@ -376,7 +376,7 @@ void timing_specfem3D_cm_ddt( int DIM2_cm, int DIM2_ic, int icount_cm, int icoun
 
     MPI_Type_size( MPI_FLOAT, &typesize );
     bytes = (icount_cm + icount_ic) * 3 * typesize;
- 
+
     timing_init( testname, &method[0], bytes );
   }
 
@@ -391,7 +391,7 @@ void timing_specfem3D_cm_ddt( int DIM2_cm, int DIM2_ic, int icount_cm, int icoun
 
     MPI_Get_address( &array_cm[0], &struct_displacement[0] );
     MPI_Get_address( &array_ic[0], &struct_displacement[1] );
- 
+
     blocklength[0] = 1;
     blocklength[1] = 1;
 
@@ -419,7 +419,7 @@ void timing_specfem3D_cm_ddt( int DIM2_cm, int DIM2_ic, int icount_cm, int icoun
 
     for( j=0 ; j<inner_loop ; j++ ) {
       if ( myrank == 0 ) {
-//! send the data from rank 0 to rank 1          
+//! send the data from rank 0 to rank 1
         MPI_Send( MPI_BOTTOM, 1, dtype_indexed_t, 1, itag, local_communicator );
 //! receive the data from rank 1 back
         MPI_Recv( MPI_BOTTOM, 1, dtype_indexed_t, 1, itag, local_communicator, MPI_STATUS_IGNORE );
@@ -509,7 +509,7 @@ void timing_specfem3D_cm_manual( int DIM2_cm, int DIM2_ic, int icount_cm, int ic
   for( i=0 ; i<outer_loop ; i++ ) {
     isize = (icount_cm+icount_ic) * 3;
     buffer = malloc( isize * sizeof(float) );
-        
+
     if ( myrank == 0 ) {
       timing_record(1);
     }
@@ -525,13 +525,13 @@ void timing_specfem3D_cm_manual( int DIM2_cm, int DIM2_ic, int icount_cm, int ic
           buffer[counter++] = array_cm[idx2D(1,temp_displacement_cm[idx2D(k,i,icount_cm)],3)];
           buffer[counter++] = array_cm[idx2D(2,temp_displacement_cm[idx2D(k,i,icount_cm)],3)];
         }
-        for( k=0 ; k<icount_ic ; k++ ) { 
+        for( k=0 ; k<icount_ic ; k++ ) {
           buffer[counter++] = array_ic[idx2D(0,temp_displacement_ic[idx2D(k,i,icount_ic)],3)];
           buffer[counter++] = array_ic[idx2D(1,temp_displacement_ic[idx2D(k,i,icount_ic)],3)];
           buffer[counter++] = array_ic[idx2D(2,temp_displacement_ic[idx2D(k,i,icount_ic)],3)];
         }
         timing_record(2);
-//! send the data from rank 0 to rank 1          
+//! send the data from rank 0 to rank 1
         MPI_Send( &buffer[0], isize, MPI_FLOAT, 1, itag, local_communicator );
 //! receive the data from rank 1 back
         MPI_Recv( &buffer[0], isize, MPI_FLOAT, 1, itag, local_communicator, MPI_STATUS_IGNORE );
@@ -572,7 +572,7 @@ void timing_specfem3D_cm_manual( int DIM2_cm, int DIM2_ic, int icount_cm, int ic
           buffer[counter++] = array_cm[idx2D(1,temp_displacement_cm[idx2D(k,i,icount_cm)],3)];
           buffer[counter++] = array_cm[idx2D(2,temp_displacement_cm[idx2D(k,i,icount_cm)],3)];
         }
-        for( k=0 ; k<icount_ic ; k++ ) { 
+        for( k=0 ; k<icount_ic ; k++ ) {
           buffer[counter++] = array_ic[idx2D(0,temp_displacement_ic[idx2D(k,i,icount_ic)],3)];
           buffer[counter++] = array_ic[idx2D(1,temp_displacement_ic[idx2D(k,i,icount_ic)],3)];
           buffer[counter++] = array_ic[idx2D(2,temp_displacement_ic[idx2D(k,i,icount_ic)],3)];
@@ -686,7 +686,7 @@ void timing_specfem3D_cm_mpi_pack_ddt( int DIM2_cm, int DIM2_ic, int icount_cm, 
       displacement[j] = temp_displacement_cm[idx2D(j,i,icount_cm)] * 3;
     }
     MPI_Type_create_indexed_block( icount_cm, 3, &displacement[0], MPI_FLOAT, &dtype_temp_t[0] );
-    
+
     for( j = 0 ; j < icount_ic ; j++ ) {
       displacement[j] = temp_displacement_ic[idx2D(j,i,icount_ic)] * 3;
     }
@@ -694,12 +694,12 @@ void timing_specfem3D_cm_mpi_pack_ddt( int DIM2_cm, int DIM2_ic, int icount_cm, 
 
     MPI_Type_create_struct( 2, &blocklength[0], &struct_displacement[0], &dtype_temp_t[0], &dtype_indexed_t );
     MPI_Type_commit( &dtype_indexed_t );
-    
+
     MPI_Type_free( &dtype_temp_t[0] );
     MPI_Type_free( &dtype_temp_t[1] );
 
     free( displacement );
- 
+
     if ( myrank == 0 ) {
       timing_record(1);
     }
@@ -712,7 +712,7 @@ void timing_specfem3D_cm_mpi_pack_ddt( int DIM2_cm, int DIM2_ic, int icount_cm, 
         pos = 0;
         MPI_Pack( MPI_BOTTOM, 1, dtype_indexed_t, &buffer[0], bytes, &pos, local_communicator );
         timing_record(2);
-//! send the data from rank 0 to rank 1          
+//! send the data from rank 0 to rank 1
         MPI_Send( &buffer[0], pos, MPI_PACKED, 1, itag, local_communicator );
 //! receive the data from rank 1 back
         MPI_Recv( &buffer[0], bytes, MPI_PACKED, 1, itag, local_communicator, MPI_STATUS_IGNORE );
@@ -796,7 +796,7 @@ void timing_specfem3d_mt_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int 
   }
 
   for( i=0 ; i<outer_loop ; i++ ) {
-        
+
     MPI_Type_contiguous( DIM1, MPI_FLOAT, &dtype_temp_t );
     MPI_Type_vector( DIM3, 1, DIM2, dtype_temp_t, &dtype_send_t );
     MPI_Type_commit( &dtype_send_t );
@@ -810,7 +810,7 @@ void timing_specfem3d_mt_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int 
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
-          
+
       if ( myrank == 0 ) {
         MPI_Send( &send_array[0], 1, dtype_send_t, 1, itag, local_communicator );
         MPI_Recv( &recv_array[0], 1, dtype_recv_t, 1, itag, local_communicator, MPI_STATUS_IGNORE );
@@ -819,7 +819,7 @@ void timing_specfem3d_mt_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int 
         MPI_Recv( &recv_array[0], 1, dtype_recv_t, 0, itag, local_communicator, MPI_STATUS_IGNORE );
         MPI_Send( &send_array[0], 1, dtype_send_t, 0, itag, local_communicator );
       }
-    
+
     } //! inner loop
 
     MPI_Type_free( &dtype_send_t );
@@ -843,7 +843,7 @@ void timing_specfem3d_mt_manual( int DIM1, int DIM2, int DIM3, int outer_loop, i
 
   float* send_array;
   float* recv_array;
-  
+
   float* buffer;
 
   int myrank;
@@ -879,13 +879,13 @@ void timing_specfem3d_mt_manual( int DIM1, int DIM2, int DIM3, int outer_loop, i
     buffer = malloc( DIM1 * DIM3 * sizeof(float) );
     MPI_Type_size( MPI_FLOAT, &typesize );
     bytes = DIM1 * DIM3 * typesize;
-        
+
     if ( myrank == 0 ) {
       timing_record(1);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
-          
+
       if ( myrank == 0 ) {
         for( k = 0; k<DIM3 ; k++ ) {
           memcpy( &buffer[k*DIM1], &send_array[k*DIM1*DIM2], DIM1*sizeof(float) );
@@ -901,7 +901,7 @@ void timing_specfem3d_mt_manual( int DIM1, int DIM2, int DIM3, int outer_loop, i
         }
         MPI_Send( &buffer[0], DIM1*DIM3, MPI_FLOAT, 0, itag, local_communicator );
       }
-    
+
     } //! inner loop
 
     free( buffer );
@@ -962,7 +962,7 @@ void timing_specfem3d_mt_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_l
     buffer = malloc( DIM1 * DIM3 * sizeof(float) );
     MPI_Type_size( MPI_FLOAT, &typesize );
     bytes = DIM1 * DIM3 * typesize;
-        
+
     MPI_Type_contiguous( DIM1, MPI_FLOAT, &dtype_temp_t );
     MPI_Type_vector( DIM3, 1, DIM2, dtype_temp_t, &dtype_send_t );
     MPI_Type_commit( &dtype_send_t );
@@ -976,7 +976,7 @@ void timing_specfem3d_mt_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_l
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
-          
+
       if ( myrank == 0 ) {
         pos = 0;
         MPI_Pack( &send_array[0], 1, dtype_send_t, &buffer[0], bytes, &pos, local_communicator );
@@ -995,7 +995,7 @@ void timing_specfem3d_mt_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_l
         MPI_Pack( &send_array[0], 1, dtype_send_t, &buffer[0], bytes, &pos, local_communicator );
         MPI_Send( &buffer[0], pos, MPI_PACKED, 0, itag, local_communicator );
       }
-    
+
     } //! inner loop
 
     free( buffer );

@@ -56,7 +56,7 @@ void timing_lammps_full_ddt( int DIM1, int icount, int* list, int outer_loop, in
       temp_displacement[idx2D(j,i,icount)] = list[idx2D(j,i,icount)] - 1;
     }
   }
- 
+
   MPI_Comm_rank( local_communicator, &myrank );
 
   base = myrank * (8*(DIM1+icount)) + 1;
@@ -77,7 +77,7 @@ void timing_lammps_full_ddt( int DIM1, int icount, int* list, int outer_loop, in
 
     MPI_Type_size( MPI_DOUBLE, &typesize );
     bytes = icount * 8 * typesize;
- 
+
     timing_init( testname, &method[0], bytes );
   }
 
@@ -86,7 +86,7 @@ void timing_lammps_full_ddt( int DIM1, int icount, int* list, int outer_loop, in
     index_displacement = malloc( icount * sizeof(int) );
 
     MPI_Type_create_indexed_block( icount, 1, &temp_displacement[idx2D(0,i,icount)], MPI_DOUBLE, &dtype_indexed1_t );
-    
+
     for( j=0 ; j<icount ; j++ ) {
       index_displacement[j] = 3 * temp_displacement[idx2D(j,i,icount)];
     }
@@ -105,7 +105,7 @@ void timing_lammps_full_ddt( int DIM1, int icount, int* list, int outer_loop, in
       oldtype[j] = dtype_indexed1_t;
       blocklength[j] = 1;
     }
- 
+
     MPI_Type_create_struct( 6, &blocklength[0], &address_displacement[0], &oldtype[0], &dtype_send_t );
     MPI_Type_commit( &dtype_send_t );
 
@@ -126,7 +126,7 @@ void timing_lammps_full_ddt( int DIM1, int icount, int* list, int outer_loop, in
     for( j=1 ; j<6 ; j++ ) {
       oldtype[j] = dtype_cont1_t;
     }
- 
+
     MPI_Type_create_struct( 6, &blocklength[0], &address_displacement[0], &oldtype[0], &dtype_recv_t );
     MPI_Type_commit( &dtype_recv_t );
 
@@ -228,13 +228,13 @@ void timing_lammps_full_manual( int DIM1, int icount, int* list, int outer_loop,
   utilities_fill_unique_array_1D_double( &aq[0], DIM1+icount, base );
   base = base + DIM1 + icount;
   utilities_fill_unique_array_1D_double( &amolecule[0], DIM1+icount, base );
-     
+
   if ( myrank == 0 ) {
     snprintf( method, 50, "manual" );
 
     MPI_Type_size( MPI_DOUBLE, &typesize );
     bytes = icount * 8 * typesize;
- 
+
     timing_init( testname, &method[0], bytes );
   }
 
@@ -243,7 +243,7 @@ void timing_lammps_full_manual( int DIM1, int icount, int* list, int outer_loop,
     isize = 8*icount;
     MPI_Type_size( MPI_DOUBLE, &typesize );
     bytes = isize * typesize;
-    buffer = malloc( isize * sizeof(double) ); 
+    buffer = malloc( isize * sizeof(double) );
 
     if ( myrank == 0 ) {
       timing_record(1);
@@ -332,7 +332,7 @@ void timing_lammps_full_manual( int DIM1, int icount, int* list, int outer_loop,
   free(amolecule);
   free(aq);
   free(ax);
-} 
+}
 
 void timing_lammps_full_mpi_pack_ddt( int DIM1, int icount, int* list, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator) {
 
@@ -410,8 +410,8 @@ void timing_lammps_full_mpi_pack_ddt( int DIM1, int icount, int* list, int outer
 
     index_displacement = malloc( icount * sizeof(int) );
     MPI_Type_create_indexed_block( icount, 1, &temp_displacement[idx2D(0,i,icount)], MPI_DOUBLE, &dtype_indexed1_t );
-    
-    for( j = 0 ; j < icount ; j++ ) {  
+
+    for( j = 0 ; j < icount ; j++ ) {
       index_displacement[j] = 3 * temp_displacement[idx2D(j,i,icount)];
     }
     MPI_Type_create_indexed_block( icount, 3, &index_displacement[0], MPI_DOUBLE, &dtype_indexed3_t );
@@ -429,7 +429,7 @@ void timing_lammps_full_mpi_pack_ddt( int DIM1, int icount, int* list, int outer
       oldtype[j] = dtype_indexed1_t;
       blocklength[j] = 1;
     }
- 
+
     MPI_Type_create_struct( 6, &blocklength[0], &address_displacement[0], &oldtype[0], &dtype_send_t );
     MPI_Type_commit( &dtype_send_t );
 
@@ -450,7 +450,7 @@ void timing_lammps_full_mpi_pack_ddt( int DIM1, int icount, int* list, int outer
     for( j=1 ; j<6 ; j++ ) {
       oldtype[j] = dtype_cont1_t;
     }
- 
+
     MPI_Type_create_struct( 6, &blocklength[0], &address_displacement[0], &oldtype[0], &dtype_recv_t );
     MPI_Type_commit( &dtype_recv_t );
 
@@ -574,7 +574,7 @@ void timing_lammps_atomic_ddt( int DIM1, int icount, int* list, int outer_loop, 
     index_displacement = malloc( icount * sizeof(int) );
 
     MPI_Type_create_indexed_block( icount, 1, &temp_displacement[idx2D(0,i,icount)], MPI_DOUBLE, &dtype_indexed1_t );
-      
+
     for( j=0 ; j<icount ; j++ ) {
       index_displacement[j] = 3 * temp_displacement[idx2D(j,i,icount)];
     }
@@ -591,7 +591,7 @@ void timing_lammps_atomic_ddt( int DIM1, int icount, int* list, int outer_loop, 
       oldtype[j] = dtype_indexed1_t;
       blocklength[j] = 1;
     }
- 
+
     MPI_Type_create_struct( 4, &blocklength[0], &address_displacement[0], &oldtype[0], &dtype_send_t );
     MPI_Type_commit( &dtype_send_t );
 
@@ -610,7 +610,7 @@ void timing_lammps_atomic_ddt( int DIM1, int icount, int* list, int outer_loop, 
     for( j=1 ; j < 4 ; j++ ) {
       oldtype[j] = dtype_cont1_t;
     }
- 
+
     MPI_Type_create_struct( 4, &blocklength[0], &address_displacement[0], &oldtype[0], &dtype_recv_t );
     MPI_Type_commit( &dtype_recv_t );
 
@@ -623,7 +623,7 @@ void timing_lammps_atomic_ddt( int DIM1, int icount, int* list, int outer_loop, 
       timing_record(1);
     }
 
-    for( j=0 ; j<inner_loop ; j++ ) { 
+    for( j=0 ; j<inner_loop ; j++ ) {
       if ( myrank == 0 ) {
         MPI_Send( MPI_BOTTOM, 1, dtype_send_t, 1, itag, local_communicator );
         MPI_Recv( MPI_BOTTOM, 1, dtype_recv_t, 1, itag, local_communicator, MPI_STATUS_IGNORE );
@@ -861,13 +861,13 @@ void timing_lammps_atomic_mpi_pack_ddt( int DIM1, int icount, int* list, int out
 
     MPI_Type_size( MPI_DOUBLE, &typesize );
     bytes = 6 * icount * typesize;
-    buffer = malloc( 6 * icount * sizeof(double) ); 
+    buffer = malloc( 6 * icount * sizeof(double) );
 
     index_displacement = malloc( icount * sizeof(int) );
-    
+
     MPI_Type_create_indexed_block( icount, 1, &temp_displacement[idx2D(0,i,icount)], MPI_DOUBLE, &dtype_indexed1_t );
 
-    for( j = 0 ; j<icount ; j++ ) {    
+    for( j = 0 ; j<icount ; j++ ) {
       index_displacement[j] = 3 * temp_displacement[idx2D(j,i,icount)];
     }
     MPI_Type_create_indexed_block( icount, 3, &index_displacement[0], MPI_DOUBLE, &dtype_indexed3_t );
@@ -883,7 +883,7 @@ void timing_lammps_atomic_mpi_pack_ddt( int DIM1, int icount, int* list, int out
       oldtype[j] = dtype_indexed1_t;
       blocklength[j] = 1;
     }
- 
+
     MPI_Type_create_struct( 4, &blocklength[0], &address_displacement[0], &oldtype[0], &dtype_send_t );
     MPI_Type_commit( &dtype_send_t );
 
@@ -902,7 +902,7 @@ void timing_lammps_atomic_mpi_pack_ddt( int DIM1, int icount, int* list, int out
     for( j=1 ; j < 4 ; j++ ) {
       oldtype[j] = dtype_cont1_t;
     }
- 
+
     MPI_Type_create_struct( 4, &blocklength[0], &address_displacement[0], &oldtype[0], &dtype_recv_t );
     MPI_Type_commit( &dtype_recv_t );
 

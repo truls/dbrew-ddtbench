@@ -16,7 +16,7 @@
 #define HRT_INIT(print, freq) do {\
   if(print) printf("# initializing ia64 timer (takes some seconds)\n"); \
   HRT_CALIBRATE(freq); \
-} while(0) 
+} while(0)
 
 #define HRT_TIMESTAMP_T UINT64_T
 
