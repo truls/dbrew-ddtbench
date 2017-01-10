@@ -3,7 +3,8 @@
 # BSD-style license that can be found in the LICENSE file.
 
 FC=mpif90
-CC=mpicc
+CC=../../MP-MPICH/dest/bin/mpicc
+#CC=/usr/lib64/openmpi/bin/mpicc
 
 PAPI_INSTALL_PATH=
 
@@ -21,9 +22,10 @@ TEST_TYPE=1  # 1: time
 OPTIMIZATION=-O3
 DEBUG=
 WARNINGS=-Wall
+#OPTS=-DMPI2
 
 FCFLAGS+=${OPTIMIZATION} ${DEBUG} ${WARNINGS} -DTEST_TYPE=${TEST_TYPE} -I../src_f90/
-CCFLAGS+=${OPTIMIZATION} ${DEBUG} ${WARNINGS} -DHRT_ARCH=${HRT_ARCH} -DTEST_TYPE=${TEST_TYPE}
+CCFLAGS+=${OPTIMIZATION} ${DEBUG} ${WARNINGS} -DHRT_ARCH=${HRT_ARCH} -DTEST_TYPE=${TEST_TYPE} ${OPTS}
 
 LDFLAGS=
 LIBS= #-lpapi

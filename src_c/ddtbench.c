@@ -79,7 +79,7 @@ int main( int argc, char **argv, char *envp[]) {
       outer_loop = atoi(argv[1]);
       inner_loop = atoi(argv[2]);
     }
-  } 
+  }
 
 //! some intro
   if ( myrank == 0 ) {
@@ -104,9 +104,11 @@ int main( int argc, char **argv, char *envp[]) {
     timing_set_max_tests( max_epochs );
   }
 
-  if ( myrank < 2 ) {
 
-//! ====================================================================
+
+  if ( myrank < 2 ) {
+#if MPI2
+     //! ====================================================================
 //! ========================== WRF y direction =========================
 //! ====================================================================
 
@@ -138,7 +140,7 @@ int main( int argc, char **argv, char *envp[]) {
     je = 43;
     param_first_scalar = 2;
 
-    wrapper_timing_wrf( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop, 
+    wrapper_timing_wrf( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop,
       inner_loop, filehandle_correctness, filehandle_debug, &testname[0][0], local_comm_pp );
 
 //! 3x3 ym send, em_b_wave case
@@ -160,7 +162,7 @@ int main( int argc, char **argv, char *envp[]) {
     je = 30;
     param_first_scalar = 2;
 
-    wrapper_timing_wrf( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop, 
+    wrapper_timing_wrf( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop,
       inner_loop, filehandle_correctness, filehandle_debug, &testname[0][0], local_comm_pp );
 
 //! 4x4 ym send, em_b_wave case
@@ -182,7 +184,7 @@ int main( int argc, char **argv, char *envp[]) {
     je = 23;
     param_first_scalar = 2;
 
-    wrapper_timing_wrf( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop, 
+    wrapper_timing_wrf( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop,
       inner_loop, filehandle_correctness, filehandle_debug, &testname[0][0], local_comm_pp );
 
 //! 5x5 ym send, em_b_wave case
@@ -204,7 +206,7 @@ int main( int argc, char **argv, char *envp[]) {
     je = 19;
     param_first_scalar = 2;
 
-    wrapper_timing_wrf( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop, 
+    wrapper_timing_wrf( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop,
       inner_loop, filehandle_correctness, filehandle_debug, &testname[0][0], local_comm_pp );
 
 //! 8x8 ym send, em_b_wave case
@@ -226,7 +228,7 @@ int main( int argc, char **argv, char *envp[]) {
     je = 13;
     param_first_scalar = 2;
 
-    wrapper_timing_wrf( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop, 
+    wrapper_timing_wrf( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop,
       inner_loop, filehandle_correctness, filehandle_debug, &testname[0][0], local_comm_pp );
 
 //! ====================================================================
@@ -255,7 +257,7 @@ int main( int argc, char **argv, char *envp[]) {
     je = 81;
     param_first_scalar = 2;
 
-    wrapper_timing_wrf( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop, 
+    wrapper_timing_wrf( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop,
       inner_loop, filehandle_correctness, filehandle_debug, &testname[0][0], local_comm_pp );
 
 //! 4x4 xp send, em_b_wave
@@ -277,7 +279,7 @@ int main( int argc, char **argv, char *envp[]) {
     je = 43;
     param_first_scalar = 2;
 
-    wrapper_timing_wrf( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop, 
+    wrapper_timing_wrf( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop,
       inner_loop, filehandle_correctness, filehandle_debug, &testname[0][0], local_comm_pp );
 
 //! 8x8 xp send, em_b_wave
@@ -299,14 +301,14 @@ int main( int argc, char **argv, char *envp[]) {
     je = 23;
     param_first_scalar = 2;
 
-    wrapper_timing_wrf( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop, 
+    wrapper_timing_wrf( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop,
       inner_loop, filehandle_correctness, filehandle_debug, &testname[0][0], local_comm_pp );
 
     free( limit_4D_arrays );
 
     testname[0][0] = '\0';
     testname[1][0] = '\0';
-
+#endif
 //! ====================================================================
 //! ==================== MILC su3 zdown direction ======================
 //! ====================================================================
@@ -549,10 +551,11 @@ int main( int argc, char **argv, char *envp[]) {
 
   } //! of myrank < 2
 
-//! ====================================================================
-//! ================================ FFT ===============================
-//! ====================================================================
+/* //! ==================================================================== */
+/* //! ================================ FFT =============================== */
+/* //! ==================================================================== */
 
+#if MPI2
   MPI_Barrier( local_comm_all2all );
 
   DIM1 = 256;
@@ -569,6 +572,8 @@ int main( int argc, char **argv, char *envp[]) {
 
   DIM1 = 1536;
   wrapper_timing_fft( DIM1, outer_loop, inner_loop, filehandle_correctness, filehandle_debug, &testname[0][0], local_comm_all2all );
+
+#endif
 
 //! ====================================================================
 //! =============================== outro ==============================

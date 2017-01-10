@@ -5,7 +5,8 @@
 include Makefile.inc
 #some parameter for the test environment, in a different file, so that the shells scripts can red them properly
 include test.inc
-all: ddtbench_c ddtbench_f90 ddtbench_c_onesided ddtbench_f90_onesided
+all: ddtbench_c #ddtbench_c_onesided
+#all: ddtbench_c ddtbench_f90 ddtbench_c_onesided ddtbench_f90_onesided
 
 clean:
 	$(MAKE) -C src_f90 clean

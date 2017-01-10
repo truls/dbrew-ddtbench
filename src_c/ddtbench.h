@@ -2,6 +2,12 @@
 //  Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#ifndef MPI2
+#define MPI_Get_address MPI_Address
+#define MPI_Type_create_hvector MPI_Type_hvector
+#define MPI_Type_create_struct MPI_Type_struct
+#endif
+
 void timing_close_file();
 void timing_init( char* ptestname, char* pmethod, int pbytes );
 void timing_open_file( char* filename );

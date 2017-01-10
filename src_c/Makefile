@@ -14,8 +14,8 @@ DDTBENCH_OBJS = \
 	timing_specfem3d.o \
 	timing_lammps.o \
 	timing_milc.o \
-	timing_fft2d.o \
-	timing_wrf.o
+#	timing_fft2d.o \
+#	timing_wrf.o
 
 # clear out all suffixes
 .SUFFIXES:

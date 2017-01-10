@@ -15,7 +15,8 @@
 //! also this is the part, where the parameter checking should be put
 //! also the output for the correctness checking should be placed here
 
-void wrapper_timing_wrf_vec( int number_2D, int number_3D, int number_4D, int ims, int ime, int jms, int jme, int kms, int kme, int* limit_4D_arrays, int is, int ie, int js, int je, 
+#if MPI2
+void wrapper_timing_wrf_vec( int number_2D, int number_3D, int number_4D, int ims, int ime, int jms, int jme, int kms, int kme, int* limit_4D_arrays, int is, int ie, int js, int je,
   int ks, int ke, int param_first_scalar, int outer_loop, int inner_loop, MPI_File filehandle_correctness, MPI_File filehandle_debug, char* ptestname, MPI_Comm local_communicator ) {
 
   int correct_flag;
@@ -34,13 +35,13 @@ void wrapper_timing_wrf_vec( int number_2D, int number_3D, int number_4D, int im
     strncpy(&testname[0], &ptestname[0], 50 );
   }
 
-  timing_wrf_vec_ddt( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop, inner_loop, 
+  timing_wrf_vec_ddt( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop, inner_loop,
     &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
 
-  timing_wrf_manual( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop, inner_loop, 
+  timing_wrf_manual( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop, inner_loop,
     &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
 
-  timing_wrf_vec_mpi_pack_ddt( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop, inner_loop, 
+  timing_wrf_vec_mpi_pack_ddt( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop, inner_loop,
     &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
 
   nelements = number_2D * (ie-is+1) * (je-js+1) + number_3D * (ie-is+1) * (je-js+1) * (ke-ks+1);
@@ -54,7 +55,7 @@ void wrapper_timing_wrf_vec( int number_2D, int number_3D, int number_4D, int im
 
 }
 
-void wrapper_timing_wrf_sa( int number_2D, int number_3D, int number_4D, int ims, int ime, int jms, int jme, int kms, int kme, int* limit_4D_arrays, int is, int ie, int js, int je, 
+void wrapper_timing_wrf_sa( int number_2D, int number_3D, int number_4D, int ims, int ime, int jms, int jme, int kms, int kme, int* limit_4D_arrays, int is, int ie, int js, int je,
   int ks, int ke, int param_first_scalar, int outer_loop, int inner_loop, MPI_File filehandle_correctness, MPI_File filehandle_debug, char* ptestname, MPI_Comm local_communicator ) {
       
   int correct_flag;
@@ -73,13 +74,13 @@ void wrapper_timing_wrf_sa( int number_2D, int number_3D, int number_4D, int ims
     strncpy( &testname[0], &ptestname[0], 50 );
   }
 
-  timing_wrf_sa_ddt( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop, inner_loop, 
+  timing_wrf_sa_ddt( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop, inner_loop,
     &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
 
-  timing_wrf_manual( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop, inner_loop, 
+  timing_wrf_manual( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop, inner_loop,
     &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
 
-  timing_wrf_sa_mpi_pack_ddt( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop, inner_loop, 
+  timing_wrf_sa_mpi_pack_ddt( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop, inner_loop,
     &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
 
   nelements = number_2D * (ie-is+1) * (je-js+1) + number_3D * (ie-is+1) * (je-js+1) * (ke-ks+1);
@@ -92,15 +93,16 @@ void wrapper_timing_wrf_sa( int number_2D, int number_3D, int number_4D, int ims
   timing_basic_ping_pong_nelements( nelements, loops, &testname[0], local_communicator );
 }
 
-void wrapper_timing_wrf( int number_2D, int number_3D, int number_4D, int ims, int ime, int jms, int jme, int kms, int kme, int* limit_4D_arrays, int is, int ie, int js, int je, 
+void wrapper_timing_wrf( int number_2D, int number_3D, int number_4D, int ims, int ime, int jms, int jme, int kms, int kme, int* limit_4D_arrays, int is, int ie, int js, int je,
   int ks, int ke, int param_first_scalar, int outer_loop, int inner_loop, MPI_File filehandle_correctness, MPI_File filehandle_debug, char* ptestname, MPI_Comm local_communicator ){
 
-  wrapper_timing_wrf_vec( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop, inner_loop, 
+  wrapper_timing_wrf_vec( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop, inner_loop,
     filehandle_correctness, filehandle_debug, &ptestname[0], local_communicator );
 
-  wrapper_timing_wrf_sa( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop, inner_loop, 
+  wrapper_timing_wrf_sa( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop, inner_loop,
     filehandle_correctness, filehandle_debug, &ptestname[50], local_communicator );
 }
+#endif
 
 void wrapper_timing_milc_su3_zdown( int DIM2, int DIM3, int DIM4, int DIM5, int outer_loop, int inner_loop, MPI_File filehandle_correctness, MPI_File filehandle_debug, char* ptestname, MPI_Comm local_communicator ) {
 
@@ -304,6 +306,7 @@ void wrapper_timing_nas_mg( int DIM1, int DIM2, int DIM3, int outer_loop, int in
 
 }
 
+#if MPI2
 void wrapper_timing_fft( int DIM1, int outer_loop, int inner_loop, MPI_File filehandle_correctness, MPI_File filehandle_debug, char* ptestname, MPI_Comm local_communicator ) {
 
   int correct_flag;
@@ -339,7 +342,8 @@ void wrapper_timing_fft( int DIM1, int outer_loop, int inner_loop, MPI_File file
   loops = outer_loop * inner_loop;
   timing_basic_alltoall_nelements( nelements, procs, loops, &testname[0], local_communicator );
 }
-      
+#endif
+
 void wrapper_timing_specfem3d_mt( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, MPI_File filehandle_correctness, MPI_File filehandle_debug, char* ptestname, MPI_Comm local_communicator ) {
 
   int correct_flag;
