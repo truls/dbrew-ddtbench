@@ -37,3 +37,8 @@
 compile_commands.json
 *.out
 ddtbench_c
+GPATH
+GRTAGS
+GTAGS
+*.pdf
+.Rhistory
