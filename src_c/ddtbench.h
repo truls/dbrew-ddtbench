@@ -2,7 +2,8 @@
 //  Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef MPI2
+#include "config.h"
+#if MY_MPI_VERSION == 1
 #define MPI_Get_address MPI_Address
 #define MPI_Type_create_hvector MPI_Type_hvector
 #define MPI_Type_create_struct MPI_Type_struct

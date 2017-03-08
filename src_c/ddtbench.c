@@ -84,6 +84,34 @@ int main( int argc, char **argv) {
 //! some intro
   if ( myrank == 0 ) {
     printf(" Welcome to our DDT benchmark suite\n\n");
+    printf(" Built with:\n");
+#ifdef HAVE_DBREW
+    printf("   * DBrew support\n");
+#endif
+#ifdef VERIFY_BUFFERS
+    printf("   * Buffer verification support\n");
+#endif
+#ifdef WRF
+    printf("   * WRF benchmark\n");
+#endif
+#ifdef MILC
+    printf("   * MILC benchmark\n");
+#endif
+#ifdef NAS
+    printf("   * NAS benchmark\n");
+#endif
+#ifdef FFT
+    printf("   * FFT benchmark\n");
+#endif
+#ifdef SPECFEM3D
+    printf("   * SPECFEM3D benchmark\n");
+#endif
+#ifdef LAMMPS
+    printf("   * LAMMPS benchmark\n");
+#endif
+    printf("   * MPI version %d library\n", MY_MPI_VERSION);
+
+    printf("\n");
     printf(" outer loop parameter = %i\n", outer_loop);
     printf(" inner loop parameter = %i\n\n", inner_loop);
 //! open the filehandle for the output of the timing
@@ -107,7 +135,6 @@ int main( int argc, char **argv) {
 
 
   if ( myrank < 2 ) {
-#if MPI2
      //! ====================================================================
 //! ========================== WRF y direction =========================
 //! ====================================================================
@@ -308,7 +335,7 @@ int main( int argc, char **argv) {
 
     testname[0][0] = '\0';
     testname[1][0] = '\0';
-#endif
+
 //! ====================================================================
 //! ==================== MILC su3 zdown direction ======================
 //! ====================================================================
@@ -555,7 +582,6 @@ int main( int argc, char **argv) {
 /* //! ================================ FFT =============================== */
 /* //! ==================================================================== */
 
-#if MPI2
   MPI_Barrier( local_comm_all2all );
 
   DIM1 = 256;
@@ -573,7 +599,6 @@ int main( int argc, char **argv) {
   DIM1 = 1536;
   wrapper_timing_fft( DIM1, outer_loop, inner_loop, filehandle_correctness, filehandle_debug, &testname[0][0], local_comm_all2all );
 
-#endif
 
 //! ====================================================================
 //! =============================== outro ==============================

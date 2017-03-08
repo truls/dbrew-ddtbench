@@ -15,10 +15,13 @@
 //! also this is the part, where the parameter checking should be put
 //! also the output for the correctness checking should be placed here
 
-#if MPI2
+
 void wrapper_timing_wrf_vec( int number_2D, int number_3D, int number_4D, int ims, int ime, int jms, int jme, int kms, int kme, int* limit_4D_arrays, int is, int ie, int js, int je,
   int ks, int ke, int param_first_scalar, int outer_loop, int inner_loop, MPI_File filehandle_correctness __attribute__((unused)), MPI_File filehandle_debug, char* ptestname, MPI_Comm local_communicator ) {
 
+#ifndef WRF
+  return;
+#endif
 
   int correct_flag;
   int typesize;
@@ -59,6 +62,9 @@ void wrapper_timing_wrf_vec( int number_2D, int number_3D, int number_4D, int im
 void wrapper_timing_wrf_sa( int number_2D, int number_3D, int number_4D, int ims, int ime, int jms, int jme, int kms, int kme, int* limit_4D_arrays, int is, int ie, int js, int je,
   int ks, int ke, int param_first_scalar, int outer_loop, int inner_loop, MPI_File filehandle_correctness __attribute__((unused)), MPI_File filehandle_debug, char* ptestname, MPI_Comm local_communicator ) {
 
+#ifndef WRF
+  return;
+#endif
 
   int correct_flag;
   int typesize;
@@ -98,17 +104,23 @@ void wrapper_timing_wrf_sa( int number_2D, int number_3D, int number_4D, int ims
 void wrapper_timing_wrf( int number_2D, int number_3D, int number_4D, int ims, int ime, int jms, int jme, int kms, int kme, int* limit_4D_arrays, int is, int ie, int js, int je,
   int ks, int ke, int param_first_scalar, int outer_loop, int inner_loop, MPI_File filehandle_correctness, MPI_File filehandle_debug, char* ptestname, MPI_Comm local_communicator ){
 
+#ifndef WRF
+  return;
+#endif
+
   wrapper_timing_wrf_vec( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop, inner_loop,
     filehandle_correctness, filehandle_debug, &ptestname[0], local_communicator );
 
   wrapper_timing_wrf_sa( number_2D, number_3D, number_4D, ims, ime, jms, jme, kms, kme, limit_4D_arrays, is, ie, js, je, ks, ke, param_first_scalar, outer_loop, inner_loop,
     filehandle_correctness, filehandle_debug, &ptestname[50], local_communicator );
 }
-#endif
 
 
 void wrapper_timing_milc_su3_zdown( int DIM2, int DIM3, int DIM4, int DIM5, int outer_loop, int inner_loop, MPI_File filehandle_correctness __attribute__((unused)), MPI_File filehandle_debug, char* ptestname, MPI_Comm local_communicator ) {
 
+#ifndef MILC
+  return;
+#endif
 
   int correct_flag;
   int typesize;
@@ -140,6 +152,9 @@ void wrapper_timing_milc_su3_zdown( int DIM2, int DIM3, int DIM4, int DIM5, int 
 
 void wrapper_timing_nas_lu_x( int DIM2, int DIM3, int outer_loop, int inner_loop, MPI_File filehandle_correctness __attribute__((unused)), MPI_File filehandle_debug, char* ptestname, MPI_Comm local_communicator ) {
 
+#ifndef NAS
+  return;
+#endif
 
   int correct_flag;
   int typesize;
@@ -171,6 +186,10 @@ void wrapper_timing_nas_lu_x( int DIM2, int DIM3, int outer_loop, int inner_loop
 
 void wrapper_timing_nas_lu_y( int DIM2, int DIM3, int outer_loop, int inner_loop, MPI_File filehandle_correctness __attribute__((unused)), MPI_File filehandle_debug, char* ptestname, MPI_Comm local_communicator ) {
 
+#ifndef NAS
+  return;
+#endif
+
   int correct_flag;
   int typesize;
   char testname[50];
@@ -201,6 +220,9 @@ void wrapper_timing_nas_lu_y( int DIM2, int DIM3, int outer_loop, int inner_loop
 
 void wrapper_timing_nas_lu( int DIM2, int DIM3, int outer_loop, int inner_loop, MPI_File filehandle_correctness __attribute__((unused)), MPI_File filehandle_debug, char* ptestname, MPI_Comm local_communicator ) {
 
+#ifndef NAS
+  return;
+#endif
 
   wrapper_timing_nas_lu_x( DIM2, DIM3, outer_loop, inner_loop, filehandle_correctness, filehandle_debug, &ptestname[0], local_communicator );
 
@@ -210,6 +232,9 @@ void wrapper_timing_nas_lu( int DIM2, int DIM3, int outer_loop, int inner_loop, 
 
 void wrapper_timing_nas_mg_x( int DIM1, int DIM2, int DIM3, int outer_loop, int  inner_loop, MPI_File filehandle_correctness __attribute__((unused)), MPI_File filehandle_debug, char* ptestname, MPI_Comm local_communicator ) {
 
+#ifndef NAS
+  return;
+#endif
 
   int correct_flag;
   int typesize;
@@ -242,6 +267,9 @@ void wrapper_timing_nas_mg_x( int DIM1, int DIM2, int DIM3, int outer_loop, int 
 
 void wrapper_timing_nas_mg_y( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, MPI_File filehandle_correctness __attribute__((unused)), MPI_File filehandle_debug, char* ptestname, MPI_Comm local_communicator ) {
 
+#ifndef NAS
+  return;
+#endif
 
   int correct_flag;
   int typesize;
@@ -274,6 +302,9 @@ void wrapper_timing_nas_mg_y( int DIM1, int DIM2, int DIM3, int outer_loop, int 
 
 void wrapper_timing_nas_mg_z( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, MPI_File filehandle_correctness __attribute__((unused)), MPI_File filehandle_debug, char* ptestname, MPI_Comm local_communicator ) {
 
+#ifndef NAS
+  return;
+#endif
 
  int correct_flag;
  int typesize;
@@ -307,6 +338,10 @@ void wrapper_timing_nas_mg_z( int DIM1, int DIM2, int DIM3, int outer_loop, int 
 
 void wrapper_timing_nas_mg( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, MPI_File filehandle_correctness, MPI_File filehandle_debug, char* ptestname, MPI_Comm local_communicator ) {
 
+#ifndef NAS
+  return;
+#endif
+
   wrapper_timing_nas_mg_x( DIM1, DIM2, DIM3, outer_loop, inner_loop, filehandle_correctness, filehandle_debug, &ptestname[0], local_communicator );
 
   wrapper_timing_nas_mg_y( DIM1, DIM2, DIM3, outer_loop, inner_loop, filehandle_correctness, filehandle_debug, &ptestname[50], local_communicator );
@@ -315,14 +350,17 @@ void wrapper_timing_nas_mg( int DIM1, int DIM2, int DIM3, int outer_loop, int in
 
 }
 
-#if MPI2
 void wrapper_timing_fft( int DIM1, int outer_loop, int inner_loop, MPI_File filehandle_correctness __attribute__((unused)), MPI_File filehandle_debug, char* ptestname, MPI_Comm local_communicator ) {
 
+#ifndef FFT
+  return;
+#endif
 
   int correct_flag;
   int typesize;
   char testname[50];
   int nelements, loops;
+
   int myrank, procs;
 
 //! just some statements to prevent compiler warnings of unused variables
@@ -352,10 +390,12 @@ void wrapper_timing_fft( int DIM1, int outer_loop, int inner_loop, MPI_File file
   loops = outer_loop * inner_loop;
   timing_basic_alltoall_nelements( nelements, procs, loops, &testname[0], local_communicator );
 }
-#endif
 
 void wrapper_timing_specfem3d_mt( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, MPI_File filehandle_correctness __attribute__((unused)), MPI_File filehandle_debug, char* ptestname, MPI_Comm local_communicator ) {
 
+#ifndef SPECFEM3D
+  return;
+#endif
 
   int correct_flag;
   int typesize;
@@ -387,6 +427,9 @@ void wrapper_timing_specfem3d_mt( int DIM1, int DIM2, int DIM3, int outer_loop, 
 
 void wrapper_timing_lammps_full( int DIM1, int icount, int outer_loop, int inner_loop, MPI_File filehandle_correctness __attribute__((unused)), MPI_File filehandle_debug, char* ptestname, MPI_Comm local_communicator ) {
 
+#ifndef LAMMPS
+  return;
+#endif
 
   int correct_flag;
   int typesize;
@@ -427,6 +470,9 @@ void wrapper_timing_lammps_full( int DIM1, int icount, int outer_loop, int inner
 
 void wrapper_timing_lammps_atomic( int DIM1, int icount, int outer_loop, int inner_loop, MPI_File filehandle_correctness __attribute__((unused)), MPI_File filehandle_debug, char* ptestname, MPI_Comm local_communicator ) {
 
+#ifndef LAMMPS
+  return;
+#endif
 
   int correct_flag;
   int typesize;
@@ -467,6 +513,9 @@ void wrapper_timing_lammps_atomic( int DIM1, int icount, int outer_loop, int inn
 
 void wrapper_timing_specfem3D_oc( int DIM1, int icount, int outer_loop, int inner_loop, MPI_File filehandle_correctness __attribute__((unused)), MPI_File filehandle_debug, char* ptestname, MPI_Comm local_communicator ) {
 
+#ifndef SPECFEM3D
+  return;
+#endif
 
   int correct_flag;
   int typesize;
@@ -505,6 +554,9 @@ void wrapper_timing_specfem3D_oc( int DIM1, int icount, int outer_loop, int inne
 
 void wrapper_timing_specfem3D_cm( int DIM2_cm, int DIM2_ic, int icount_cm, int icount_ic, int outer_loop, int inner_loop, MPI_File filehandle_correctness __attribute__((unused)), MPI_File filehandle_debug, char* ptestname, MPI_Comm local_communicator ) {
 
+#ifndef SPECFEM3D
+  return;
+#endif
 
   int correct_flag;
   int typesize;

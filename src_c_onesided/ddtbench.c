@@ -109,7 +109,7 @@ int main( int argc, char **argv, char *envp[]) {
 //! ====================================================================
 //! ========================== WRF y direction =========================
 //! ====================================================================
-
+#ifdef WRF
     number_2D = 4;
     number_3D = 3;
     number_4D = 2;
@@ -307,6 +307,9 @@ int main( int argc, char **argv, char *envp[]) {
     testname[0][0] = '\0';
     testname[1][0] = '\0';
 
+#endif //WRF
+
+#ifdef MILC
 //! ====================================================================
 //! ==================== MILC su3 zdown direction ======================
 //! ====================================================================
@@ -339,6 +342,8 @@ int main( int argc, char **argv, char *envp[]) {
 
     wrapper_timing_milc_su3_zdown( DIM1, DIM2, DIM3, DIM4, outer_loop, inner_loop, filehandle_correctness, filehandle_debug, &testname[0][0], local_comm_pp );
 
+#endif //MILC
+#ifdef NAS
 //! ====================================================================
 //! =============================== NAS_LU =============================
 //! ====================================================================
@@ -405,7 +410,8 @@ int main( int argc, char **argv, char *envp[]) {
     DIM3 = 258;
 
     wrapper_timing_nas_mg( DIM1, DIM2, DIM3, outer_loop, inner_loop, filehandle_correctness, filehandle_debug, &testname[0][0], local_comm_pp );
-
+#endif //NAS
+#ifdef LAMMPS
 //! ====================================================================
 //! ============================ LAMMPS_full ===========================
 //! ====================================================================
@@ -450,6 +456,8 @@ int main( int argc, char **argv, char *envp[]) {
 
     wrapper_timing_lammps_atomic( DIM1, icount1, outer_loop, inner_loop, filehandle_correctness, filehandle_debug, &testname[0][0], local_comm_pp );
 
+#endif //LAMMPS
+#ifdef SPECFEM3D
 //! ====================================================================
 //! ============================ SPECFEM3D_oc ==========================
 //! ====================================================================
@@ -546,9 +554,10 @@ int main( int argc, char **argv, char *envp[]) {
 
     wrapper_timing_specfem3d_mt( DIM1, DIM2, DIM3, outer_loop, inner_loop, filehandle_correctness, filehandle_debug, &testname[0][0], local_comm_pp );
 
-
+#endif //SPECFEM3D
   } //! of myrank < 2
 
+#ifdef FFT
 //! ====================================================================
 //! ================================ FFT ===============================
 //! ====================================================================
@@ -569,7 +578,7 @@ int main( int argc, char **argv, char *envp[]) {
 
   DIM1 = 1536;
   wrapper_timing_fft( DIM1, outer_loop, inner_loop, filehandle_correctness, filehandle_debug, &testname[0][0], local_comm_all2all );
-
+#endif //FFT
 //! ====================================================================
 //! =============================== outro ==============================
 //! ====================================================================
@@ -585,7 +594,7 @@ int main( int argc, char **argv, char *envp[]) {
   MPI_Comm_free( &local_comm_all2all );
   if ( myrank < 2 ) {
     MPI_Comm_free( &local_comm_pp );
-  }
+ }
 
   MPI_Barrier( MPI_COMM_WORLD );
 

@@ -55,7 +55,14 @@ void timing_fft2d_ddt( int DIM1, int procs, int outer_loop, int inner_loop, int*
     MPI_Type_vector( DIM1/procs, 1, DIM1, dtype_complex_t, &dtype_vector_t );
     lb = 0;
     extent = 2 * sizeof(double);
+#if MY_MPI_VERSION >= 2
+#define RESIZED_NAME dtype_resize_t
     MPI_Type_create_resized( dtype_vector_t, lb, extent, &dtype_resize_t );
+#else
+#define RESIZED_NAME dtype_vector_t
+    //#error "Requires MPI version >= 2"
+    MPI_Type_extent(dtype_vector_t, extent);
+#endif
     MPI_Type_contiguous( DIM1/procs, dtype_resize_t, &dtype_scatter_t );
     MPI_Type_commit( &dtype_scatter_t  );
 
