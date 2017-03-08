@@ -3,6 +3,9 @@
 // found in the LICENSE file.
 
 #include "config.h"
+#ifndef _DDTBENCH_H_
+#define _DDTBENCH_H_
+
 #if MY_MPI_VERSION == 1
 #define MPI_Get_address MPI_Address
 #define MPI_Type_create_hvector MPI_Type_hvector
@@ -112,3 +115,5 @@ void wrapper_timing_specfem3d_mt( int DIM1, int DIM2, int DIM3, int outer_loop, 
 void wrapper_timing_specfem3D_oc( int DIM1, int icount, int outer_loop, int inner_loop, MPI_File filehandle_correctness, MPI_File filehandle_debug, char* ptestname, MPI_Comm local_communicator);
 void wrapper_timing_wrf( int number_2D, int number_3D, int number_4D, int ims, int ime, int jms, int jme, int kms, int kme, int* limit_4D_arrays, int is, int ie, int js, int je,
   int ks, int ke, int param_first_scalar, int outer_loop, int inner_loop, MPI_File filehandle_correctness, MPI_File filehandle_debug, char* ptestname, MPI_Comm local_communicator );
+
+#endif // _DDTBENCH_H_
