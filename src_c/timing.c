@@ -225,7 +225,8 @@ void timing_open_file( char* filename ) {
   char line[256];
   int ier;
 
-  ier = MPI_File_open( MPI_COMM_SELF, filename, MPI_MODE_EXCL + MPI_MODE_CREATE + MPI_MODE_WRONLY, MPI_INFO_NULL, &filehandle_values );
+  // Allow overwriting the output file for now (MPI_MODE_EXCL removed)
+  ier = MPI_File_open( MPI_COMM_SELF, filename, MPI_MODE_CREATE + MPI_MODE_WRONLY, MPI_INFO_NULL, &filehandle_values );
 
   if ( ier != MPI_SUCCESS ) {
     printf("Error at open file %s for writing the timing values. The file probably already exists.\nWill now abort.\n", filename);
