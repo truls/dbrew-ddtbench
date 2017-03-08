@@ -65,7 +65,7 @@ void timing_milc_su3_zdown_ddt( int DIM2, int DIM3, int DIM4, int DIM5, int oute
     MPI_Type_free( &dtype_temp_t );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -73,7 +73,7 @@ void timing_milc_su3_zdown_ddt( int DIM2, int DIM3, int DIM4, int DIM5, int oute
       if ( myrank == 0 ) {
         MPI_Send( &array[0], 1, dtype_su3_zdown_t, 1, itag, local_communicator );
         MPI_Recv( &array[0], 1, dtype_su3_zdown_t, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
       } else {
         MPI_Recv( &array[0], 1, dtype_su3_zdown_t, 0, itag, local_communicator, MPI_STATUS_IGNORE );
         MPI_Send( &array[0], 1, dtype_su3_zdown_t, 0, itag, local_communicator );
@@ -84,7 +84,7 @@ void timing_milc_su3_zdown_ddt( int DIM2, int DIM3, int DIM4, int DIM5, int oute
     MPI_Type_free( &dtype_su3_zdown_t );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer loop
@@ -137,7 +137,7 @@ void timing_milc_su3_zdown_manual( int DIM2, int DIM3, int DIM4, int DIM5, int o
 
 //! modelling the zdown direction
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++) {
@@ -155,10 +155,10 @@ void timing_milc_su3_zdown_manual( int DIM2, int DIM3, int DIM4, int DIM5, int o
             }
           }
         }
-        timing_record(2);
+        timing_record(Pack);
         MPI_Send( &buffer[0], dsize, MPI_FLOAT, 1, itag, local_communicator );
         MPI_Recv( &buffer[0], dsize, MPI_FLOAT, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
         pos = 0;
         for( k=0 ; k<DIM5 ; k++ ) {
           for( l=0 ; l<DIM4 ; l+=DIM4/2 ) {
@@ -171,7 +171,7 @@ void timing_milc_su3_zdown_manual( int DIM2, int DIM3, int DIM4, int DIM5, int o
             }
           }
         }
-        timing_record(4);
+        timing_record(Unpack);
       } else {
         MPI_Recv( &buffer[0], dsize, MPI_FLOAT, 0, itag, local_communicator, MPI_STATUS_IGNORE );
         pos = 0;
@@ -206,7 +206,7 @@ void timing_milc_su3_zdown_manual( int DIM2, int DIM3, int DIM4, int DIM5, int o
     free( buffer );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer loop
@@ -275,7 +275,7 @@ void timing_milc_su3_zdown_mpi_pack_ddt( int DIM2, int DIM3, int DIM4, int DIM5,
     MPI_Type_free( &dtype_temp_t );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -283,13 +283,13 @@ void timing_milc_su3_zdown_mpi_pack_ddt( int DIM2, int DIM3, int DIM4, int DIM5,
       if ( myrank == 0 ) {
         pos = 0;
         MPI_Pack( &array[0], 1, dtype_su3_zdown_t, &buffer[0], bytes, &pos, local_communicator );
-        timing_record(2);
+        timing_record(Pack);
         MPI_Send( &buffer[0], pos, MPI_PACKED, 1, itag, local_communicator );
         MPI_Recv( &buffer[0], bytes, MPI_PACKED, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
         pos = 0;
         MPI_Unpack( &buffer[0], bytes, &pos, &array[0], 1, dtype_su3_zdown_t, local_communicator );
-        timing_record(4);
+        timing_record(Unpack);
       } else {
         MPI_Recv( &buffer[0], bytes, MPI_PACKED, 0, itag, local_communicator, MPI_STATUS_IGNORE );
         pos = 0;
@@ -306,7 +306,7 @@ void timing_milc_su3_zdown_mpi_pack_ddt( int DIM2, int DIM3, int DIM4, int DIM5,
     free( buffer );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer loop

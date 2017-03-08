@@ -72,7 +72,7 @@ void timing_fft2d_ddt( int DIM1, int procs, int outer_loop, int inner_loop, int*
     MPI_Type_free( &dtype_complex_t );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -80,7 +80,7 @@ void timing_fft2d_ddt( int DIM1, int procs, int outer_loop, int inner_loop, int*
       MPI_Alltoall( &matrix[0], 1, dtype_gather_t, &recv_array[0], 1, dtype_scatter_t, local_communicator );
       MPI_Alltoall( &recv_array[0], 1, dtype_gather_t, &matrix[0], 1, dtype_scatter_t, local_communicator );
       if ( myrank == 0 ) {
-        timing_record(3);
+        timing_record(Comm);
       }
 
     }  //! inner loop
@@ -89,7 +89,7 @@ void timing_fft2d_ddt( int DIM1, int procs, int outer_loop, int inner_loop, int*
     MPI_Type_free( &dtype_scatter_t );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   }  //! outer loop
@@ -143,7 +143,7 @@ void timing_fft2d_manual( int DIM1, int procs, int outer_loop, int inner_loop, i
     buffer = malloc( 2 * DIM1 * DIM1/procs * sizeof(double) );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -155,7 +155,7 @@ void timing_fft2d_manual( int DIM1, int procs, int outer_loop, int inner_loop, i
       }
 
       if ( myrank == 0 ) {
-        timing_record(2);
+        timing_record(Pack);
       }
 
       MPI_Alltoall( &buffer[0], 2*DIM1/procs*DIM1/procs, MPI_DOUBLE, &recv_buffer[0], 2*DIM1/procs*DIM1/procs, MPI_DOUBLE, local_communicator );
@@ -177,7 +177,7 @@ void timing_fft2d_manual( int DIM1, int procs, int outer_loop, int inner_loop, i
       MPI_Alltoall( &buffer[0], 2*DIM1/procs*DIM1/procs, MPI_DOUBLE, recv_buffer, 2*DIM1/procs*DIM1/procs, MPI_DOUBLE, local_communicator );
 
       if ( myrank == 0 ) {
-        timing_record(3);
+        timing_record(Comm);
       }
 
 //! unpack the data
@@ -188,7 +188,7 @@ void timing_fft2d_manual( int DIM1, int procs, int outer_loop, int inner_loop, i
       }
 
       if ( myrank == 0 ) {
-        timing_record(4);
+        timing_record(Unpack);
       }
 
     } //! inner loop
@@ -196,7 +196,7 @@ void timing_fft2d_manual( int DIM1, int procs, int outer_loop, int inner_loop, i
     free( buffer );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer loop
@@ -276,7 +276,7 @@ void timing_fft2d_mpi_pack_ddt( int DIM1, int procs, int outer_loop, int inner_l
     MPI_Type_free( &dtype_complex_t );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -284,7 +284,7 @@ void timing_fft2d_mpi_pack_ddt( int DIM1, int procs, int outer_loop, int inner_l
       pos = 0;
       MPI_Pack( &matrix[0], 1, dtype_gather_t, &buffer[0], bytes, &pos, local_communicator );
       if ( myrank == 0 ) {
-        timing_record(2);
+        timing_record(Pack);
       }
 
       MPI_Alltoall( &buffer[0], bytes, MPI_PACKED, &recv_buffer[0], bytes, MPI_PACKED, local_communicator );
@@ -300,13 +300,13 @@ void timing_fft2d_mpi_pack_ddt( int DIM1, int procs, int outer_loop, int inner_l
       MPI_Alltoall( &buffer[0], bytes, MPI_PACKED, &recv_buffer[0], bytes, MPI_PACKED, local_communicator );
 
       if ( myrank == 0 ) {
-        timing_record(3);
+        timing_record(Comm);
       }
 //! unpack the data
       pos = 0;
       MPI_Unpack( &recv_buffer[0], bytes, &pos, &matrix[0], 1, dtype_scatter_t, local_communicator );
       if ( myrank == 0 ) {
-        timing_record(4);
+        timing_record(Unpack);
       }
 
     } //! inner loop
@@ -317,7 +317,7 @@ void timing_fft2d_mpi_pack_ddt( int DIM1, int procs, int outer_loop, int inner_l
     free( buffer );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer loop

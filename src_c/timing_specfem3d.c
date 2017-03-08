@@ -69,7 +69,7 @@ void timing_specfem3D_oc_ddt( int DIM1, int icount, int* list, int outer_loop, i
     MPI_Type_commit( &dtype_indexed_t );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -80,7 +80,7 @@ void timing_specfem3D_oc_ddt( int DIM1, int icount, int* list, int outer_loop, i
         MPI_Send( &array[0], 1, dtype_indexed_t, 1, itag, local_communicator );
 //! receive the data from rank 1 back
         MPI_Recv( &array[0], 1, dtype_indexed_t, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
 //! now for rank 1
       } else {
         MPI_Recv( &array[0], 1, dtype_indexed_t, 0, itag, local_communicator, MPI_STATUS_IGNORE );
@@ -95,7 +95,7 @@ void timing_specfem3D_oc_ddt( int DIM1, int icount, int* list, int outer_loop, i
     MPI_Type_free( &dtype_indexed_t );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer loop
@@ -157,7 +157,7 @@ void timing_specfem3D_oc_manual( int DIM1, int icount, int* list, int outer_loop
     buffer = malloc( icount *sizeof(float) );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -168,17 +168,17 @@ void timing_specfem3D_oc_manual( int DIM1, int icount, int* list, int outer_loop
         for( k=0 ; k < icount ; k++ ) {
           buffer[k] = array[displacement[idx2D(k,i,icount)]];
         }
-        timing_record(2);
+        timing_record(Pack);
 //! send the data from rank 0 to rank 1
         MPI_Send( buffer, icount, MPI_FLOAT, 1, itag, local_communicator );
 //! receive the data from rank 1 back
         MPI_Recv( buffer, icount, MPI_FLOAT, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
 //! unpack of the data
         for( k=1 ; k<icount ; k++ ) {
           array[displacement[idx2D(k,i,icount)]] = buffer[k];
         }
-        timing_record(4);
+        timing_record(Unpack);
 //! now for rank 1
       } else {
         MPI_Recv( buffer, icount, MPI_FLOAT, 0, itag, local_communicator, MPI_STATUS_IGNORE );
@@ -199,7 +199,7 @@ void timing_specfem3D_oc_manual( int DIM1, int icount, int* list, int outer_loop
     free( buffer );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer loop
@@ -270,7 +270,7 @@ void timing_specfem3D_oc_mpi_pack_ddt( int DIM1, int icount, int* list, int oute
     MPI_Type_commit( &dtype_indexed_t );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -280,16 +280,16 @@ void timing_specfem3D_oc_mpi_pack_ddt( int DIM1, int icount, int* list, int oute
 //! pack of the data
         pos = 0;
         MPI_Pack( &array[0], 1, dtype_indexed_t, &buffer[0], bytes, &pos, local_communicator );
-        timing_record(2);
+        timing_record(Pack);
 //! send the data from rank 0 to rank 1
         MPI_Send( &buffer[0], pos, MPI_PACKED, 1, itag, local_communicator );
 //! receive the data from rank 1 back
         MPI_Recv( &buffer[0], bytes, MPI_PACKED, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
 //! unpack of the data
         pos = 0;
         MPI_Unpack( &buffer[0], bytes, &pos, &array[0], 1, dtype_indexed_t, local_communicator );
-        timing_record(4);
+        timing_record(Unpack);
 //! now for rank 1
       } else {
         MPI_Recv( &buffer[0], bytes, MPI_PACKED, 0, itag, local_communicator, MPI_STATUS_IGNORE );
@@ -310,7 +310,7 @@ void timing_specfem3D_oc_mpi_pack_ddt( int DIM1, int icount, int* list, int oute
     MPI_Type_free( &dtype_indexed_t );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer loop
@@ -412,7 +412,7 @@ void timing_specfem3D_cm_ddt( int DIM2_cm, int DIM2_ic, int icount_cm, int icoun
     free( displacement );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
 //! =============== ping pong communication =================
@@ -423,7 +423,7 @@ void timing_specfem3D_cm_ddt( int DIM2_cm, int DIM2_ic, int icount_cm, int icoun
         MPI_Send( MPI_BOTTOM, 1, dtype_indexed_t, 1, itag, local_communicator );
 //! receive the data from rank 1 back
         MPI_Recv( MPI_BOTTOM, 1, dtype_indexed_t, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
 //! now for rank 1
       } else {
 //! receive the data from rank 0
@@ -438,7 +438,7 @@ void timing_specfem3D_cm_ddt( int DIM2_cm, int DIM2_ic, int icount_cm, int icoun
     MPI_Type_free( &dtype_indexed_t );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer loop
@@ -511,7 +511,7 @@ void timing_specfem3D_cm_manual( int DIM2_cm, int DIM2_ic, int icount_cm, int ic
     buffer = malloc( isize * sizeof(float) );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
 //! =============== ping pong communication =================
@@ -530,12 +530,12 @@ void timing_specfem3D_cm_manual( int DIM2_cm, int DIM2_ic, int icount_cm, int ic
           buffer[counter++] = array_ic[idx2D(1,temp_displacement_ic[idx2D(k,i,icount_ic)],3)];
           buffer[counter++] = array_ic[idx2D(2,temp_displacement_ic[idx2D(k,i,icount_ic)],3)];
         }
-        timing_record(2);
+        timing_record(Pack);
 //! send the data from rank 0 to rank 1
         MPI_Send( &buffer[0], isize, MPI_FLOAT, 1, itag, local_communicator );
 //! receive the data from rank 1 back
         MPI_Recv( &buffer[0], isize, MPI_FLOAT, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
 //! unpack the data
         counter = 0;
         for( k=0 ; k<icount_cm ; k++ ) {
@@ -548,7 +548,7 @@ void timing_specfem3D_cm_manual( int DIM2_cm, int DIM2_ic, int icount_cm, int ic
           array_ic[idx2D(1,temp_displacement_ic[idx2D(k,i,icount_ic)],3)] = buffer[counter++];
           array_ic[idx2D(2,temp_displacement_ic[idx2D(k,i,icount_ic)],3)] = buffer[counter++];
         }
-        timing_record(4);
+        timing_record(Unpack);
 //! now for rank 1
       } else {
 //! receive the data from rank 0
@@ -586,7 +586,7 @@ void timing_specfem3D_cm_manual( int DIM2_cm, int DIM2_ic, int icount_cm, int ic
     free( buffer );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer loop
@@ -701,7 +701,7 @@ void timing_specfem3D_cm_mpi_pack_ddt( int DIM2_cm, int DIM2_ic, int icount_cm, 
     free( displacement );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
 //! =============== ping pong communication =================
@@ -711,16 +711,16 @@ void timing_specfem3D_cm_mpi_pack_ddt( int DIM2_cm, int DIM2_ic, int icount_cm, 
 //! pack the buffer
         pos = 0;
         MPI_Pack( MPI_BOTTOM, 1, dtype_indexed_t, &buffer[0], bytes, &pos, local_communicator );
-        timing_record(2);
+        timing_record(Pack);
 //! send the data from rank 0 to rank 1
         MPI_Send( &buffer[0], pos, MPI_PACKED, 1, itag, local_communicator );
 //! receive the data from rank 1 back
         MPI_Recv( &buffer[0], bytes, MPI_PACKED, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
 //! unpack the data
         pos = 0;
         MPI_Unpack( &buffer[0], bytes, &pos, MPI_BOTTOM, 1, dtype_indexed_t, local_communicator );
-        timing_record(4);
+        timing_record(Unpack);
 //! now for rank 1
       } else {
 //! receive the data from rank 0
@@ -742,7 +742,7 @@ void timing_specfem3D_cm_mpi_pack_ddt( int DIM2_cm, int DIM2_ic, int icount_cm, 
     free( buffer );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer loop
@@ -806,7 +806,7 @@ void timing_specfem3d_mt_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int 
     MPI_Type_commit( &dtype_recv_t );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -814,7 +814,7 @@ void timing_specfem3d_mt_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int 
       if ( myrank == 0 ) {
         MPI_Send( &send_array[0], 1, dtype_send_t, 1, itag, local_communicator );
         MPI_Recv( &recv_array[0], 1, dtype_recv_t, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
       } else {
         MPI_Recv( &recv_array[0], 1, dtype_recv_t, 0, itag, local_communicator, MPI_STATUS_IGNORE );
         MPI_Send( &send_array[0], 1, dtype_send_t, 0, itag, local_communicator );
@@ -826,7 +826,7 @@ void timing_specfem3d_mt_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int 
     MPI_Type_free( &dtype_recv_t );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer loop
@@ -881,7 +881,7 @@ void timing_specfem3d_mt_manual( int DIM1, int DIM2, int DIM3, int outer_loop, i
     bytes = DIM1 * DIM3 * typesize;
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -890,10 +890,10 @@ void timing_specfem3d_mt_manual( int DIM1, int DIM2, int DIM3, int outer_loop, i
         for( k = 0; k<DIM3 ; k++ ) {
           memcpy( &buffer[k*DIM1], &send_array[k*DIM1*DIM2], DIM1*sizeof(float) );
         }
-        timing_record(2);
+        timing_record(Pack);
         MPI_Send( &buffer[0], DIM1*DIM3, MPI_FLOAT, 1, itag, local_communicator );
         MPI_Recv( &recv_array[0], DIM1*DIM3, MPI_FLOAT, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
       } else {
         MPI_Recv( &recv_array[0], DIM1*DIM3, MPI_FLOAT, 0, itag, local_communicator, MPI_STATUS_IGNORE );
         for( k = 0; k<DIM3 ; k++ ) {
@@ -907,7 +907,7 @@ void timing_specfem3d_mt_manual( int DIM1, int DIM2, int DIM3, int outer_loop, i
     free( buffer );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer loop
@@ -972,7 +972,7 @@ void timing_specfem3d_mt_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_l
     MPI_Type_commit( &dtype_recv_t );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -980,13 +980,13 @@ void timing_specfem3d_mt_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_l
       if ( myrank == 0 ) {
         pos = 0;
         MPI_Pack( &send_array[0], 1, dtype_send_t, &buffer[0], bytes, &pos, local_communicator );
-        timing_record(2);
+        timing_record(Pack);
         MPI_Send( &buffer[0], pos, MPI_PACKED, 1, itag, local_communicator );
         MPI_Recv( &buffer[0], bytes, MPI_PACKED, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
         pos = 0;
         MPI_Unpack( &buffer[0], bytes, &pos, &recv_array[0], 1, dtype_recv_t, local_communicator );
-        timing_record(4);
+        timing_record(Unpack);
       } else {
         MPI_Recv( &buffer[0], bytes, MPI_PACKED, 0, itag, local_communicator, MPI_STATUS_IGNORE );
         pos = 0;
@@ -1004,7 +1004,7 @@ void timing_specfem3d_mt_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_l
     MPI_Type_free( &dtype_recv_t );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer loop

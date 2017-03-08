@@ -6,7 +6,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "../hrtimer/hrtimer.h"
-
+#include "ddtbench.h"
 #include "mpi.h"
 
 //! handles all the time measurement
@@ -25,7 +25,17 @@ static int epoch_used[5];
 static int counter;
 
 static char testname[50], method[50];
-static char epoch_name[5][20];
+//static char epoch_name[5][20];
+static const char epoch_name[EpochMax][20] = {
+  [0] = "null_item",
+  [DDTCreate] = "ddt_create_overhead",
+  [Rewrite] = "dbrew_rewrite",
+  [Pack] = "pack",
+  [Comm] = "communication",
+  [Unpack] = "unpack",
+  [DDTFree] = "ddt_free_overhead"
+};
+
 static int bytes;
 static MPI_File filehandle_values;
 
@@ -56,11 +66,11 @@ void timing_init( char* ptestname, char* pmethod, int pbytes ) {
   strncpy( method, pmethod, 50 );
   bytes = pbytes;
 
-  snprintf( &epoch_name[0][0], 20, "ddt_create_overhead");
+  /*snprintf( &epoch_name[0][0], 20, "ddt_create_overhead");
   snprintf( &epoch_name[1][0], 20, "pack");
   snprintf( &epoch_name[2][0], 20, "communication");
   snprintf( &epoch_name[3][0], 20, "unpack");
-  snprintf( &epoch_name[4][0], 20, "ddt_free_overhead");
+  snprintf( &epoch_name[4][0], 20, "ddt_free_overhead");*/
 
   for( i = 0 ; i < 5 ; i++) {
     epoch_used[i] = 0;
@@ -125,10 +135,10 @@ void timing_print( int last ) {
 
 //! if a epoch id is not in 1..5 is found, only the id is printed (instead of
 //! the the epoch name)
-    if ( (ids[i] > 5) || (ids[i] < 1) ) {
+    if ( (ids[i] > EpochMax - 1) || (ids[i] < 1) ) {
       snprintf(line, 256, "%30s%30s%15i%20i%20s%20s%20s%20s%20s\n", testname, method, bytes, ids[i], time_str, PapiEventName1, eventcount1, PapiEventName2, eventcount2 );
     } else {
-      snprintf(line, 256, "%30s%30s%15i%20s%20s%20s%20s%20s%20s\n", testname, method, bytes, epoch_name[ids[i]-1], time_str, PapiEventName1, eventcount1, PapiEventName2, eventcount2 );
+      snprintf(line, 256, "%30s%30s%15i%20s%20s%20s%20s%20s%20s\n", testname, method, bytes, epoch_name[ids[i]], time_str, PapiEventName1, eventcount1, PapiEventName2, eventcount2 );
 //! keep tracking if a epoch is used or not
       if (epoch_used[ids[i]-1] == 0) {
         epoch_used[ids[i]-1] = 1;
@@ -183,7 +193,7 @@ void timing_print( int last ) {
 //! if number of recorded timings exceed 1024, then the function empties
 //! the buffer and they will be printed
 
-void timing_record( int id ) {
+void timing_record( Epochs id ) {
 
 #if TEST_TYPE > 1
   PAPI_stop( PapiEventSet, &PapiEventCounts[2*counter] );

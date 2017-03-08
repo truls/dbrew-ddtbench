@@ -61,7 +61,7 @@ void timing_nas_lu_y_ddt( int DIM2, int DIM3, int outer_loop, int inner_loop, in
     MPI_Type_free( &dtype_temp_t );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for (j=0 ; j<inner_loop ; j++ ) {
@@ -69,7 +69,7 @@ void timing_nas_lu_y_ddt( int DIM2, int DIM3, int outer_loop, int inner_loop, in
       if ( myrank == 0 ) {
         MPI_Send( &array[idx3D(0,DIM2,1,DIM1,DIM2+2)], 1, dtype_y_t, 1, itag, local_communicator );
         MPI_Recv( &array[idx3D(0,0,1,DIM1,DIM2+2)], 1, dtype_y_t, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
       } else {
         MPI_Recv( &array[idx3D(0,0,1,DIM1,DIM2+2)], 1, dtype_y_t, 0, itag, local_communicator, MPI_STATUS_IGNORE );
         MPI_Send( &array[idx3D(0,DIM2,1,DIM1,DIM2+2)], 1, dtype_y_t, 0, itag, local_communicator );
@@ -80,7 +80,7 @@ void timing_nas_lu_y_ddt( int DIM2, int DIM3, int outer_loop, int inner_loop, in
     MPI_Type_free( &dtype_y_t );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   }
@@ -131,7 +131,7 @@ void timing_nas_lu_y_manual( int DIM2, int DIM3, int outer_loop, int inner_loop,
     buffer = malloc( DIM1 * DIM3 * sizeof(double));
 
     if ( myrank == 0 ) {
-       timing_record(1);
+       timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -143,10 +143,10 @@ void timing_nas_lu_y_manual( int DIM2, int DIM3, int outer_loop, int inner_loop,
             buffer[base++] = array[idx3D(l,DIM2,k,DIM1,DIM2+2)];
           }
         }
-        timing_record(2);
+        timing_record(Pack);
         MPI_Send( &buffer[0], DIM1*DIM3, MPI_DOUBLE, 1, itag, local_communicator );
         MPI_Recv( &buffer[0], DIM1*DIM3, MPI_DOUBLE, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
 //! unpack the data
         base = 0;
         for( k=1 ; k<DIM3 ; k++ ) {
@@ -154,7 +154,7 @@ void timing_nas_lu_y_manual( int DIM2, int DIM3, int outer_loop, int inner_loop,
             array[idx3D(l,0,k,DIM1,DIM2+2)] = buffer[base++];
           }
         }
-        timing_record(4);
+        timing_record(Unpack);
       } else {
         MPI_Recv( &buffer[0], DIM1*DIM3, MPI_DOUBLE, 0, itag, local_communicator, MPI_STATUS_IGNORE );
 //! unpack the data
@@ -178,7 +178,7 @@ void timing_nas_lu_y_manual( int DIM2, int DIM3, int outer_loop, int inner_loop,
     free( buffer );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
   }
 
@@ -238,7 +238,7 @@ void timing_nas_lu_y_mpi_pack_ddt( int DIM2, int DIM3, int outer_loop, int inner
     MPI_Type_free( &dtype_temp_t );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -246,14 +246,14 @@ void timing_nas_lu_y_mpi_pack_ddt( int DIM2, int DIM3, int outer_loop, int inner
 //! pack the data
         pos = 0;
         MPI_Pack( &array[idx3D(0,DIM2,1,DIM1,DIM2)], 1, dtype_y_t, &buffer[0], bytes, &pos, local_communicator );
-        timing_record(2);
+        timing_record(Pack);
         MPI_Send( &buffer[0], pos, MPI_PACKED, 1, itag, local_communicator );
         MPI_Recv( &buffer[0], bytes, MPI_PACKED, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
 //! unpack the data
         pos = 0;
         MPI_Unpack( &buffer[0], bytes, &pos, &array[idx3D(0,0,1,DIM1,DIM2+2)], 1, dtype_y_t, local_communicator );
-        timing_record(4);
+        timing_record(Unpack);
       } else {
         MPI_Recv( &buffer[0], bytes, MPI_PACKED, 0, itag, local_communicator, MPI_STATUS_IGNORE );
 //! unpack the data
@@ -271,7 +271,7 @@ void timing_nas_lu_y_mpi_pack_ddt( int DIM2, int DIM3, int outer_loop, int inner
     MPI_Type_free( &dtype_y_t );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer loop
@@ -326,7 +326,7 @@ void timing_nas_lu_x_ddt( int DIM2, int DIM3, int outer_loop, int inner_loop, in
     MPI_Type_commit( &dtype_x_t );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -334,7 +334,7 @@ void timing_nas_lu_x_ddt( int DIM2, int DIM3, int outer_loop, int inner_loop, in
       if ( myrank == 0 ) {
         MPI_Send( &array[idx3D(0,1,DIM3,DIM1,DIM2+2)], 1, dtype_x_t, 1, itag, local_communicator );
         MPI_Recv( &array[idx3D(0,1,0,DIM1,DIM2+2)], 1, dtype_x_t, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
       } else {
         MPI_Recv( &array[idx3D(0,1,0,DIM1,DIM2+2)], 1, dtype_x_t, 0, itag, local_communicator, MPI_STATUS_IGNORE );
         MPI_Send( &array[idx3D(0,1,DIM3,DIM1,DIM2+2)], 1, dtype_x_t, 0, itag, local_communicator );
@@ -344,7 +344,7 @@ void timing_nas_lu_x_ddt( int DIM2, int DIM3, int outer_loop, int inner_loop, in
     MPI_Type_free( &dtype_x_t );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
   }
 
@@ -395,7 +395,7 @@ void timing_nas_lu_x_manual( int DIM2, int DIM3, int outer_loop, int inner_loop,
     buffer = malloc(DIM1 * DIM2 * sizeof(double));
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -407,10 +407,10 @@ void timing_nas_lu_x_manual( int DIM2, int DIM3, int outer_loop, int inner_loop,
             buffer[base++] = array[idx3D(l,k,DIM3,DIM1,DIM2+2)];
           }
         }
-        timing_record(2);
+        timing_record(Pack);
         MPI_Send( &buffer[0], DIM1*DIM2, MPI_DOUBLE, 1, itag, local_communicator );
         MPI_Recv( &buffer[0], DIM1*DIM2, MPI_DOUBLE, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
 //! unpack the data
         base = 0;
         for( k=1 ; k<DIM2+1 ; k++ ) {
@@ -418,7 +418,7 @@ void timing_nas_lu_x_manual( int DIM2, int DIM3, int outer_loop, int inner_loop,
             array[idx3D(l,k,0,DIM1,DIM2+2)] = buffer[base++];
           }
         }
-        timing_record(4);
+        timing_record(Unpack);
       } else {
         MPI_Recv( &buffer[0], DIM1*DIM2, MPI_DOUBLE, 0, itag, local_communicator, MPI_STATUS_IGNORE );
 //! unpack the data
@@ -442,7 +442,7 @@ void timing_nas_lu_x_manual( int DIM2, int DIM3, int outer_loop, int inner_loop,
     free( buffer );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer loop
@@ -500,7 +500,7 @@ void timing_nas_lu_x_mpi_pack_ddt( int DIM2, int DIM3, int outer_loop, int inner
     MPI_Type_commit( &dtype_x_t );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -508,14 +508,14 @@ void timing_nas_lu_x_mpi_pack_ddt( int DIM2, int DIM3, int outer_loop, int inner
 //! pack the data
         pos = 0;
         MPI_Pack( &array[idx3D(0,1,DIM3,DIM1,DIM2+2)], 1, dtype_x_t, &buffer[0], bytes, &pos, local_communicator );
-        timing_record(2);
+        timing_record(Pack);
         MPI_Send( &buffer[0], pos, MPI_PACKED, 1, itag, local_communicator );
         MPI_Recv( &buffer[0], bytes, MPI_PACKED, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
 //! unpack the data
         pos = 0;
         MPI_Unpack( &buffer[0], bytes, &pos, &array[idx3D(0,1,0,DIM1,DIM2+2)], 1, dtype_x_t, local_communicator );
-        timing_record(4);
+        timing_record(Unpack);
       } else {
         MPI_Recv( &buffer[0], bytes, MPI_PACKED, 0, itag, local_communicator, MPI_STATUS_IGNORE );
 //! unpack the data
@@ -533,7 +533,7 @@ void timing_nas_lu_x_mpi_pack_ddt( int DIM2, int DIM3, int outer_loop, int inner
     MPI_Type_free( &dtype_x_t );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
   } //! outer loop
 
@@ -591,7 +591,7 @@ void timing_nas_mg_x_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inne
     MPI_Type_free( &dtype_temp_t );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -599,7 +599,7 @@ void timing_nas_mg_x_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inne
       if ( myrank == 0 ) {
         MPI_Send( &array[idx3D(DIM1-2,1,1,DIM1,DIM2)], 1, dtype_face_x_t, 1, itag, local_communicator );
         MPI_Recv( &array[idx3D(DIM1-1,1,1,DIM1,DIM2)], 1, dtype_face_x_t, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
       } else {
         MPI_Recv( &array[idx3D(DIM1-1,1,1,DIM1,DIM2)], 1, dtype_face_x_t, 0, itag, local_communicator, MPI_STATUS_IGNORE );
         MPI_Send( &array[idx3D(DIM1-2,1,1,DIM1,DIM2)], 1, dtype_face_x_t, 0, itag, local_communicator );
@@ -610,7 +610,7 @@ void timing_nas_mg_x_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inne
     MPI_Type_free( &dtype_face_x_t );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   }
@@ -660,7 +660,7 @@ void timing_nas_mg_x_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int i
     buffer = malloc( psize * sizeof(double) );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -672,17 +672,17 @@ void timing_nas_mg_x_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int i
             buffer[base++] = array[idx3D(DIM1-2,l,k,DIM1,DIM2)];
           }
         }
-        timing_record(2);
+        timing_record(Pack);
         MPI_Send( &buffer[0], psize, MPI_DOUBLE, 1, itag, local_communicator );
         MPI_Recv( &buffer[0], psize, MPI_DOUBLE, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
         base = 0;
         for( k=1 ; k<DIM3-1 ; k++ ) {
           for( l=1 ; l<DIM2-1 ; l++ ) {
             array[idx3D(DIM1-1,l,k,DIM1,DIM2)] = buffer[base++];
           }
         }
-        timing_record(4);
+        timing_record(Unpack);
       } else {
         MPI_Recv( &buffer[0], psize, MPI_DOUBLE, 0, itag, local_communicator, MPI_STATUS_IGNORE );
         base = 0;
@@ -704,7 +704,7 @@ void timing_nas_mg_x_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int i
     free( buffer );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer loop
@@ -768,7 +768,7 @@ void timing_nas_mg_x_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop,
     MPI_Type_free( &dtype_temp_t );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -776,13 +776,13 @@ void timing_nas_mg_x_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop,
       if ( myrank == 0 ) {
         pos = 0;
         MPI_Pack( &array[idx3D(DIM1-2,1,1,DIM1,DIM2)], 1, dtype_face_x_t, &buffer[0], bytes, &pos, local_communicator );
-        timing_record(2);
+        timing_record(Pack);
         MPI_Send( &buffer[0], pos, MPI_PACKED, 1, itag, local_communicator );
         MPI_Recv( &buffer[0], bytes, MPI_PACKED, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
         pos = 0;
         MPI_Unpack( &buffer[0], bytes, &pos, &array[idx3D(DIM1-1,1,1,DIM1,DIM2)], 1, dtype_face_x_t, local_communicator );
-        timing_record(4);
+        timing_record(Unpack);
       } else {
         MPI_Recv( &buffer[0], bytes, MPI_PACKED, 0, itag, local_communicator, MPI_STATUS_IGNORE );
         pos = 0;
@@ -799,7 +799,7 @@ void timing_nas_mg_x_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop,
     MPI_Type_free( &dtype_face_x_t );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer loop
@@ -851,7 +851,7 @@ void timing_nas_mg_y_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inne
     MPI_Type_commit( &dtype_face_y_t );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -859,7 +859,7 @@ void timing_nas_mg_y_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inne
       if ( myrank == 0 ) {
         MPI_Send( &array[idx3D(1,DIM2-2,1,DIM1,DIM2)], 1, dtype_face_y_t, 1, itag, local_communicator );
         MPI_Recv( &array[idx3D(1,DIM2-1,1,DIM1,DIM2)], 1, dtype_face_y_t, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
       } else {
         MPI_Recv( &array[idx3D(1,DIM2-1,1,DIM1,DIM2)], 1, dtype_face_y_t, 0, itag, local_communicator, MPI_STATUS_IGNORE );
         MPI_Send( &array[idx3D(1,DIM2-2,1,DIM1,DIM2)], 1, dtype_face_y_t, 0, itag, local_communicator );
@@ -870,7 +870,7 @@ void timing_nas_mg_y_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inne
     MPI_Type_free( &dtype_face_y_t );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } // outer loop
@@ -920,7 +920,7 @@ void timing_nas_mg_y_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int i
     buffer = malloc( psize * sizeof(double) );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -932,17 +932,17 @@ void timing_nas_mg_y_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int i
             buffer[base++] = array[idx3D(l,DIM2-2,k,DIM1,DIM2)];
           }
         }
-        timing_record(2);
+        timing_record(Pack);
         MPI_Send( &buffer[0], psize, MPI_DOUBLE, 1, itag, local_communicator );
         MPI_Recv( &buffer[0], psize, MPI_DOUBLE, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
         base = 0;
         for( k=1 ; k<DIM3-1 ; k++ ) {
           for( l=1 ; l<DIM1-1 ; l++ ) {
             array[idx3D(l,DIM2-1,k,DIM1,DIM2)] = buffer[base++];
           }
         }
-        timing_record(4);
+        timing_record(Unpack);
       } else {
         MPI_Recv( &buffer[0], psize, MPI_DOUBLE, 0, itag, local_communicator, MPI_STATUS_IGNORE );
         base = 0;
@@ -965,7 +965,7 @@ void timing_nas_mg_y_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int i
     free( buffer );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer loop
@@ -1021,7 +1021,7 @@ void timing_nas_mg_y_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop,
     MPI_Type_commit( &dtype_face_y_t );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -1029,13 +1029,13 @@ void timing_nas_mg_y_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop,
       if ( myrank == 0 ) {
         pos = 0;
         MPI_Pack( &array[idx3D(1,DIM2-2,1,DIM1,DIM2)], 1, dtype_face_y_t, &buffer[0], bytes, &pos, local_communicator );
-        timing_record(2);
+        timing_record(Pack);
         MPI_Send( &buffer[0], pos, MPI_PACKED, 1, itag, local_communicator );
         MPI_Recv( &buffer[0], bytes, MPI_PACKED, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
         pos = 0;
         MPI_Unpack( &buffer[0], bytes, &pos, &array[idx3D(1,DIM2-1,1,DIM1,DIM2)], 1, dtype_face_y_t, local_communicator );
-        timing_record(4);
+        timing_record(Unpack);
       } else {
         MPI_Recv( &buffer[0], bytes, MPI_PACKED, 0, itag, local_communicator, MPI_STATUS_IGNORE );
         pos = 0;
@@ -1052,7 +1052,8 @@ void timing_nas_mg_y_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop,
     MPI_Type_free( &dtype_face_y_t );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
+    }
     }
 
   } //! outer_loop
@@ -1103,7 +1104,7 @@ void timing_nas_mg_z_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inne
     MPI_Type_commit( &dtype_face_z_t );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -1111,7 +1112,7 @@ void timing_nas_mg_z_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inne
       if ( myrank == 0 ) {
         MPI_Send( &array[idx3D(1,1,1,DIM1,DIM2)], 1, dtype_face_z_t, 1, itag, local_communicator );
         MPI_Recv( &array[idx3D(1,1,0,DIM1,DIM2)], 1, dtype_face_z_t, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
       } else {
         MPI_Recv( &array[idx3D(1,1,0,DIM1,DIM2)], 1, dtype_face_z_t, 0, itag, local_communicator, MPI_STATUS_IGNORE );
         MPI_Send( &array[idx3D(1,1,1,DIM1,DIM2)], 1, dtype_face_z_t, 0, itag, local_communicator );
@@ -1122,7 +1123,7 @@ void timing_nas_mg_z_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inne
     MPI_Type_free( &dtype_face_z_t );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   }
@@ -1172,7 +1173,7 @@ void timing_nas_mg_z_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int i
     buffer = malloc( psize * sizeof(double) );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -1184,17 +1185,17 @@ void timing_nas_mg_z_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int i
             buffer[base++] = array[idx3D(l,k,1,DIM1,DIM2)];
           }
         }
-        timing_record(2);
+        timing_record(Pack);
         MPI_Send( &buffer[0], psize, MPI_DOUBLE, 1, itag, local_communicator );
         MPI_Recv( &buffer[0], psize, MPI_DOUBLE, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
         base = 0;
         for( k=1 ; k<DIM2-1 ; k++ ) {
           for( l=1 ; l<DIM1-1 ; l++ ) {
             array[idx3D(l,k,0,DIM1,DIM2)] = buffer[base++];
           }
         }
-        timing_record(4);
+        timing_record(Unpack);
       } else {
         MPI_Recv( &buffer[0], psize, MPI_DOUBLE, 0, itag, local_communicator, MPI_STATUS_IGNORE );
         base = 0;
@@ -1217,7 +1218,7 @@ void timing_nas_mg_z_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int i
     free( buffer );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer loop
@@ -1273,7 +1274,7 @@ void timing_nas_mg_z_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop,
     MPI_Type_commit( &dtype_face_z_t );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -1281,13 +1282,13 @@ void timing_nas_mg_z_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop,
       if ( myrank == 0 ) {
         pos = 0;
         MPI_Pack( &array[idx3D(1,1,1,DIM1,DIM2)], 1, dtype_face_z_t, &buffer[0], bytes, &pos, local_communicator );
-        timing_record(2);
+        timing_record(Pack);
         MPI_Send( &buffer[0], pos, MPI_PACKED, 1, itag, local_communicator );
         MPI_Recv( &buffer[0], bytes, MPI_PACKED, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
+        timing_record(Unpack);
         pos = 0;
         MPI_Unpack( &buffer[0], bytes, &pos, &array[idx3D(1,1,0,DIM1,DIM2)], 1, dtype_face_z_t, local_communicator );
-        timing_record(4);
       } else {
         MPI_Recv( &buffer[0], bytes, MPI_PACKED, 0, itag, local_communicator, MPI_STATUS_IGNORE );
         pos = 0;
@@ -1304,7 +1305,7 @@ void timing_nas_mg_z_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop,
     MPI_Type_free( &dtype_face_z_t );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   }

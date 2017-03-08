@@ -136,7 +136,7 @@ void timing_lammps_full_ddt( int DIM1, int icount, int* list, int outer_loop, in
     free(index_displacement );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -144,7 +144,7 @@ void timing_lammps_full_ddt( int DIM1, int icount, int* list, int outer_loop, in
       if ( myrank == 0 ) {
         MPI_Send( MPI_BOTTOM, 1, dtype_send_t, 1, itag, local_communicator );
         MPI_Recv( MPI_BOTTOM, 1, dtype_recv_t, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
       } else {
         MPI_Recv( MPI_BOTTOM, 1, dtype_recv_t, 0, itag, local_communicator, MPI_STATUS_IGNORE );
         MPI_Send( MPI_BOTTOM, 1, dtype_send_t, 0, itag, local_communicator );
@@ -156,7 +156,7 @@ void timing_lammps_full_ddt( int DIM1, int icount, int* list, int outer_loop, in
 	  MPI_Type_free( &dtype_recv_t );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer loop
@@ -246,7 +246,7 @@ void timing_lammps_full_manual( int DIM1, int icount, int* list, int outer_loop,
     buffer = malloc( isize * sizeof(double) );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -264,10 +264,10 @@ void timing_lammps_full_manual( int DIM1, int icount, int* list, int outer_loop,
           buffer[pos++] = amolecule[l];
           buffer[pos++] = aq[l];
         }
-        timing_record(2);
+        timing_record(Pack);
         MPI_Send( &buffer[0], isize, MPI_DOUBLE, 1, itag, local_communicator );
         MPI_Recv( &buffer[0], isize, MPI_DOUBLE, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
         pos = 0;
         for( k=0 ; k<icount ; k++ ) {
           l=DIM1+k;
@@ -280,7 +280,7 @@ void timing_lammps_full_manual( int DIM1, int icount, int* list, int outer_loop,
           amolecule[l] = buffer[pos++];
           aq[l] = buffer[pos++];
         }
-        timing_record(4);
+        timing_record(Unpack);
       } else {
         MPI_Recv( &buffer[0], isize, MPI_DOUBLE, 0, itag, local_communicator, MPI_STATUS_IGNORE );
         pos = 0;
@@ -315,7 +315,7 @@ void timing_lammps_full_manual( int DIM1, int icount, int* list, int outer_loop,
     free( buffer );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer loop
@@ -460,7 +460,7 @@ void timing_lammps_full_mpi_pack_ddt( int DIM1, int icount, int* list, int outer
     free( index_displacement );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -468,13 +468,13 @@ void timing_lammps_full_mpi_pack_ddt( int DIM1, int icount, int* list, int outer
       if ( myrank == 0 ) {
         pos = 0;
         MPI_Pack( MPI_BOTTOM, 1, dtype_send_t, &buffer[0], bytes, &pos, local_communicator );
-        timing_record(2);
+        timing_record(Pack);
         MPI_Send( &buffer[0], pos, MPI_PACKED, 1, itag, local_communicator );
         MPI_Recv( &buffer[0], bytes, MPI_PACKED, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
         pos = 0;
         MPI_Unpack( &buffer[0], bytes, &pos, MPI_BOTTOM, 1, dtype_recv_t, local_communicator );
-        timing_record(4);
+        timing_record(Unpack);
       } else {
         MPI_Recv( &buffer[0], bytes, MPI_PACKED, 0, itag, local_communicator, MPI_STATUS_IGNORE );
         pos = 0;
@@ -492,7 +492,9 @@ void timing_lammps_full_mpi_pack_ddt( int DIM1, int icount, int* list, int outer
 	  MPI_Type_free( &dtype_recv_t );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
+    }
+
     }
 
  } //! outer loop
@@ -620,14 +622,14 @@ void timing_lammps_atomic_ddt( int DIM1, int icount, int* list, int outer_loop, 
     free(index_displacement);
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
       if ( myrank == 0 ) {
         MPI_Send( MPI_BOTTOM, 1, dtype_send_t, 1, itag, local_communicator );
         MPI_Recv( MPI_BOTTOM, 1, dtype_recv_t, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
       } else {
         MPI_Recv( MPI_BOTTOM, 1, dtype_recv_t, 0, itag, local_communicator, MPI_STATUS_IGNORE );
         MPI_Send( MPI_BOTTOM, 1, dtype_send_t, 0, itag, local_communicator );
@@ -636,10 +638,10 @@ void timing_lammps_atomic_ddt( int DIM1, int icount, int* list, int outer_loop, 
     } //! inner loop
 
     MPI_Type_free( &dtype_send_t );
-	MPI_Type_free( &dtype_recv_t );
+    MPI_Type_free( &dtype_recv_t );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer loop
@@ -719,7 +721,7 @@ void timing_lammps_atomic_manual( int DIM1, int icount, int* list, int outer_loo
     buffer = malloc( isize * sizeof(double) );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -735,10 +737,10 @@ void timing_lammps_atomic_manual( int DIM1, int icount, int* list, int outer_loo
           buffer[pos++] = atype[l];
           buffer[pos++] = amask[l];
         }
-        timing_record(2);
+        timing_record(Pack);
         MPI_Send( &buffer[0], isize, MPI_DOUBLE, 1, itag, local_communicator );
         MPI_Recv( &buffer[0], isize, MPI_DOUBLE, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
         pos = 0;
         for( k=0 ; k<icount ; k++ ) {
           l = DIM1+k;
@@ -749,7 +751,7 @@ void timing_lammps_atomic_manual( int DIM1, int icount, int* list, int outer_loo
           atype[l] = buffer[pos++];
           amask[l] = buffer[pos++];
         }
-        timing_record(4);
+        timing_record(Unpack);
       } else {
         MPI_Recv( &buffer[0], isize, MPI_DOUBLE, 0, itag, local_communicator, MPI_STATUS_IGNORE );
         pos = 0;
@@ -780,7 +782,7 @@ void timing_lammps_atomic_manual( int DIM1, int icount, int* list, int outer_loo
     free( buffer );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer loop
@@ -912,21 +914,23 @@ void timing_lammps_atomic_mpi_pack_ddt( int DIM1, int icount, int* list, int out
     free(index_displacement );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
 
       if ( myrank == 0 ) {
         pos = 0;
-        MPI_Pack( MPI_BOTTOM, 1, dtype_send_t, &buffer[0], bytes, &pos, local_communicator );
-        timing_record(2);
+        MPI_Pack( MPI_BOTTOM, 1, dtype_send_t, &buffer[0], bytes, &pos,  local_communicator );
+
+        timing_record(Pack);
         MPI_Send( &buffer[0], pos, MPI_PACKED, 1, itag, local_communicator );
         MPI_Recv( &buffer[0], bytes, MPI_PACKED, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
         pos = 0;
         MPI_Unpack( &buffer[0], bytes, &pos, MPI_BOTTOM, 1, dtype_recv_t, local_communicator );
-        timing_record(4);
+        timing_record(Unpack);
+
       } else {
         MPI_Recv( &buffer[0], bytes, MPI_PACKED, 0, itag, local_communicator, MPI_STATUS_IGNORE );
         pos = 0;
@@ -944,7 +948,7 @@ void timing_lammps_atomic_mpi_pack_ddt( int DIM1, int icount, int* list, int out
 	  MPI_Type_free( &dtype_recv_t );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer loop

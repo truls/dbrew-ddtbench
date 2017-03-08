@@ -130,7 +130,7 @@ void timing_wrf_manual ( int number_2D, int number_3D, int number_4D, int ims, i
     buffer = malloc( element_number * sizeof(float) );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -168,11 +168,11 @@ void timing_wrf_manual ( int number_2D, int number_3D, int number_4D, int ims, i
             }
           }
         }
-        timing_record(2);
+        timing_record(Pack);
         MPI_Send( &buffer[0], element_number, MPI_FLOAT, 1, itag, local_communicator );
 //! receive the data back from rank 1
         MPI_Recv( &buffer[0], element_number, MPI_FLOAT, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
 //! =================== unpack the data =====================
         counter = 0;
         for( m=0 ; m<number_2D ; m++ ) {
@@ -202,7 +202,7 @@ void timing_wrf_manual ( int number_2D, int number_3D, int number_4D, int ims, i
             }
           }
         }
-        timing_record(4);
+        timing_record(Unpack);
 //! now for rank 1
       } else {
 //! receive from rank 0
@@ -277,7 +277,7 @@ void timing_wrf_manual ( int number_2D, int number_3D, int number_4D, int ims, i
     free( buffer );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer_loop
@@ -479,7 +479,7 @@ void timing_wrf_vec_ddt ( int number_2D, int number_3D, int number_4D, int ims, 
     free( displacement );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -491,7 +491,7 @@ void timing_wrf_vec_ddt ( int number_2D, int number_3D, int number_4D, int ims, 
         MPI_Send( MPI_BOTTOM, 1, dtype_subarray_t, 1, itag, local_communicator );
 //! receive the data back from rank 1
         MPI_Recv( MPI_BOTTOM, 1, dtype_subarray_t, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
 //! now for rank 1
       } else {
 //! receive from rank 0
@@ -507,7 +507,7 @@ void timing_wrf_vec_ddt ( int number_2D, int number_3D, int number_4D, int ims, 
     MPI_Type_free( &dtype_subarray_t );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer_loop
@@ -713,7 +713,7 @@ void timing_wrf_vec_mpi_pack_ddt ( int number_2D, int number_3D, int number_4D, 
     free( displacement );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -725,15 +725,15 @@ void timing_wrf_vec_mpi_pack_ddt ( int number_2D, int number_3D, int number_4D, 
 //! ==================== pack the data ======================
         pos = 0;
         MPI_Pack( MPI_BOTTOM, 1, dtype_subarray_t, &buffer[0], bytes, &pos, local_communicator );
-        timing_record(2);
+        timing_record(Pack);
         MPI_Send( &buffer[0], pos, MPI_PACKED, 1, itag, local_communicator );
 //! receive the data back from rank 1
         MPI_Recv( &buffer[0], bytes, MPI_PACKED, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
 //! =================== unpack the data =====================
         pos = 0;
         MPI_Unpack( &buffer[0], bytes, &pos, MPI_BOTTOM, 1, dtype_subarray_t, local_communicator );
-        timing_record(4);
+        timing_record(Unpack);
 //! now for rank 1
       } else {
 //! receive from rank 0
@@ -757,7 +757,7 @@ void timing_wrf_vec_mpi_pack_ddt ( int number_2D, int number_3D, int number_4D, 
     free( buffer );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer_loop
@@ -971,7 +971,7 @@ void timing_wrf_sa_ddt ( int number_2D, int number_3D, int number_4D, int ims, i
     free( displacement );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -983,7 +983,7 @@ void timing_wrf_sa_ddt ( int number_2D, int number_3D, int number_4D, int ims, i
         MPI_Send( MPI_BOTTOM, 1, dtype_subarray_t, 1, itag, local_communicator );
 //! receive the data back from rank 1
         MPI_Recv( MPI_BOTTOM, 1, dtype_subarray_t, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
 //! now for rank 1
       } else {
 //! receive from rank 0
@@ -999,7 +999,7 @@ void timing_wrf_sa_ddt ( int number_2D, int number_3D, int number_4D, int ims, i
     MPI_Type_free( &dtype_subarray_t );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer_loop
@@ -1222,7 +1222,7 @@ void timing_wrf_sa_mpi_pack_ddt ( int number_2D, int number_3D, int number_4D, i
     free( displacement );
 
     if ( myrank == 0 ) {
-      timing_record(1);
+      timing_record(DDTCreate);
     }
 
     for( j=0 ; j<inner_loop ; j++ ) {
@@ -1234,15 +1234,15 @@ void timing_wrf_sa_mpi_pack_ddt ( int number_2D, int number_3D, int number_4D, i
 //! ==================== pack the data ======================
         pos = 0;
         MPI_Pack( MPI_BOTTOM, 1, dtype_subarray_t, &buffer[0], bytes, &pos, local_communicator );
-        timing_record(2);
+        timing_record(Pack);
         MPI_Send( &buffer[0], pos, MPI_PACKED, 1, itag, local_communicator );
 //! receive the data back from rank 1
         MPI_Recv( &buffer[0], bytes, MPI_PACKED, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-        timing_record(3);
+        timing_record(Comm);
 //! =================== unpack the data =====================
         pos = 0;
         MPI_Unpack( &buffer[0], bytes, &pos, MPI_BOTTOM, 1, dtype_subarray_t, local_communicator );
-        timing_record(4);
+        timing_record(Unpack);
 //! now for rank 1
       } else {
 //! receive from rank 0
@@ -1266,7 +1266,7 @@ void timing_wrf_sa_mpi_pack_ddt ( int number_2D, int number_3D, int number_4D, i
     free( buffer );
 
     if ( myrank == 0 ) {
-      timing_record(5);
+      timing_record(DDTFree);
     }
 
   } //! outer_loop

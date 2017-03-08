@@ -38,7 +38,7 @@ void timing_basic_ping_pong_nelements( int DIM1, int loop, char* testname, MPI_C
     if ( myrank == 0 ) {
       MPI_Send( &array[0], DIM1, MPI_FLOAT, 1, itag, local_communicator );
       MPI_Recv( &array[0], DIM1, MPI_FLOAT, 1, itag, local_communicator, MPI_STATUS_IGNORE );
-      timing_record(3);
+      timing_record(Comm);
     } else {
       MPI_Recv( &array[0], DIM1, MPI_FLOAT, 0, itag, local_communicator, MPI_STATUS_IGNORE );
       MPI_Send( &array[0], DIM1, MPI_FLOAT, 0, itag, local_communicator );
@@ -82,7 +82,7 @@ void timing_basic_alltoall_nelements( int DIM1, int procs, int loop, char* testn
     MPI_Alltoall(&send_array[0], DIM1, MPI_FLOAT, &recv_array[0], DIM1, MPI_FLOAT, local_communicator );
     MPI_Alltoall(&recv_array[0], DIM1, MPI_FLOAT, &send_array[0], DIM1, MPI_FLOAT, local_communicator );
     if ( myrank == 0 ) {
-      timing_record(3);
+      timing_record(Comm);
     }
   }
 

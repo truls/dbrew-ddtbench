@@ -8,11 +8,24 @@
 #define MPI_Type_create_struct MPI_Type_struct
 #endif
 
+
+// Epochs
+typedef enum Epochs Epochs;
+enum Epochs {
+  DDTCreate = 1,
+  Rewrite,
+  Pack,
+  Comm,
+  Unpack,
+  DDTFree,
+  EpochMax,
+};
+
 void timing_close_file();
 void timing_init( char* ptestname, char* pmethod, int pbytes );
 void timing_open_file( char* filename );
 void timing_print( int last );
-void timing_record( int id );
+void timing_record( Epochs id );
 void timing_set_max_tests(int value);
 #if TEST_TYPE > 1
   void init_papi();
