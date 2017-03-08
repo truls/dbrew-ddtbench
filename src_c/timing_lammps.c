@@ -495,15 +495,202 @@ void timing_lammps_full_mpi_pack_ddt( int DIM1, int icount, int* list, int outer
       timing_record(DDTFree);
     }
 
+  } //! outer loop
+
+  if ( myrank == 0 ) {
+    timing_print( 1 );
+  }
+
+  free(temp_displacement);
+
+  free(atag);
+  free(atype);
+  free(amask);
+  free(amolecule);
+  free(aq);
+  free(ax);
+}
+
+void timing_lammps_full_mpi_pack_ddt_dbrew( int DIM1, int icount, int* list, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator) {
+
+  double* atag;
+  double* atype;
+  double* amask;
+  double* amolecule;
+  double* aq;
+  double* ax;
+
+  double* buffer;
+
+  int myrank;
+  int i, j, typesize, bytes, base, pos;
+
+  MPI_Datatype dtype_indexed1_t, dtype_indexed3_t, dtype_send_t, dtype_cont1_t, dtype_cont3_t, dtype_recv_t, oldtype[6];
+  MPI_Aint address_displacement[6];
+  int blocklength[6];
+  int* index_displacement;
+
+  int* temp_displacement;
+
+  char method[50];
+
+//! just some statements to prevent compiler warnings of unused variables
+//! those parameter are included for future features
+  *correct_flag = 0;
+  *ptypesize = 0;
+//  typesize = filehandle_debug
+
+  atag = malloc( (DIM1+icount) * sizeof(double) );
+  atype = malloc( (DIM1+icount) * sizeof(double) );
+  amask = malloc( (DIM1+icount) * sizeof(double) );
+  amolecule = malloc( (DIM1+icount) * sizeof(double) );
+  aq = malloc( (DIM1+icount) * sizeof(double) );
+  ax  = malloc( 3 * (DIM1+icount) * sizeof(double) );
+
+//conversion from fortran to c
+  temp_displacement = malloc( icount * outer_loop * sizeof(int) );
+  for( i = 0 ; i<outer_loop ; i++ ) {
+    for( j = 0 ; j<icount ; j++ ) {
+      temp_displacement[idx2D(j,i,icount)] = list[idx2D(j,i,icount)] - 1;
+    }
+  }
+
+  MPI_Comm_rank( local_communicator, &myrank  );
+
+  base = myrank * (8*(DIM1+icount)) + 1;
+  utilities_fill_unique_array_2D_double( &ax[0], 3, DIM1+icount, base );
+  base = base + 3*(DIM1+icount);
+  utilities_fill_unique_array_1D_double( &atag[0], DIM1+icount, base );
+  base = base + DIM1 + icount;
+  utilities_fill_unique_array_1D_double( &atype[0], DIM1+icount, base );
+  base = base + DIM1 + icount;
+  utilities_fill_unique_array_1D_double( &amask[0], DIM1+icount, base );
+  base = base + DIM1 + icount;
+  utilities_fill_unique_array_1D_double( &aq[0], DIM1+icount, base );
+  base = base + DIM1 + icount;
+  utilities_fill_unique_array_1D_double( &amolecule[0], DIM1+icount, base );
+
+  if ( myrank == 0 ) {
+    snprintf(method, 50, "mpi_pack_ddt_dbrew" );
+
+    MPI_Type_size( MPI_DOUBLE, &typesize );
+    bytes = icount * 8 * typesize;
+
+    timing_init( testname, &method[0], bytes );
+  }
+
+  for( i=0 ; i<outer_loop ; i++ ) {
+
+    MPI_Type_size( MPI_DOUBLE, &typesize );
+    bytes = 8 * icount * typesize ;
+    buffer = malloc( 8 * icount * sizeof(double) );
+
+    index_displacement = malloc( icount * sizeof(int) );
+    MPI_Type_create_indexed_block( icount, 1, &temp_displacement[idx2D(0,i,icount)], MPI_DOUBLE, &dtype_indexed1_t );
+
+    for( j = 0 ; j < icount ; j++ ) {
+      index_displacement[j] = 3 * temp_displacement[idx2D(j,i,icount)];
+    }
+    MPI_Type_create_indexed_block( icount, 3, &index_displacement[0], MPI_DOUBLE, &dtype_indexed3_t );
+
+    MPI_Get_address( &ax[0], &address_displacement[0] );
+    MPI_Get_address( &atag[0], &address_displacement[1] );
+    MPI_Get_address( &atype[0], &address_displacement[2] );
+    MPI_Get_address( &amask[0], &address_displacement[3] );
+    MPI_Get_address( &amolecule[0], &address_displacement[4] );
+    MPI_Get_address( &aq[0], &address_displacement[5] );
+
+    oldtype[0] = dtype_indexed3_t;
+    blocklength[0] = 1;
+    for( j = 1 ; j < 6 ; j++ ) {
+      oldtype[j] = dtype_indexed1_t;
+      blocklength[j] = 1;
     }
 
- } //! outer loop
+    MPI_Type_create_struct( 6, &blocklength[0], &address_displacement[0], &oldtype[0], &dtype_send_t );
+    MPI_Type_commit( &dtype_send_t );
 
- if ( myrank == 0 ) {
-   timing_print( 1 );
- }
+    MPI_Type_free( &dtype_indexed1_t );
+    MPI_Type_free( &dtype_indexed3_t );
 
- free(temp_displacement);
+    MPI_Type_contiguous( icount, MPI_DOUBLE, &dtype_cont1_t );
+    MPI_Type_contiguous( 3*icount, MPI_DOUBLE, &dtype_cont3_t );
+
+    MPI_Get_address( &ax[3*DIM1], &address_displacement[0] );
+    MPI_Get_address( &atag[DIM1], &address_displacement[1] );
+    MPI_Get_address( &atype[DIM1], &address_displacement[2] );
+    MPI_Get_address( &amask[DIM1], &address_displacement[3] );
+    MPI_Get_address( &aq[DIM1], &address_displacement[4] );
+    MPI_Get_address( &amolecule[DIM1], &address_displacement[5] );
+
+    oldtype[0] = dtype_cont3_t;
+    for( j=1 ; j<6 ; j++ ) {
+      oldtype[j] = dtype_cont1_t;
+    }
+
+    MPI_Type_create_struct( 6, &blocklength[0], &address_displacement[0], &oldtype[0], &dtype_recv_t );
+    MPI_Type_commit( &dtype_recv_t );
+
+    MPI_Type_free( &dtype_cont1_t );
+    MPI_Type_free( &dtype_cont3_t );
+
+    free( index_displacement );
+
+    if ( myrank == 0 ) {
+      timing_record(DDTCreate);
+      printf("Running full lammps tests\n");
+    }
+
+    INIT_VERIFIER(v, myrank);
+    REWRITE_PACK(pr, rp, pos, myrank, true, MPI_BOTTOM, 1, dtype_send_t, &buffer[0], bytes, &pos, local_communicator );
+    REWRITE_UNPACK(ur, ru, pos, myrank, false, &buffer[0], bytes, &pos, MPI_BOTTOM, 1, dtype_recv_t, local_communicator );
+    timing_record(Rewrite);
+
+    for( j=0 ; j<inner_loop ; j++ ) {
+
+      if ( myrank == 0 ) {
+        pos = 0;
+        //MPI_Pack( MPI_BOTTOM, 1, dtype_send_t, &buffer[0], bytes, &pos, local_communicator );
+        PACK_MAYBE_ASSERT_VALID(v, rp, pos, MPI_BOTTOM, 1, dtype_send_t, &buffer[0], bytes, &pos, local_communicator );
+        timing_record(Pack);
+        MPI_Send( &buffer[0], pos, MPI_PACKED, 1, itag, local_communicator );
+        MPI_Recv( &buffer[0], bytes, MPI_PACKED, 1, itag, local_communicator, MPI_STATUS_IGNORE );
+        timing_record(Comm);
+        pos = 0;
+        //MPI_Unpack( &buffer[0], bytes, &pos, MPI_BOTTOM, 1, dtype_recv_t, local_communicator );
+        UNPACK_MAYBE_ASSERT_VALID(v, ru, pos, &buffer[0], bytes, &pos, MPI_BOTTOM, 1, dtype_recv_t, local_communicator );
+        timing_record(Unpack);
+      } else {
+        MPI_Recv( &buffer[0], bytes, MPI_PACKED, 0, itag, local_communicator, MPI_STATUS_IGNORE );
+        pos = 0;
+        MPI_Unpack( &buffer[0], bytes, &pos, MPI_BOTTOM, 1, dtype_recv_t, local_communicator );
+        pos = 0;
+        MPI_Pack( MPI_BOTTOM, 1, dtype_send_t, &buffer[0], bytes, &pos, local_communicator );
+        MPI_Send( &buffer[0], pos, MPI_PACKED, 0, itag, local_communicator );
+      }
+
+    } //! inner loop
+
+    free( buffer );
+
+    MPI_Type_free( &dtype_send_t );
+    MPI_Type_free( &dtype_recv_t );
+
+    if ( myrank == 0 ) {
+      timing_record(DDTFree);
+    }
+
+    dbrew_free(pr);
+    dbrew_free(ur);
+    verifier_free(v);
+
+  } //! outer loop
+
+  if ( myrank == 0 ) {
+    timing_print( 1 );
+  }
+
+  free(temp_displacement);
 
   free(atag);
   free(atype);
@@ -600,8 +787,8 @@ void timing_lammps_atomic_ddt( int DIM1, int icount, int* list, int outer_loop, 
     MPI_Type_free( &dtype_indexed1_t );
     MPI_Type_free( &dtype_indexed3_t );
 
-	  MPI_Type_contiguous( icount, MPI_DOUBLE, &dtype_cont1_t );
-	  MPI_Type_contiguous( 3*icount, MPI_DOUBLE, &dtype_cont3_t );
+    MPI_Type_contiguous( icount, MPI_DOUBLE, &dtype_cont1_t );
+    MPI_Type_contiguous( 3*icount, MPI_DOUBLE, &dtype_cont3_t );
 
     MPI_Get_address( &ax[3*DIM1], &address_displacement[0] );
     MPI_Get_address( &atag[DIM1], &address_displacement[1] );
@@ -947,10 +1134,192 @@ void timing_lammps_atomic_mpi_pack_ddt( int DIM1, int icount, int* list, int out
     MPI_Type_free( &dtype_send_t );
     MPI_Type_free( &dtype_recv_t );
 
+    if ( myrank == 0 ) {
+      timing_record(DDTFree);
+    }
+
+  } //! outer loop
+
+  if ( myrank == 0 ) {
+    timing_print( 1 );
+  }
+
+  free(temp_displacement);
+
+  free(ax);
+  free(atag);
+  free(atype);
+  free(amask);
+}
+
+void timing_lammps_atomic_mpi_pack_ddt_dbrew( int DIM1, int icount, int* list, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ){
+
+  double* atag;
+  double* atype;
+  double* amask;
+  double* ax;
+
+  double* buffer;
+
+  int myrank;
+  int i, j, typesize, bytes, base, pos;
+
+  MPI_Datatype dtype_indexed1_t, dtype_indexed3_t, dtype_send_t, dtype_cont1_t, dtype_cont3_t, dtype_recv_t, oldtype[4];
+  MPI_Aint address_displacement[4];
+  int blocklength[4];
+  int* index_displacement;
+
+  int* temp_displacement;
+
+  char method[50];
+
+//! just some statements to prevent compiler warnings of unused variables
+//! those parameter are included for future features
+  *correct_flag = 0;
+  *ptypesize = 0;
+//  typesize = filehandle_debug
+
+  atag = malloc( (DIM1+icount) * sizeof(double) );
+  atype = malloc( (DIM1+icount) * sizeof(double) );
+  amask = malloc( (DIM1+icount) * sizeof(double) );
+  ax = malloc( 3 * (DIM1+icount) * sizeof(double) );
+
+//conversion from fortran to c
+  temp_displacement = malloc( icount * outer_loop * sizeof(int) );
+  for( i = 0 ; i<outer_loop ; i++ ) {
+    for( j = 0 ; j<icount ; j++ ) {
+      temp_displacement[idx2D(j,i,icount)] = list[idx2D(j,i,icount)] - 1;
+    }
+  }
+
+  MPI_Comm_rank( local_communicator, &myrank );
+
+  base = myrank * (6*(DIM1+icount)) + 1;
+  utilities_fill_unique_array_2D_double( &ax[0], 3, DIM1+icount, base );
+  base = base + 3*(DIM1+icount);
+  utilities_fill_unique_array_1D_double( &atag[0], DIM1+icount, base );
+  base = base + DIM1 + icount;
+  utilities_fill_unique_array_1D_double( &atype[0], DIM1+icount, base );
+  base = base + DIM1 + icount;
+  utilities_fill_unique_array_1D_double( &amask[0], DIM1+icount, base );
+
+  if ( myrank == 0 ) {
+    snprintf( method, 50, "mpi_pack_ddt_dbrew" );
+
+    MPI_Type_size( MPI_DOUBLE_PRECISION, &typesize );
+    bytes = icount * 6 * typesize;
+
+    timing_init( testname, &method[0], bytes );
+  }
+
+  for( i=0 ; i<outer_loop ; i++ ) {
+
+    MPI_Type_size( MPI_DOUBLE, &typesize );
+    bytes = 6 * icount * typesize;
+    buffer = malloc( 6 * icount * sizeof(double) );
+
+    index_displacement = malloc( icount * sizeof(int) );
+
+    MPI_Type_create_indexed_block( icount, 1, &temp_displacement[idx2D(0,i,icount)], MPI_DOUBLE, &dtype_indexed1_t );
+
+    for( j = 0 ; j<icount ; j++ ) {
+      index_displacement[j] = 3 * temp_displacement[idx2D(j,i,icount)];
+    }
+    MPI_Type_create_indexed_block( icount, 3, &index_displacement[0], MPI_DOUBLE, &dtype_indexed3_t );
+
+    MPI_Get_address( &ax[0], &address_displacement[0] );
+    MPI_Get_address( &atag[0], &address_displacement[1] );
+    MPI_Get_address( &atype[0], &address_displacement[2] );
+    MPI_Get_address( &amask[0], &address_displacement[3] );
+
+    oldtype[0] = dtype_indexed3_t;
+    blocklength[0] = 1;
+    for( j=1 ; j<4 ; j++ ) {
+      oldtype[j] = dtype_indexed1_t;
+      blocklength[j] = 1;
+    }
+
+    MPI_Type_create_struct( 4, &blocklength[0], &address_displacement[0], &oldtype[0], &dtype_send_t );
+    MPI_Type_commit( &dtype_send_t );
+
+    MPI_Type_free( &dtype_indexed1_t );
+    MPI_Type_free( &dtype_indexed3_t );
+
+    MPI_Type_contiguous( icount, MPI_DOUBLE, &dtype_cont1_t );
+    MPI_Type_contiguous( 3*icount, MPI_DOUBLE, &dtype_cont3_t );
+
+    MPI_Get_address( &ax[3*DIM1], &address_displacement[0] );
+    MPI_Get_address( &atag[DIM1], &address_displacement[1] );
+    MPI_Get_address( &atype[DIM1], &address_displacement[2] );
+    MPI_Get_address( &amask[DIM1], &address_displacement[3] );
+
+    oldtype[0] = dtype_cont3_t;
+    for( j=1 ; j < 4 ; j++ ) {
+      oldtype[j] = dtype_cont1_t;
+    }
+
+    MPI_Type_create_struct( 4, &blocklength[0], &address_displacement[0], &oldtype[0], &dtype_recv_t );
+    MPI_Type_commit( &dtype_recv_t );
+
+    MPI_Type_free( &dtype_cont1_t );
+    MPI_Type_free( &dtype_cont3_t );
+
+    free(index_displacement );
+
+    if ( myrank == 0 ) {
+      timing_record(DDTCreate);
+    }
+
+    printf("Running lammps tests\n");
+    //if (myrank == 0) {
+    //  print_pid(myrank);
+    //  int foo = 0;
+    //  while (foo == 0);
+    //}
+    INIT_VERIFIER(v, myrank);
+    bool verbose = DIM1 == 4084 && i == 0;
+    REWRITE_PACK(pr, rp, pos, myrank, verbose, MPI_BOTTOM, 1, dtype_send_t, &buffer[0], bytes, &pos, local_communicator );
+    REWRITE_UNPACK(ur, ru, pos, myrank, false, &buffer[0], bytes, &pos, MPI_BOTTOM, 1, dtype_recv_t, local_communicator );
+    timing_record(Rewrite);
+
+    for( j=0 ; j<inner_loop ; j++ ) {
+
+      if ( myrank == 0 ) {
+        pos = 0;
+        //MPI_Pack( MPI_BOTTOM, 1, dtype_send_t, &buffer[0], bytes, &pos,
+        //local_communicator );
+        PACK_MAYBE_ASSERT_VALID(v, rp, pos, MPI_BOTTOM, 1, dtype_send_t, &buffer[0], bytes, &pos, local_communicator );
+
+        timing_record(Pack);
+        MPI_Send( &buffer[0], pos, MPI_PACKED, 1, itag, local_communicator );
+        MPI_Recv( &buffer[0], bytes, MPI_PACKED, 1, itag, local_communicator, MPI_STATUS_IGNORE );
+        timing_record(Comm);
+        pos = 0;
+        //MPI_Unpack( &buffer[0], bytes, &pos, MPI_BOTTOM, 1, dtype_recv_t, local_communicator );
+        UNPACK_MAYBE_ASSERT_VALID(v, ru, pos, &buffer[0], bytes, &pos, MPI_BOTTOM, 1, dtype_recv_t, local_communicator );
+        timing_record(Unpack);
+      } else {
+        MPI_Recv( &buffer[0], bytes, MPI_PACKED, 0, itag, local_communicator, MPI_STATUS_IGNORE );
+        pos = 0;
+        MPI_Unpack( &buffer[0], bytes, &pos, MPI_BOTTOM, 1, dtype_recv_t, local_communicator );
+        pos = 0;
+        MPI_Pack( MPI_BOTTOM, 1, dtype_send_t, &buffer[0], bytes, &pos, local_communicator );
+        MPI_Send( &buffer[0], pos, MPI_PACKED, 0, itag, local_communicator );
+      }
+
+    } //! inner loop
+
+    free( buffer );
+
+    MPI_Type_free( &dtype_send_t );
+    MPI_Type_free( &dtype_recv_t );
 
     if ( myrank == 0 ) {
       timing_record(DDTFree);
     }
+    dbrew_free(pr);
+    dbrew_free(ur);
+    verifier_free(v);
 
   } //! outer loop
 

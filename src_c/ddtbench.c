@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <argp.h>
+#include <unistd.h>
 
 #include "mpi.h"
 #include "ddtbench.h"
@@ -40,7 +42,6 @@ int main( int argc, char **argv) {
 //! =============================== intro ==============================
 //! ====================================================================
 
-
 //! init some variables for file handling
   testname[0][0] = '\0';
   testname[1][0] = '\0';
@@ -64,7 +65,12 @@ int main( int argc, char **argv) {
     MPI_Comm_split( MPI_COMM_WORLD, MPI_UNDEFINED, myrank, &local_comm_pp );
   }
 
-//  init the random number generator
+  print_pid(myrank);
+
+  //i = 0;
+  //while (i == 0);
+  //i = 0;
+  //  init the random number generator
   unsigned int iseed = (unsigned int)time(NULL);
   srand (iseed);
 

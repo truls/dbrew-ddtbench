@@ -6,6 +6,19 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
+#include <assert.h>
+#include <stdio.h>
+#include <unistd.h>
+
+#include <mpi.h>
+
+#include "config.h"
+
+#ifdef HAVE_DBREW
+#include <dbrew.h>
+#endif
+
 typedef enum _CmpState {
   StateCompare,
   StateCapture,
@@ -17,6 +30,10 @@ struct Verifier {
   size_t capturedSize;
   CmpState captureState;
 };
+
+void print_pid(int myrank) {
+  printf("Rank %d is at pid %d\n", myrank, getpid());
+}
 
 //! gives list_dim unique numbers in index list back (from the range of
 //! 1:global_dim
@@ -148,6 +165,114 @@ void utilities_fill_unique_array_3D_double( double* array, int DIM1, int DIM2, i
     }
   }
 }
+
+/*uint64_t rewrite(Rewriter* r, ...)
+{
+  va_list args;
+  va_start(args, r);
+  dbrew_re
+  }*/
+
+#ifdef HAVE_DBREW
+
+static
+void setup_rewriter_function(Rewriter* r) {
+
+  uintptr_t mpirtp = dbrew_util_symname_to_ptr(r, "MPIR_ToPointer");
+  //assert(mpirtp_dir == mpirtp);
+  //uintptr_t printfptr = (uintptr_t) &printf;
+  uintptr_t printfptr = dbrew_util_symname_to_ptr(r, "printf@plt");
+  //uintptr_t memcpyptr = dbrew_util_symname_to_ptr(r, "memcpy@plt");
+  uintptr_t memcpyptr = (uintptr_t) &memcpy;
+  //uintptr_t  mpierr = (uintptr_t) &MPIR_Error;
+  //uintptr_t  mpierr_dir = (uintptr_t) &MPIR_Error;
+  uintptr_t  mpierr = dbrew_util_symname_to_ptr(r, "MPIR_Error");
+  //assert(mpierr == mpierr_dir);
+  //uintptr_t mpierrsm_dir = (uintptr_t) &MPIR_Err_setmsg;
+  //uintptr_t mpierrsm = (uintptr_t) &MPIR_Err_setmsg;
+  uintptr_t mpierrsm = dbrew_util_symname_to_ptr(r, "MPIR_Err_setmsg");
+
+  dbrew_config_function_parcount(r, mpirtp, 1);
+  dbrew_config_function_par_setname(r, mpirtp, 0, "MPIR_ToPointer arg1");
+  dbrew_config_function_setname(r, mpirtp, "MPIR_ToPointer");
+  dbrew_config_function_setflags(r, mpirtp,
+                                 FC_BypassEmu | FC_SetRetKnownViral | FC_RetValueHint);
+
+  dbrew_config_function_parcount(r, mpierr, 5);
+  dbrew_config_function_setflags(r, mpierr, FC_BypassEmu | FC_KeepCallInstr);
+
+  dbrew_config_function_parcount(r, mpierrsm, 6);
+  dbrew_config_function_setflags(r, mpierrsm, FC_BypassEmu | FC_KeepCallInstr);
+
+  dbrew_config_function_parcount(r, printfptr, 6);
+  dbrew_config_function_setflags(r, printfptr, FC_BypassEmu | FC_KeepCallInstr);
+
+  dbrew_config_function_parcount(r, memcpyptr, 3);
+  dbrew_config_function_setflags(r, memcpyptr, FC_BypassEmu | FC_KeepCallInstr | FC_SetReturnDynamic);
+
+  dbrew_return_orig_on_fail(r, false);
+}
+
+Rewriter* get_pack_rewriter(bool verbose)
+{
+
+  Rewriter* r = dbrew_new();
+
+  uintptr_t pack = (uintptr_t) &MPI_Pack;
+
+
+  dbrew_set_function(r, (uint64_t)pack);
+  if (verbose) {
+    dbrew_verbose(r, 1, 1, 1);
+    dbrew_optverbose(r, 1);
+  }
+  dbrew_colorful_output(r, true);
+  dbrew_config_function_setname(r, (uint64_t) pack, "MPI_Pack");
+  dbrew_config_function_parmap(r, (uint64_t) pack, 7,
+                               SPInt(2) // incount
+                               | SPInt(3) // datatype
+                               | SRPInt(5) // outcount
+                               | SRPInt(6) // position
+                               | SPInt(7) // comm
+
+                               );
+  setup_rewriter_function(r);
+  return r;
+}
+
+Rewriter* get_unpack_rewriter(bool verbose)
+{
+  Rewriter* r = dbrew_new();
+
+  uintptr_t unpack = (uintptr_t) &MPI_Unpack;
+
+  dbrew_set_function(r, (uint64_t)unpack);
+  if (verbose) {
+    dbrew_verbose(r, 1, 1, 1);
+    dbrew_optverbose(r, 1);
+  }
+  dbrew_colorful_output(r, true);
+  dbrew_config_function_setname(r, (uint64_t) unpack, "MPI_Unpack");
+  dbrew_config_function_parmap(r, (uint64_t) unpack, 7,
+                                 SPInt(2) // insize
+                               | SRPInt(3) // position
+                               | SRPInt(5) // outsize
+                               | SPInt(6) // datatype;
+                               | SPInt(7) // comm
+                               );
+
+
+  setup_rewriter_function(r);
+
+  return r;
+}
+
+void free_rewriter(Rewriter* r) {
+  dbrew_free(r);
+}
+
+#endif // HAVE_DBREW
+
 void verifier_reset(Verifier* v) {
   if (v->captured)
     free(v->captured);

@@ -143,6 +143,8 @@ void wrapper_timing_milc_su3_zdown( int DIM2, int DIM3, int DIM4, int DIM5, int 
 
   timing_milc_su3_zdown_mpi_pack_ddt( DIM2, DIM3, DIM4, DIM5, outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
 
+  timing_milc_su3_zdown_mpi_pack_ddt_dbrew( DIM2, DIM3, DIM4, DIM5, outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
+
 //! not necessarily correct, since it assumes that a complex uses twice
 //! the bytes a real does
    nelements = DIM2*DIM3/2*DIM5*2*3*2;
@@ -177,6 +179,8 @@ void wrapper_timing_nas_lu_x( int DIM2, int DIM3, int outer_loop, int inner_loop
 
   timing_nas_lu_x_mpi_pack_ddt( DIM2, DIM3, outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
 
+  timing_nas_lu_x_mpi_pack_ddt_dbrew( DIM2, DIM3, outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
+
 //! not necessarily correct, since it assumes that a double uses twice
 //! the bytes a real does
   nelements = 5 * DIM2 * 2;
@@ -210,6 +214,8 @@ void wrapper_timing_nas_lu_y( int DIM2, int DIM3, int outer_loop, int inner_loop
   timing_nas_lu_y_manual( DIM2, DIM3, outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
 
   timing_nas_lu_y_mpi_pack_ddt( DIM2, DIM3, outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
+
+  timing_nas_lu_y_mpi_pack_ddt_dbrew( DIM2, DIM3, outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
 
 //! not necessarily correct, since it assumes that a double uses twice
 //! the bytes a real does
@@ -257,6 +263,8 @@ void wrapper_timing_nas_mg_x( int DIM1, int DIM2, int DIM3, int outer_loop, int 
 
   timing_nas_mg_x_mpi_pack_ddt( DIM1, DIM2, DIM3, outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
 
+  timing_nas_mg_x_mpi_pack_ddt_dbrew( DIM1, DIM2, DIM3, outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
+
 //! not necessarily correct, since it assumes that a double uses twice
 //! the bytes a real does
   nelements = (DIM2-2)*(DIM3-2)*2;
@@ -292,6 +300,8 @@ void wrapper_timing_nas_mg_y( int DIM1, int DIM2, int DIM3, int outer_loop, int 
 
    timing_nas_mg_y_mpi_pack_ddt( DIM1, DIM2, DIM3, outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
 
+   timing_nas_mg_y_mpi_pack_ddt_dbrew( DIM1, DIM2, DIM3, outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
+
 //! not necessarily correct, since it assumes that a double uses twice
 //! the bytes a real does
     nelements = (DIM1-2) * (DIM3-2) * 2;
@@ -326,6 +336,8 @@ void wrapper_timing_nas_mg_z( int DIM1, int DIM2, int DIM3, int outer_loop, int 
   timing_nas_mg_z_manual( DIM1, DIM2, DIM3, outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
 
   timing_nas_mg_z_mpi_pack_ddt( DIM1, DIM2, DIM3, outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
+
+  timing_nas_mg_z_mpi_pack_ddt_dbrew( DIM1, DIM2, DIM3, outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
 
 //! not necessarily correct, since it assumes that a double uses twice
 //! the bytes a real does
@@ -418,6 +430,8 @@ void wrapper_timing_specfem3d_mt( int DIM1, int DIM2, int DIM3, int outer_loop, 
 
   timing_specfem3d_mt_mpi_pack_ddt( DIM1, DIM2, DIM3, outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
 
+  timing_specfem3d_mt_mpi_pack_ddt_dbrew( DIM1, DIM2, DIM3, outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
+
   nelements = DIM1 * DIM3;
   loops = outer_loop * inner_loop;
 
@@ -458,6 +472,8 @@ void wrapper_timing_lammps_full( int DIM1, int icount, int outer_loop, int inner
   timing_lammps_full_manual( DIM1, icount, list, outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
 
   timing_lammps_full_mpi_pack_ddt( DIM1, icount, list, outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
+
+  //timing_lammps_full_mpi_pack_ddt_dbrew( DIM1, icount, list, outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
 
 //! not necessarily correct, since it assumes that a double uses twice
 //! the bytes a real does
@@ -502,6 +518,8 @@ void wrapper_timing_lammps_atomic( int DIM1, int icount, int outer_loop, int inn
 
   timing_lammps_atomic_mpi_pack_ddt( DIM1, icount, list, outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
 
+    timing_lammps_atomic_mpi_pack_ddt_dbrew( DIM1, icount, list, outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
+
 //! not necessarily correct, since it assumes that a double uses twice
 //! the bytes a real does
   nelements = icount * 6 * 2;
@@ -544,6 +562,8 @@ void wrapper_timing_specfem3D_oc( int DIM1, int icount, int outer_loop, int inne
   timing_specfem3D_oc_manual( DIM1, icount, &list[0], outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
 
   timing_specfem3D_oc_mpi_pack_ddt( DIM1, icount, &list[0], outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
+
+  //timing_specfem3D_oc_mpi_pack_ddt_dbrew( DIM1, icount, &list[0], outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
 
   nelements = icount;
   loops = outer_loop * inner_loop;
