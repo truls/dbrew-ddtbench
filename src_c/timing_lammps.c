@@ -113,7 +113,7 @@ void timing_lammps_full_ddt( int DIM1, int icount, int* list, int outer_loop, in
     MPI_Type_free( &dtype_indexed3_t );
 
     MPI_Type_contiguous( icount, MPI_DOUBLE, &dtype_cont1_t );
-	  MPI_Type_contiguous( 3*icount, MPI_DOUBLE, &dtype_cont3_t );
+    MPI_Type_contiguous( 3*icount, MPI_DOUBLE, &dtype_cont3_t );
 
     MPI_Get_address( &ax[3*DIM1], &address_displacement[0] );
     MPI_Get_address( &atag[DIM1], &address_displacement[1] );
@@ -153,7 +153,7 @@ void timing_lammps_full_ddt( int DIM1, int icount, int* list, int outer_loop, in
     } //! inner loop
 
     MPI_Type_free( &dtype_send_t );
-	  MPI_Type_free( &dtype_recv_t );
+    MPI_Type_free( &dtype_recv_t );
 
     if ( myrank == 0 ) {
       timing_record(DDTFree);
@@ -437,7 +437,7 @@ void timing_lammps_full_mpi_pack_ddt( int DIM1, int icount, int* list, int outer
     MPI_Type_free( &dtype_indexed3_t );
 
     MPI_Type_contiguous( icount, MPI_DOUBLE, &dtype_cont1_t );
-	  MPI_Type_contiguous( 3*icount, MPI_DOUBLE, &dtype_cont3_t );
+    MPI_Type_contiguous( 3*icount, MPI_DOUBLE, &dtype_cont3_t );
 
     MPI_Get_address( &ax[3*DIM1], &address_displacement[0] );
     MPI_Get_address( &atag[DIM1], &address_displacement[1] );
@@ -489,7 +489,7 @@ void timing_lammps_full_mpi_pack_ddt( int DIM1, int icount, int* list, int outer
     free( buffer );
 
     MPI_Type_free( &dtype_send_t );
-	  MPI_Type_free( &dtype_recv_t );
+    MPI_Type_free( &dtype_recv_t );
 
     if ( myrank == 0 ) {
       timing_record(DDTFree);
@@ -892,8 +892,8 @@ void timing_lammps_atomic_mpi_pack_ddt( int DIM1, int icount, int* list, int out
     MPI_Type_free( &dtype_indexed1_t );
     MPI_Type_free( &dtype_indexed3_t );
 
-	  MPI_Type_contiguous( icount, MPI_DOUBLE, &dtype_cont1_t );
-	  MPI_Type_contiguous( 3*icount, MPI_DOUBLE, &dtype_cont3_t );
+    MPI_Type_contiguous( icount, MPI_DOUBLE, &dtype_cont1_t );
+    MPI_Type_contiguous( 3*icount, MPI_DOUBLE, &dtype_cont3_t );
 
     MPI_Get_address( &ax[3*DIM1], &address_displacement[0] );
     MPI_Get_address( &atag[DIM1], &address_displacement[1] );
@@ -945,7 +945,8 @@ void timing_lammps_atomic_mpi_pack_ddt( int DIM1, int icount, int* list, int out
     free( buffer );
 
     MPI_Type_free( &dtype_send_t );
-	  MPI_Type_free( &dtype_recv_t );
+    MPI_Type_free( &dtype_recv_t );
+
 
     if ( myrank == 0 ) {
       timing_record(DDTFree);

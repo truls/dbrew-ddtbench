@@ -345,77 +345,77 @@ void timing_set_max_tests( int value ) {
 
 void timing_init_( char* ptestname, char* pmethod, int* pbytes, int ptestname_len, int pmethod_len ) {
 
-	int i;
+  int i;
 
-	char* c_ptestname = malloc(ptestname_len+1);
-	memcpy(c_ptestname, ptestname, ptestname_len);
-	c_ptestname[ptestname_len] = '\0';
+  char* c_ptestname = malloc(ptestname_len+1);
+  memcpy(c_ptestname, ptestname, ptestname_len);
+  c_ptestname[ptestname_len] = '\0';
 
-	for (i=ptestname_len-1; i>0; i--) {
-		if (c_ptestname[i] == ' ') {
-			c_ptestname[i] = '\0';
-		}
-		else {
-			break;
-		}
-	}
+  for (i=ptestname_len-1; i>0; i--) {
+    if (c_ptestname[i] == ' ') {
+      c_ptestname[i] = '\0';
+    }
+    else {
+      break;
+    }
+  }
 
-	char* c_pmethod = malloc(pmethod_len+1);
-	memcpy(c_pmethod, pmethod, pmethod_len);
-	c_pmethod[pmethod_len] = '\0';
+  char* c_pmethod = malloc(pmethod_len+1);
+  memcpy(c_pmethod, pmethod, pmethod_len);
+  c_pmethod[pmethod_len] = '\0';
 
-	for (i=pmethod_len-1; i>0; i--) {
-		if (c_pmethod[i] == ' ') {
-			c_pmethod[i] = '\0';
-		}
-		else {
-			break;
-		}
-	}
+  for (i=pmethod_len-1; i>0; i--) {
+    if (c_pmethod[i] == ' ') {
+      c_pmethod[i] = '\0';
+    }
+    else {
+      break;
+    }
+  }
 
-	timing_init(c_ptestname, c_pmethod, *pbytes);
+  timing_init(c_ptestname, c_pmethod, *pbytes);
 
-	free(c_ptestname);
-	free(c_pmethod);
+  free(c_ptestname);
+  free(c_pmethod);
 
 }
 
 void timing_print_( int* last ) {
-	timing_print(*last);
+  timing_print(*last);
 }
 
 void timing_record_( int* id ) {
-	timing_record(*id);
+  timing_record(*id);
 }
 
 void timing_open_file_( char* filename, int len ) {
 
-	int i;
-	char* c_filename = malloc(len+1);
-	memcpy(c_filename, filename, len);
-	c_filename[len] = '\0';
+  int i;
+  char* c_filename = malloc(len+1);
+  memcpy(c_filename, filename, len);
+  c_filename[len] = '\0';
 
-	for (i=len-1; i>0; i--) {
-		if (c_filename[i] == ' ') {
-			c_filename[i] = '\0';
-		}
-		else {
-			break;
-		}
-	}
+  for (i=len-1; i>0; i--) {
+    if (c_filename[i] == ' ') {
+      c_filename[i] = '\0';
+    }
+    else {
+      break;
+    }
+  }
 
-	timing_open_file(c_filename);
+  timing_open_file(c_filename);
 
-	free(c_filename);
+  free(c_filename);
 
 }
 
 void timing_close_file_() {
-	timing_close_file();
+  timing_close_file();
 }
 
 void timing_set_max_tests_( int* value ) {
-	timing_set_max_tests(*value);
+  timing_set_max_tests(*value);
 }
 
 void timing_hrt_init_() {
@@ -436,76 +436,76 @@ void cleanup_papi_() {
 
 void timing_init__( char* ptestname, int ptestname_len, char* pmethod, int pmethod_len, int* pbytes ) {
 
-	int i;
+  int i;
 
-	char* c_ptestname = malloc(ptestname_len+1);
-	memcpy(c_ptestname, ptestname, ptestname_len);
-	c_ptestname[ptestname_len] = '\0';
+  char* c_ptestname = malloc(ptestname_len+1);
+  memcpy(c_ptestname, ptestname, ptestname_len);
+  c_ptestname[ptestname_len] = '\0';
 
-	for (i=ptestname_len-1; i>0; i--) {
-		if (c_ptestname[i] == ' ') {
-			c_ptestname[i] = '\0';
-		}
-		else {
-			break;
-		}
-	}
+  for (i=ptestname_len-1; i>0; i--) {
+    if (c_ptestname[i] == ' ') {
+      c_ptestname[i] = '\0';
+    }
+    else {
+      break;
+    }
+  }
 
-	char* c_pmethod = malloc(pmethod_len+1);
-	memcpy(c_pmethod, pmethod, pmethod_len);
-	c_pmethod[pmethod_len] = '\0';
+  char* c_pmethod = malloc(pmethod_len+1);
+  memcpy(c_pmethod, pmethod, pmethod_len);
+  c_pmethod[pmethod_len] = '\0';
 
-	for (i=pmethod_len-1; i>0; i--) {
-		if (c_pmethod[i] == ' ') {
-			c_pmethod[i] = '\0';
-		}
-		else {
-			break;
-		}
-	}
+  for (i=pmethod_len-1; i>0; i--) {
+    if (c_pmethod[i] == ' ') {
+      c_pmethod[i] = '\0';
+    }
+    else {
+      break;
+    }
+  }
 
-	timing_init(c_ptestname, c_pmethod, *pbytes);
+  timing_init(c_ptestname, c_pmethod, *pbytes);
 
-	free(c_ptestname);
-	free(c_pmethod);
+  free(c_ptestname);
+  free(c_pmethod);
 }
 
 void timing_print__( int* last ) {
-	timing_print(*last);
+  timing_print(*last);
 }
 
 void timing_record__( int* id ) {
-	timing_record(*id);
+  timing_record(*id);
 }
 
 void timing_open_file__( char* filename, int len ) {
 
-	int i;
-	char* c_filename = malloc(len+1);
-	memcpy(c_filename, filename, len);
-	c_filename[len] = '\0';
+  int i;
+  char* c_filename = malloc(len+1);
+  memcpy(c_filename, filename, len);
+  c_filename[len] = '\0';
 
-	for (i=len-1; i>0; i--) {
-		if (c_filename[i] == ' ') {
-			c_filename[i] = '\0';
-		}
-		else {
-			break;
-		}
-	}
+  for (i=len-1; i>0; i--) {
+    if (c_filename[i] == ' ') {
+      c_filename[i] = '\0';
+    }
+    else {
+      break;
+    }
+  }
 
-	timing_open_file(c_filename);
+  timing_open_file(c_filename);
 
-	free(c_filename);
+  free(c_filename);
 
 }
 
 void timing_close_file__() {
-	timing_close_file();
+  timing_close_file();
 }
 
 void timing_set_max_tests__( int* value ) {
-	timing_set_max_tests(*value);
+  timing_set_max_tests(*value);
 }
 
 void timing_hrt_init__() {
