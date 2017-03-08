@@ -25,6 +25,15 @@ enum Epochs {
   EpochMax,
 };
 
+// Verifier definitions
+typedef struct Verifier Verifier;
+void verifier_reset(Verifier* v);
+Verifier* verifier_new();
+void verifier_free(Verifier* v);
+void verifier_capture(Verifier* v, void* data, size_t size);
+bool verifier_verify(Verifier* v, void* data, size_t size);
+void verifier_report(void* buf1, void* buf2, size_t size, int maxerrs);
+void verifier_test(Verifier* verify);
 void timing_close_file();
 void timing_init( char* ptestname, char* pmethod, int pbytes );
 void timing_open_file( char* filename );
