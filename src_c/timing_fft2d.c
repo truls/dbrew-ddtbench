@@ -10,7 +10,7 @@
 
 #include "ddtbench.h"
 
-void timing_fft2d_ddt( int DIM1, int procs, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+void timing_fft2d_ddt( int DIM1, int procs, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
   double* matrix;
   double* recv_array;
@@ -102,7 +102,7 @@ void timing_fft2d_ddt( int DIM1, int procs, int outer_loop, int inner_loop, int*
   free(matrix);
 }
 
-void timing_fft2d_manual( int DIM1, int procs, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+void timing_fft2d_manual( int DIM1, int procs, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
   double* matrix;
   double* recv_buffer;
@@ -209,7 +209,7 @@ void timing_fft2d_manual( int DIM1, int procs, int outer_loop, int inner_loop, i
   free(matrix);
 }
 
-void timing_fft2d_mpi_pack_ddt( int DIM1, int procs, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+void timing_fft2d_mpi_pack_ddt( int DIM1, int procs, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
   double* matrix;
   double* recv_buffer;

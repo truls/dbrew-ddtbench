@@ -16,7 +16,7 @@ static inline int idx3D(int x, int y, int z, int DIM1, int DIM2) {
     return x+DIM1*(y+z*DIM2);
 }
 
-void timing_nas_lu_y_ddt( int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+void timing_nas_lu_y_ddt( int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
   int DIM1 = 5;
 
@@ -92,7 +92,7 @@ void timing_nas_lu_y_ddt( int DIM2, int DIM3, int outer_loop, int inner_loop, in
   free(array);
 }
 
-void timing_nas_lu_y_manual( int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+void timing_nas_lu_y_manual( int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
   int DIM1 = 5;
 
@@ -189,7 +189,7 @@ void timing_nas_lu_y_manual( int DIM2, int DIM3, int outer_loop, int inner_loop,
   free(array);
 }
 
-void timing_nas_lu_y_mpi_pack_ddt( int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+void timing_nas_lu_y_mpi_pack_ddt( int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
   int DIM1  = 5;
 
@@ -355,7 +355,7 @@ void timing_nas_lu_x_ddt( int DIM2, int DIM3, int outer_loop, int inner_loop, in
   free(array);
 }
 
-void timing_nas_lu_x_manual( int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+void timing_nas_lu_x_manual( int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
   int DIM1 = 5;
 
@@ -454,7 +454,7 @@ void timing_nas_lu_x_manual( int DIM2, int DIM3, int outer_loop, int inner_loop,
   free(array);
 }
 
-void timing_nas_lu_x_mpi_pack_ddt( int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+void timing_nas_lu_x_mpi_pack_ddt( int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
   int DIM1 = 5;
 
@@ -622,7 +622,7 @@ void timing_nas_mg_x_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inne
   free(array);
 }
 
-void timing_nas_mg_x_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+void timing_nas_mg_x_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
   double* array;
   double* buffer;
@@ -716,7 +716,7 @@ void timing_nas_mg_x_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int i
   free(array);
 }
 
-void timing_nas_mg_x_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+void timing_nas_mg_x_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
   double* array;
   double* buffer;
@@ -882,7 +882,7 @@ void timing_nas_mg_y_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inne
   free(array);
 }
 
-void timing_nas_mg_y_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+void timing_nas_mg_y_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
  double* array;
  double* buffer;
@@ -977,7 +977,7 @@ void timing_nas_mg_y_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int i
   free(array);
 }
 
-void timing_nas_mg_y_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+void timing_nas_mg_y_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
   double* array;
   double* buffer;
@@ -1065,7 +1065,8 @@ void timing_nas_mg_y_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop,
   free( array );
 }
 
-void timing_nas_mg_z_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+
+void timing_nas_mg_z_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
   double* array;
 
@@ -1135,7 +1136,7 @@ void timing_nas_mg_z_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inne
   free(array);
 }
 
-void timing_nas_mg_z_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+void timing_nas_mg_z_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
   double* array;
   double* buffer;
@@ -1230,7 +1231,7 @@ void timing_nas_mg_z_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int i
   free(array);
 }
 
-void timing_nas_mg_z_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+void timing_nas_mg_z_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
   double* array;
   double* buffer;

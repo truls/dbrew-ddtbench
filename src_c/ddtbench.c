@@ -9,7 +9,7 @@
 #include "mpi.h"
 #include "ddtbench.h"
 
-int main( int argc, char **argv, char *envp[]) {
+int main( int argc, char **argv) {
 
   int outer_loop = 10;
   int inner_loop = 20;

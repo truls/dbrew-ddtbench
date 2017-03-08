@@ -15,7 +15,7 @@ static inline int idx2D(int x, int y, int DIM1) {
   return x+y*DIM1;
 }
 
-void timing_lammps_full_ddt( int DIM1, int icount, int* list, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator) {
+void timing_lammps_full_ddt( int DIM1, int icount, int* list, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator) {
 
   double* atag;
   double* atype;
@@ -175,7 +175,7 @@ void timing_lammps_full_ddt( int DIM1, int icount, int* list, int outer_loop, in
   free(ax);
 }
 
-void timing_lammps_full_manual( int DIM1, int icount, int* list, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator) {
+void timing_lammps_full_manual( int DIM1, int icount, int* list, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator) {
 
   double* atag;
   double* atype;
@@ -334,7 +334,7 @@ void timing_lammps_full_manual( int DIM1, int icount, int* list, int outer_loop,
   free(ax);
 }
 
-void timing_lammps_full_mpi_pack_ddt( int DIM1, int icount, int* list, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator) {
+void timing_lammps_full_mpi_pack_ddt( int DIM1, int icount, int* list, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator) {
 
   double* atag;
   double* atype;
@@ -513,7 +513,7 @@ void timing_lammps_full_mpi_pack_ddt( int DIM1, int icount, int* list, int outer
   free(ax);
 }
 
-void timing_lammps_atomic_ddt( int DIM1, int icount, int* list, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator) {
+void timing_lammps_atomic_ddt( int DIM1, int icount, int* list, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator) {
 
   double* atag;
   double* atype;
@@ -658,7 +658,7 @@ void timing_lammps_atomic_ddt( int DIM1, int icount, int* list, int outer_loop, 
   free(amask);
 }
 
-void timing_lammps_atomic_manual( int DIM1, int icount, int* list, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator) {
+void timing_lammps_atomic_manual( int DIM1, int icount, int* list, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator) {
 
   double* atag;
   double* atype;
@@ -799,7 +799,7 @@ void timing_lammps_atomic_manual( int DIM1, int icount, int* list, int outer_loo
   free(amask);
 }
 
-void timing_lammps_atomic_mpi_pack_ddt( int DIM1, int icount, int* list, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ){
+void timing_lammps_atomic_mpi_pack_ddt( int DIM1, int icount, int* list, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ){
 
   double* atag;
   double* atype;

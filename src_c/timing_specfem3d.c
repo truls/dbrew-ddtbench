@@ -16,7 +16,7 @@ static inline int idx2D(int x, int y, int DIM1) {
   return x+y*DIM1;
 }
 
-void timing_specfem3D_oc_ddt( int DIM1, int icount, int* list, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+void timing_specfem3D_oc_ddt( int DIM1, int icount, int* list, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
   float *array;
 
@@ -108,7 +108,7 @@ void timing_specfem3D_oc_ddt( int DIM1, int icount, int* list, int outer_loop, i
   free(displacement);
 }
 
-void timing_specfem3D_oc_manual( int DIM1, int icount, int* list, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+void timing_specfem3D_oc_manual( int DIM1, int icount, int* list, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
   float* array;
   float* buffer;
@@ -212,7 +212,10 @@ void timing_specfem3D_oc_manual( int DIM1, int icount, int* list, int outer_loop
   free(displacement);
 }
 
-void timing_specfem3D_oc_mpi_pack_ddt( int DIM1, int icount, int* list, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+void timing_specfem3D_oc_mpi_pack_ddt( int DIM1, int icount, int* list, int
+                                       outer_loop, int inner_loop, int*
+                                       correct_flag __attribute__((unused)),
+                                       int* ptypesize __attribute__((unused)), char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
   float* array;
   float* buffer;
@@ -453,7 +456,7 @@ void timing_specfem3D_cm_ddt( int DIM2_cm, int DIM2_ic, int icount_cm, int icoun
   free(temp_displacement_ic);
 }
 
-void timing_specfem3D_cm_manual( int DIM2_cm, int DIM2_ic, int icount_cm, int icount_ic, int* list_cm, int* list_ic, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+void timing_specfem3D_cm_manual( int DIM2_cm, int DIM2_ic, int icount_cm, int icount_ic, int* list_cm, int* list_ic, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
   float* array_cm;
   float* array_ic;
@@ -601,7 +604,7 @@ void timing_specfem3D_cm_manual( int DIM2_cm, int DIM2_ic, int icount_cm, int ic
   free(array_cm);
 }
 
-void timing_specfem3D_cm_mpi_pack_ddt( int DIM2_cm, int DIM2_ic, int icount_cm, int icount_ic, int* list_cm, int* list_ic, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+void timing_specfem3D_cm_mpi_pack_ddt( int DIM2_cm, int DIM2_ic, int icount_cm, int icount_ic, int* list_cm, int* list_ic, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
   float* array_cm;
   float* array_ic;
@@ -759,7 +762,7 @@ void timing_specfem3D_cm_mpi_pack_ddt( int DIM2_cm, int DIM2_ic, int icount_cm, 
 
 }
 
-void timing_specfem3d_mt_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+void timing_specfem3d_mt_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
   float* send_array;
   float* recv_array;
@@ -839,7 +842,7 @@ void timing_specfem3d_mt_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int 
   free(recv_array);
 }
 
-void timing_specfem3d_mt_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, int *correct_flag, int *ptypesize, char *testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+void timing_specfem3d_mt_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, int *correct_flag, int *ptypesize, char *testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
   float* send_array;
   float* recv_array;
@@ -920,7 +923,7 @@ void timing_specfem3d_mt_manual( int DIM1, int DIM2, int DIM3, int outer_loop, i
   free( recv_array );
 }
 
-void timing_specfem3d_mt_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+void timing_specfem3d_mt_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
   float* send_array;
   float* recv_array;

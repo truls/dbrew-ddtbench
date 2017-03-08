@@ -22,7 +22,7 @@ static inline int idx4D(int x, int y, int z, int t, int DIM1, int DIM2, int DIM3
 }
 
 void timing_wrf_manual ( int number_2D, int number_3D, int number_4D, int ims, int ime, int jms, int jme, int kms, int kme, int* limit_4D_arrays, int is, int ie, int js, int je,
-  int ks, int ke, int param_first_scalar, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+  int ks, int ke, int param_first_scalar, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
   float** array2Ds;
   float** array3Ds;
@@ -306,7 +306,7 @@ void timing_wrf_manual ( int number_2D, int number_3D, int number_4D, int ims, i
 }
 
 void timing_wrf_vec_ddt ( int number_2D, int number_3D, int number_4D, int ims, int ime, int jms, int jme, int kms, int kme, int* limit_4D_arrays, int is, int ie, int js, int je,
-  int ks, int ke, int param_first_scalar, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+  int ks, int ke, int param_first_scalar, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
   float** array2Ds;
   float** array3Ds;
@@ -536,7 +536,7 @@ void timing_wrf_vec_ddt ( int number_2D, int number_3D, int number_4D, int ims, 
 }
 
 void timing_wrf_vec_mpi_pack_ddt ( int number_2D, int number_3D, int number_4D, int ims, int ime, int jms, int jme, int kms, int kme, int* limit_4D_arrays, int is, int ie, int js,
-  int je, int ks, int ke, int param_first_scalar, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+  int je, int ks, int ke, int param_first_scalar, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
   float** array2Ds;
   float** array3Ds;
@@ -785,8 +785,7 @@ void timing_wrf_vec_mpi_pack_ddt ( int number_2D, int number_3D, int number_4D, 
   free( array4Ds );
 }
 
-void timing_wrf_sa_ddt ( int number_2D, int number_3D, int number_4D, int ims, int ime, int jms, int jme, int kms, int kme, int* limit_4D_arrays, int is, int ie, int js, int je,
-  int ks, int ke, int param_first_scalar, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+void timing_wrf_sa_ddt ( int number_2D, int number_3D, int number_4D, int ims, int ime, int jms, int jme, int kms, int kme, int* limit_4D_arrays, int is, int ie, int js, int je, int ks, int ke, int param_first_scalar, int outer_loop, int inner_loop, int* correct_flag __attribute__((unused)), int* ptypesize __attribute__((unused)), char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
   float** array2Ds;
   float** array3Ds;
@@ -1028,7 +1027,7 @@ void timing_wrf_sa_ddt ( int number_2D, int number_3D, int number_4D, int ims, i
 }
 
 void timing_wrf_sa_mpi_pack_ddt ( int number_2D, int number_3D, int number_4D, int ims, int ime, int jms, int jme, int kms, int kme, int* limit_4D_arrays, int is, int ie, int js, int je,
-  int ks, int ke, int param_first_scalar, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+  int ks, int ke, int param_first_scalar, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)) __attribute__((unused)), MPI_Comm local_communicator ) {
 
   float** array2Ds;
   float** array3Ds;

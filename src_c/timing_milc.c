@@ -15,7 +15,7 @@ static inline int idx5D(int x, int y, int z, int t, int u, int DIM1, int DIM2, i
   return x+DIM1*(y+DIM2*(z+DIM3*(t+DIM4*u)));
 }
 
-void timing_milc_su3_zdown_ddt( int DIM2, int DIM3, int DIM4, int DIM5, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+void timing_milc_su3_zdown_ddt( int DIM2, int DIM3, int DIM4, int DIM5, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
   float* array;
 
@@ -96,7 +96,7 @@ void timing_milc_su3_zdown_ddt( int DIM2, int DIM3, int DIM4, int DIM5, int oute
   free( array );
 }
 
-void timing_milc_su3_zdown_manual( int DIM2, int DIM3, int DIM4, int DIM5, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ) {
+void timing_milc_su3_zdown_manual( int DIM2, int DIM3, int DIM4, int DIM5, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
   float* array;
   float* buffer;
@@ -218,7 +218,7 @@ void timing_milc_su3_zdown_manual( int DIM2, int DIM3, int DIM4, int DIM5, int o
   free(array);
 }
 
-void timing_milc_su3_zdown_mpi_pack_ddt( int DIM2, int DIM3, int DIM4, int DIM5, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug, MPI_Comm local_communicator ){
+void timing_milc_su3_zdown_mpi_pack_ddt( int DIM2, int DIM3, int DIM4, int DIM5, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ){
 
   float* array;
   float* buffer;
