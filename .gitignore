@@ -42,3 +42,4 @@ GRTAGS
 GTAGS
 *.pdf
 .Rhistory
+build/
