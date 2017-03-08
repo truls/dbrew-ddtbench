@@ -1,0 +1,20 @@
+# -*- mode: python -*-
+
+option('verify_buffers', type: 'boolean', value: false, description:
+       'Verify the output of DBrew revritten functions against the outputs of non-transformed functions')
+option('mpi_impl', type: 'combo', choices: ['MPMPICH', 'mpich', 'openmpi'],
+       value: 'MPMPICH')
+option('MPMPICH_path', type: 'string', value: '', description: 'Base path of MPMPICH installation')
+option('openmpi_path', type: 'string', value: '/usr/lib64/openmpi', description: 'Base path of openmpi installation')
+option('mpich_path', type: 'string', value: '/usr/lib64/mpich', description: 'Base path of mpich installation')
+
+option('enable_wrf', type: 'boolean', value: false, description: 'Enable WRF benchmark')
+option('enable_milc', type: 'boolean', value: false, description: 'Enable MILC benchmark')
+option('enable_nas', type: 'boolean', value: false, description: 'Enable NAS_benchmarks')
+option('enable_fft', type: 'boolean', value: false, description: 'Enable FFT benchmark')
+option('enable_specfem3d', type: 'boolean', value: false, description: 'Enable SPECFEM3D benchmark')
+option('enable_lammps', type: 'boolean', value: false, description: 'Enable LAMMPS benchmark')
+option('enable_all', type: 'boolean', value: false, description: 'Enable all supported benchmark')
+
+option('enable_dbrew', type: 'boolean', value: false, description: 'DBrew rewriting backend')
+option('enable_papi', type: 'boolean', value: false, description: 'Enable the PAPI library')

@@ -1,0 +1,26 @@
+// Copyright (c) 2012 The Trustees of University of Illinois. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+#ifndef _DDTBENCH_CONFIG_H_
+#define _DDTBENCH_CONFIG_H_
+
+#mesondefine VERIFY_BUFFERS
+#mesondefine HAVE_DBREW
+#mesondefine HAVE_PAPI
+#mesondefine TEST_TYPE
+
+#mesondefine MY_MPI_VERSION
+
+#mesondefine WRF
+#mesondefine MILC
+#mesondefine NAS
+#mesondefine FFT
+#mesondefine SPECFEM3D
+#mesondefine LAMMPS
+
+#if ((MY_MPI_VERSION == 1)) && ((defined WRF) || (defined FFT))
+#error MPI2 compatible implementation not used but tests requiring MPI2 were enabled
+#endif
+
+#endif
