@@ -9,6 +9,7 @@
 #mesondefine HAVE_DBREW
 #mesondefine HAVE_PAPI
 #mesondefine TEST_TYPE
+#mesondefine USE_ALIGNED_MALLOC
 
 #mesondefine MY_MPI_VERSION
 

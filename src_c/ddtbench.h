@@ -160,6 +160,13 @@ void verifier_test(Verifier* verify);
   } while(0)
 #endif
 
+#ifdef USE_ALIGNED_MALLOC
+#define ddtmalloc(size) aligned_alloc(32, ((size_t) size + 0x1f) & (((size_t) (-1)) - 0x1f))
+#else
+#define ddtmalloc(size) malloc(size);
+#endif
+
+
 void timing_close_file();
 void timing_init( char* ptestname, char* pmethod, int pbytes );
 void timing_open_file( char* filename );

@@ -42,15 +42,15 @@ void timing_lammps_full_ddt( int DIM1, int icount, int* list, int outer_loop, in
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  atag = malloc( (DIM1+icount) * sizeof(double) );
-  atype = malloc( (DIM1+icount) * sizeof(double) );
-  amask = malloc( (DIM1+icount) * sizeof(double) );
-  amolecule = malloc( (DIM1+icount) * sizeof(double) );
-  aq = malloc( (DIM1+icount) * sizeof(double) );
-  ax  = malloc( 3 * (DIM1+icount) * sizeof(double) );
+  atag = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  atype = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  amask = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  amolecule = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  aq = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  ax  = ddtmalloc( 3 * (DIM1+icount) * sizeof(double) );
 
 //conversion from fortran to c
-  temp_displacement = malloc( icount * outer_loop * sizeof(int) );
+  temp_displacement = ddtmalloc( icount * outer_loop * sizeof(int) );
   for( i = 0 ; i<outer_loop ; i++ ) {
     for( j = 0 ; j<icount ; j++ ) {
       temp_displacement[idx2D(j,i,icount)] = list[idx2D(j,i,icount)] - 1;
@@ -83,7 +83,7 @@ void timing_lammps_full_ddt( int DIM1, int icount, int* list, int outer_loop, in
 
   for( i=0 ; i<outer_loop ; i++ ) {
 
-    index_displacement = malloc( icount * sizeof(int) );
+    index_displacement = ddtmalloc( icount * sizeof(int) );
 
     MPI_Type_create_indexed_block( icount, 1, &temp_displacement[idx2D(0,i,icount)], MPI_DOUBLE, &dtype_indexed1_t );
 
@@ -199,15 +199,15 @@ void timing_lammps_full_manual( int DIM1, int icount, int* list, int outer_loop,
   *ptypesize = 0;
 //  typesize = filehandle_debug;
 
-  atag = malloc( (DIM1+icount) * sizeof(double) );
-  atype = malloc( (DIM1+icount) * sizeof(double) );
-  amask = malloc( (DIM1+icount) * sizeof(double) );
-  amolecule = malloc( (DIM1+icount) * sizeof(double) );
-  aq = malloc( (DIM1+icount) * sizeof(double) );
-  ax  = malloc( 3 * (DIM1+icount) * sizeof(double) );
+  atag = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  atype = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  amask = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  amolecule = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  aq = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  ax  = ddtmalloc( 3 * (DIM1+icount) * sizeof(double) );
 
 //conversion from fortran to c
-  temp_displacement = malloc( icount * outer_loop * sizeof(int) );
+  temp_displacement = ddtmalloc( icount * outer_loop * sizeof(int) );
   for( i = 0 ; i<outer_loop ; i++ ) {
     for( j = 0 ; j<icount ; j++ ) {
       temp_displacement[idx2D(j,i,icount)] = list[idx2D(j,i,icount)] - 1;
@@ -243,7 +243,7 @@ void timing_lammps_full_manual( int DIM1, int icount, int* list, int outer_loop,
     isize = 8*icount;
     MPI_Type_size( MPI_DOUBLE, &typesize );
     bytes = isize * typesize;
-    buffer = malloc( isize * sizeof(double) );
+    buffer = ddtmalloc( isize * sizeof(double) );
 
     if ( myrank == 0 ) {
       timing_record(DDTCreate);
@@ -363,15 +363,15 @@ void timing_lammps_full_mpi_pack_ddt( int DIM1, int icount, int* list, int outer
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  atag = malloc( (DIM1+icount) * sizeof(double) );
-  atype = malloc( (DIM1+icount) * sizeof(double) );
-  amask = malloc( (DIM1+icount) * sizeof(double) );
-  amolecule = malloc( (DIM1+icount) * sizeof(double) );
-  aq = malloc( (DIM1+icount) * sizeof(double) );
-  ax  = malloc( 3 * (DIM1+icount) * sizeof(double) );
+  atag = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  atype = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  amask = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  amolecule = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  aq = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  ax  = ddtmalloc( 3 * (DIM1+icount) * sizeof(double) );
 
 //conversion from fortran to c
-  temp_displacement = malloc( icount * outer_loop * sizeof(int) );
+  temp_displacement = ddtmalloc( icount * outer_loop * sizeof(int) );
   for( i = 0 ; i<outer_loop ; i++ ) {
     for( j = 0 ; j<icount ; j++ ) {
       temp_displacement[idx2D(j,i,icount)] = list[idx2D(j,i,icount)] - 1;
@@ -406,9 +406,9 @@ void timing_lammps_full_mpi_pack_ddt( int DIM1, int icount, int* list, int outer
 
     MPI_Type_size( MPI_DOUBLE, &typesize );
     bytes = 8 * icount * typesize ;
-    buffer = malloc( 8 * icount * sizeof(double) );
+    buffer = ddtmalloc( 8 * icount * sizeof(double) );
 
-    index_displacement = malloc( icount * sizeof(int) );
+    index_displacement = ddtmalloc( icount * sizeof(int) );
     MPI_Type_create_indexed_block( icount, 1, &temp_displacement[idx2D(0,i,icount)], MPI_DOUBLE, &dtype_indexed1_t );
 
     for( j = 0 ; j < icount ; j++ ) {
@@ -540,15 +540,15 @@ void timing_lammps_full_mpi_pack_ddt_dbrew( int DIM1, int icount, int* list, int
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  atag = malloc( (DIM1+icount) * sizeof(double) );
-  atype = malloc( (DIM1+icount) * sizeof(double) );
-  amask = malloc( (DIM1+icount) * sizeof(double) );
-  amolecule = malloc( (DIM1+icount) * sizeof(double) );
-  aq = malloc( (DIM1+icount) * sizeof(double) );
-  ax  = malloc( 3 * (DIM1+icount) * sizeof(double) );
+  atag = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  atype = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  amask = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  amolecule = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  aq = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  ax  = ddtmalloc( 3 * (DIM1+icount) * sizeof(double) );
 
 //conversion from fortran to c
-  temp_displacement = malloc( icount * outer_loop * sizeof(int) );
+  temp_displacement = ddtmalloc( icount * outer_loop * sizeof(int) );
   for( i = 0 ; i<outer_loop ; i++ ) {
     for( j = 0 ; j<icount ; j++ ) {
       temp_displacement[idx2D(j,i,icount)] = list[idx2D(j,i,icount)] - 1;
@@ -583,9 +583,9 @@ void timing_lammps_full_mpi_pack_ddt_dbrew( int DIM1, int icount, int* list, int
 
     MPI_Type_size( MPI_DOUBLE, &typesize );
     bytes = 8 * icount * typesize ;
-    buffer = malloc( 8 * icount * sizeof(double) );
+    buffer = ddtmalloc( 8 * icount * sizeof(double) );
 
-    index_displacement = malloc( icount * sizeof(int) );
+    index_displacement = ddtmalloc( icount * sizeof(int) );
     MPI_Type_create_indexed_block( icount, 1, &temp_displacement[idx2D(0,i,icount)], MPI_DOUBLE, &dtype_indexed1_t );
 
     for( j = 0 ; j < icount ; j++ ) {
@@ -725,13 +725,13 @@ void timing_lammps_atomic_ddt( int DIM1, int icount, int* list, int outer_loop, 
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  atag = malloc( (DIM1+icount) * sizeof(double) );
-  atype = malloc( (DIM1+icount) * sizeof(double) );
-  amask = malloc( (DIM1+icount) * sizeof(double) );
-  ax = malloc( 3 * (DIM1+icount) * sizeof(double) );
+  atag = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  atype = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  amask = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  ax = ddtmalloc( 3 * (DIM1+icount) * sizeof(double) );
 
 //conversion from fortran to c
-  temp_displacement = malloc( icount * outer_loop * sizeof(int) );
+  temp_displacement = ddtmalloc( icount * outer_loop * sizeof(int) );
   for( i = 0 ; i<outer_loop ; i++ ) {
     for( j = 0 ; j<icount ; j++ ) {
       temp_displacement[idx2D(j,i,icount)] = list[idx2D(j,i,icount)] - 1;
@@ -760,7 +760,7 @@ void timing_lammps_atomic_ddt( int DIM1, int icount, int* list, int outer_loop, 
 
   for( i=0 ; i<outer_loop ; i++ ) {
 
-    index_displacement = malloc( icount * sizeof(int) );
+    index_displacement = ddtmalloc( icount * sizeof(int) );
 
     MPI_Type_create_indexed_block( icount, 1, &temp_displacement[idx2D(0,i,icount)], MPI_DOUBLE, &dtype_indexed1_t );
 
@@ -867,13 +867,13 @@ void timing_lammps_atomic_manual( int DIM1, int icount, int* list, int outer_loo
   *ptypesize = 0;
 // typesize = filehandle_debug
 
-  atag = malloc( (DIM1+icount) * sizeof(double) );
-  atype = malloc( (DIM1+icount) * sizeof(double) );
-  amask = malloc( (DIM1+icount) * sizeof(double) );
-  ax = malloc( 3 * (DIM1+icount) * sizeof(double) );
+  atag = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  atype = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  amask = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  ax = ddtmalloc( 3 * (DIM1+icount) * sizeof(double) );
 
 //conversion from fortran to c
-  temp_displacement = malloc( icount * outer_loop * sizeof(int) );
+  temp_displacement = ddtmalloc( icount * outer_loop * sizeof(int) );
   for( i = 0 ; i<outer_loop ; i++ ) {
     for( j = 0 ; j<icount ; j++ ) {
       temp_displacement[idx2D(j,i,icount)] = list[idx2D(j,i,icount)] - 1;
@@ -905,7 +905,7 @@ void timing_lammps_atomic_manual( int DIM1, int icount, int* list, int outer_loo
     isize = 6*icount;
     MPI_Type_size( MPI_DOUBLE, &typesize );
     bytes = isize * typesize;
-    buffer = malloc( isize * sizeof(double) );
+    buffer = ddtmalloc( isize * sizeof(double) );
 
     if ( myrank == 0 ) {
       timing_record(DDTCreate);
@@ -1013,13 +1013,13 @@ void timing_lammps_atomic_mpi_pack_ddt( int DIM1, int icount, int* list, int out
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  atag = malloc( (DIM1+icount) * sizeof(double) );
-  atype = malloc( (DIM1+icount) * sizeof(double) );
-  amask = malloc( (DIM1+icount) * sizeof(double) );
-  ax = malloc( 3 * (DIM1+icount) * sizeof(double) );
+  atag = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  atype = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  amask = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  ax = ddtmalloc( 3 * (DIM1+icount) * sizeof(double) );
 
 //conversion from fortran to c
-  temp_displacement = malloc( icount * outer_loop * sizeof(int) );
+  temp_displacement = ddtmalloc( icount * outer_loop * sizeof(int) );
   for( i = 0 ; i<outer_loop ; i++ ) {
     for( j = 0 ; j<icount ; j++ ) {
       temp_displacement[idx2D(j,i,icount)] = list[idx2D(j,i,icount)] - 1;
@@ -1050,9 +1050,9 @@ void timing_lammps_atomic_mpi_pack_ddt( int DIM1, int icount, int* list, int out
 
     MPI_Type_size( MPI_DOUBLE, &typesize );
     bytes = 6 * icount * typesize;
-    buffer = malloc( 6 * icount * sizeof(double) );
+    buffer = ddtmalloc( 6 * icount * sizeof(double) );
 
-    index_displacement = malloc( icount * sizeof(int) );
+    index_displacement = ddtmalloc( icount * sizeof(int) );
 
     MPI_Type_create_indexed_block( icount, 1, &temp_displacement[idx2D(0,i,icount)], MPI_DOUBLE, &dtype_indexed1_t );
 
@@ -1179,13 +1179,13 @@ void timing_lammps_atomic_mpi_pack_ddt_dbrew( int DIM1, int icount, int* list, i
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  atag = malloc( (DIM1+icount) * sizeof(double) );
-  atype = malloc( (DIM1+icount) * sizeof(double) );
-  amask = malloc( (DIM1+icount) * sizeof(double) );
-  ax = malloc( 3 * (DIM1+icount) * sizeof(double) );
+  atag = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  atype = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  amask = ddtmalloc( (DIM1+icount) * sizeof(double) );
+  ax = ddtmalloc( 3 * (DIM1+icount) * sizeof(double) );
 
 //conversion from fortran to c
-  temp_displacement = malloc( icount * outer_loop * sizeof(int) );
+  temp_displacement = ddtmalloc( icount * outer_loop * sizeof(int) );
   for( i = 0 ; i<outer_loop ; i++ ) {
     for( j = 0 ; j<icount ; j++ ) {
       temp_displacement[idx2D(j,i,icount)] = list[idx2D(j,i,icount)] - 1;
@@ -1216,9 +1216,9 @@ void timing_lammps_atomic_mpi_pack_ddt_dbrew( int DIM1, int icount, int* list, i
 
     MPI_Type_size( MPI_DOUBLE, &typesize );
     bytes = 6 * icount * typesize;
-    buffer = malloc( 6 * icount * sizeof(double) );
+    buffer = ddtmalloc( 6 * icount * sizeof(double) );
 
-    index_displacement = malloc( icount * sizeof(int) );
+    index_displacement = ddtmalloc( icount * sizeof(int) );
 
     MPI_Type_create_indexed_block( icount, 1, &temp_displacement[idx2D(0,i,icount)], MPI_DOUBLE, &dtype_indexed1_t );
 

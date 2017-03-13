@@ -43,7 +43,7 @@ void utilities_random_array_shuffle( int* index_list, int list_dim, int global_d
   int i, temp, irandom;
   int* shuffle_array;
 
-  shuffle_array = malloc( global_dim * sizeof(int) );
+  shuffle_array = ddtmalloc( global_dim * sizeof(int) );
 
   for( i=0 ; i<global_dim ; i++ ) {
 //! it is i+1 to be compliant with the fortran code

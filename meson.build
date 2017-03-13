@@ -25,6 +25,8 @@ else
   conf.set('TEST_TYPE', 1)
 endif
 
+conf.set('USE_ALIGNED_MALLOC', get_option('use_aligned_malloc'))
+
 verify_buffers = get_option('verify_buffers')
 conf.set('VERIFY_BUFFERS', verify_buffers)
 if (not enable_dbrew) and verify_buffers

@@ -116,6 +116,9 @@ int main( int argc, char **argv) {
     printf("   * LAMMPS benchmark\n");
 #endif
     printf("   * MPI version %d library\n", MY_MPI_VERSION);
+#ifdef USE_ALIGNED_MALLOC
+    printf("   * Aligned ddtmalloc\n");
+#endif
 
     printf("\n");
     printf(" outer loop parameter = %i\n", outer_loop);

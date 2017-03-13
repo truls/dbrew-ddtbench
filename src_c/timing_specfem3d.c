@@ -36,14 +36,14 @@ void timing_specfem3D_oc_ddt( int DIM1, int icount, int* list, int outer_loop, i
 //  typesize = filehandle_debug
 
 //conversion from fortran to c
-  displacement = malloc( icount * outer_loop * sizeof(float) );
+  displacement = ddtmalloc( icount * outer_loop * sizeof(float) );
   for ( i=0 ; i<outer_loop ; i++ ) {
     for( j=0 ; j < icount ; j++ ) {
       displacement[idx2D(j,i,icount)] = list[idx2D(j,i,icount)] - 1;
     }
   }
 
-  array = malloc( DIM1 * sizeof(float) );
+  array = ddtmalloc( DIM1 * sizeof(float) );
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -127,14 +127,14 @@ void timing_specfem3D_oc_manual( int DIM1, int icount, int* list, int outer_loop
 //  typesize = filehandle_debug
 
 //conversion from fortran to c
-  displacement = malloc( icount * outer_loop * sizeof(float) );
+  displacement = ddtmalloc( icount * outer_loop * sizeof(float) );
   for ( i=0 ; i<outer_loop ; i++ ) {
     for( j=0 ; j < icount ; j++ ) {
       displacement[idx2D(j,i,icount)] = list[idx2D(j,i,icount)] - 1;
     }
   }
 
-  array = malloc( DIM1 * sizeof(float) );
+  array = ddtmalloc( DIM1 * sizeof(float) );
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -154,7 +154,7 @@ void timing_specfem3D_oc_manual( int DIM1, int icount, int* list, int outer_loop
 
   for( i=0 ; i<outer_loop ; i++ ) {
 
-    buffer = malloc( icount *sizeof(float) );
+    buffer = ddtmalloc( icount *sizeof(float) );
 
     if ( myrank == 0 ) {
       timing_record(DDTCreate);
@@ -236,14 +236,14 @@ void timing_specfem3D_oc_mpi_pack_ddt( int DIM1, int icount, int* list, int
 //  typesize = filehandle_debug
 
 //conversion from fortran to c
-  displacement = malloc( icount * outer_loop * sizeof(float) );
+  displacement = ddtmalloc( icount * outer_loop * sizeof(float) );
   for ( i=0 ; i<outer_loop ; i++ ) {
     for( j=0 ; j < icount ; j++ ) {
       displacement[idx2D(j,i,icount)] = list[idx2D(j,i,icount)] - 1;
     }
   }
 
-  array = malloc( DIM1 * sizeof(float) );
+  array = ddtmalloc( DIM1 * sizeof(float) );
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -263,7 +263,7 @@ void timing_specfem3D_oc_mpi_pack_ddt( int DIM1, int icount, int* list, int
 
   for( i=0 ; i<outer_loop ; i++ ) {
 
-    buffer = malloc( icount * sizeof(float) );
+    buffer = ddtmalloc( icount * sizeof(float) );
 
     MPI_Type_size( MPI_FLOAT, &typesize );
     bytes = icount * typesize;
@@ -350,14 +350,14 @@ void timing_specfem3D_oc_mpi_pack_ddt_dbrew( int DIM1, int icount, int* list, in
 //  typesize = filehandle_debug
 
 //conversion from fortran to c
-  displacement = malloc( icount * outer_loop * sizeof(float) );
+  displacement = ddtmalloc( icount * outer_loop * sizeof(float) );
   for ( i=0 ; i<outer_loop ; i++ ) {
     for( j=0 ; j < icount ; j++ ) {
       displacement[idx2D(j,i,icount)] = list[idx2D(j,i,icount)] - 1;
     }
   }
 
-  array = malloc( DIM1 * sizeof(float) );
+  array = ddtmalloc( DIM1 * sizeof(float) );
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -377,7 +377,7 @@ void timing_specfem3D_oc_mpi_pack_ddt_dbrew( int DIM1, int icount, int* list, in
 
   for( i=0 ; i<outer_loop ; i++ ) {
 
-    buffer = malloc( icount * sizeof(float) );
+    buffer = ddtmalloc( icount * sizeof(float) );
 
     MPI_Type_size( MPI_FLOAT, &typesize );
     bytes = icount * typesize;
@@ -481,12 +481,12 @@ void timing_specfem3D_cm_ddt( int DIM2_cm, int DIM2_ic, int icount_cm, int icoun
   *ptypesize = 0;
  //typesize = filehandle_debug
 
-  array_cm = malloc( 3 * DIM2_cm * sizeof(float) );
-  array_ic = malloc( 3 * DIM2_ic * sizeof(float) );
+  array_cm = ddtmalloc( 3 * DIM2_cm * sizeof(float) );
+  array_ic = ddtmalloc( 3 * DIM2_ic * sizeof(float) );
 
 // fortran to c conversion
-  temp_displacement_cm = malloc( icount_cm * outer_loop * sizeof(int) );
-  temp_displacement_ic = malloc( icount_ic * outer_loop * sizeof(int) );
+  temp_displacement_cm = ddtmalloc( icount_cm * outer_loop * sizeof(int) );
+  temp_displacement_ic = ddtmalloc( icount_ic * outer_loop * sizeof(int) );
   for( i=0 ; i<outer_loop ; i++ ) {
     for( j=0 ; j<icount_cm ; j++ ) {
       temp_displacement_cm[idx2D(j,i,icount_cm)] = list_cm[idx2D(j,i,icount_cm)] - 1;
@@ -520,7 +520,7 @@ void timing_specfem3D_cm_ddt( int DIM2_cm, int DIM2_ic, int icount_cm, int icoun
     } else {
       maximum = icount_cm;
     }
-    displacement = malloc( maximum * sizeof(int) );
+    displacement = ddtmalloc( maximum * sizeof(int) );
 
     MPI_Get_address( &array_cm[0], &struct_displacement[0] );
     MPI_Get_address( &array_ic[0], &struct_displacement[1] );
@@ -607,12 +607,12 @@ void timing_specfem3D_cm_manual( int DIM2_cm, int DIM2_ic, int icount_cm, int ic
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  array_cm = malloc( 3 * DIM2_cm * sizeof(float) );
-  array_ic = malloc( 3 * DIM2_ic * sizeof(float) );
+  array_cm = ddtmalloc( 3 * DIM2_cm * sizeof(float) );
+  array_ic = ddtmalloc( 3 * DIM2_ic * sizeof(float) );
 
 // fortran to c conversion
-  temp_displacement_cm = malloc( icount_cm * outer_loop * sizeof(int) );
-  temp_displacement_ic = malloc( icount_ic * outer_loop * sizeof(int) );
+  temp_displacement_cm = ddtmalloc( icount_cm * outer_loop * sizeof(int) );
+  temp_displacement_ic = ddtmalloc( icount_ic * outer_loop * sizeof(int) );
   for( i=0 ; i<outer_loop ; i++ ) {
     for( j=0 ; j<icount_cm ; j++ ) {
       temp_displacement_cm[idx2D(j,i,icount_cm)] = list_cm[idx2D(j,i,icount_cm)] - 1;
@@ -641,7 +641,7 @@ void timing_specfem3D_cm_manual( int DIM2_cm, int DIM2_ic, int icount_cm, int ic
 
   for( i=0 ; i<outer_loop ; i++ ) {
     isize = (icount_cm+icount_ic) * 3;
-    buffer = malloc( isize * sizeof(float) );
+    buffer = ddtmalloc( isize * sizeof(float) );
 
     if ( myrank == 0 ) {
       timing_record(DDTCreate);
@@ -761,12 +761,12 @@ void timing_specfem3D_cm_mpi_pack_ddt( int DIM2_cm, int DIM2_ic, int icount_cm, 
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  array_cm = malloc( 3 * DIM2_cm * sizeof(float) );
-  array_ic = malloc( 3 * DIM2_ic * sizeof(float) );
+  array_cm = ddtmalloc( 3 * DIM2_cm * sizeof(float) );
+  array_ic = ddtmalloc( 3 * DIM2_ic * sizeof(float) );
 
 // fortran to c conversion
-  temp_displacement_cm = malloc( icount_cm * outer_loop * sizeof(int) );
-  temp_displacement_ic = malloc( icount_ic * outer_loop * sizeof(int) );
+  temp_displacement_cm = ddtmalloc( icount_cm * outer_loop * sizeof(int) );
+  temp_displacement_ic = ddtmalloc( icount_ic * outer_loop * sizeof(int) );
   for( i=0 ; i<outer_loop ; i++ ) {
     for( j=0 ; j<icount_cm ; j++ ) {
       temp_displacement_cm[idx2D(j,i,icount_cm)] = list_cm[idx2D(j,i,icount_cm)] - 1;
@@ -798,7 +798,7 @@ void timing_specfem3D_cm_mpi_pack_ddt( int DIM2_cm, int DIM2_ic, int icount_cm, 
     MPI_Type_size( MPI_FLOAT, &typesize );
     bytes = isize * typesize;
 
-    buffer = malloc( isize * sizeof(float) );
+    buffer = ddtmalloc( isize * sizeof(float) );
 
 //! ========== building the MPI derived datatype ============
     if (icount_cm < icount_ic) {
@@ -807,7 +807,7 @@ void timing_specfem3D_cm_mpi_pack_ddt( int DIM2_cm, int DIM2_ic, int icount_cm, 
       maximum = icount_cm;
     }
 
-    displacement = malloc( maximum * sizeof(int) );
+    displacement = ddtmalloc( maximum * sizeof(int) );
 
     MPI_Get_address( &array_cm[0], &struct_displacement[0] );
     MPI_Get_address( &array_ic[0], &struct_displacement[1] );
@@ -911,8 +911,8 @@ void timing_specfem3d_mt_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int 
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  send_array = malloc( DIM1 * DIM2 * DIM3 * sizeof(float) );
-  recv_array = malloc( DIM1 * DIM3 * sizeof(float) );
+  send_array = ddtmalloc( DIM1 * DIM2 * DIM3 * sizeof(float) );
+  recv_array = ddtmalloc( DIM1 * DIM3 * sizeof(float) );
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -990,8 +990,8 @@ void timing_specfem3d_mt_manual( int DIM1, int DIM2, int DIM3, int outer_loop, i
   *ptypesize = 0;
 // typesize = filehandle_debug
 
-  send_array = malloc( DIM1 * DIM2 * DIM3 * sizeof(float) );
-  recv_array = malloc( DIM1 * DIM3 * sizeof(float) );
+  send_array = ddtmalloc( DIM1 * DIM2 * DIM3 * sizeof(float) );
+  recv_array = ddtmalloc( DIM1 * DIM3 * sizeof(float) );
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -1009,7 +1009,7 @@ void timing_specfem3d_mt_manual( int DIM1, int DIM2, int DIM3, int outer_loop, i
 
   for( i=0 ; i<outer_loop ; i++ ) {
 
-    buffer = malloc( DIM1 * DIM3 * sizeof(float) );
+    buffer = ddtmalloc( DIM1 * DIM3 * sizeof(float) );
     MPI_Type_size( MPI_FLOAT, &typesize );
     bytes = DIM1 * DIM3 * typesize;
 
@@ -1073,8 +1073,8 @@ void timing_specfem3d_mt_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_l
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  send_array = malloc( DIM1 * DIM2 * DIM3 * sizeof(float) );
-  recv_array = malloc( DIM1 * DIM3 * sizeof(float) );
+  send_array = ddtmalloc( DIM1 * DIM2 * DIM3 * sizeof(float) );
+  recv_array = ddtmalloc( DIM1 * DIM3 * sizeof(float) );
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -1092,7 +1092,7 @@ void timing_specfem3d_mt_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_l
 
   for( i=0 ; i<outer_loop ; i++ ) {
 
-    buffer = malloc( DIM1 * DIM3 * sizeof(float) );
+    buffer = ddtmalloc( DIM1 * DIM3 * sizeof(float) );
     MPI_Type_size( MPI_FLOAT, &typesize );
     bytes = DIM1 * DIM3 * typesize;
 
@@ -1175,8 +1175,8 @@ void timing_specfem3d_mt_mpi_pack_ddt_dbrew( int DIM1, int DIM2, int DIM3,
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  send_array = malloc( DIM1 * DIM2 * DIM3 * sizeof(float) );
-  recv_array = malloc( DIM1 * DIM3 * sizeof(float) );
+  send_array = ddtmalloc( DIM1 * DIM2 * DIM3 * sizeof(float) );
+  recv_array = ddtmalloc( DIM1 * DIM3 * sizeof(float) );
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -1194,7 +1194,7 @@ void timing_specfem3d_mt_mpi_pack_ddt_dbrew( int DIM1, int DIM2, int DIM3,
 
   for( i=0 ; i<outer_loop ; i++ ) {
 
-    buffer = malloc( DIM1 * DIM3 * sizeof(float) );
+    buffer = ddtmalloc( DIM1 * DIM3 * sizeof(float) );
     MPI_Type_size( MPI_FLOAT, &typesize );
     bytes = DIM1 * DIM3 * typesize;
 

@@ -18,7 +18,7 @@ void timing_basic_ping_pong_nelements( int DIM1, int loop, char* testname, MPI_C
   int base, typesize, bytes, i;
   char method[50];
 
-  array = malloc( DIM1 * sizeof(float));
+  array = ddtmalloc( DIM1 * sizeof(float));
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -61,8 +61,8 @@ void timing_basic_alltoall_nelements( int DIM1, int procs, int loop, char* testn
   int base, typesize, bytes, i;
   char method[50];
 
-  send_array = malloc( DIM1 * procs * sizeof(float));
-  recv_array = malloc( DIM1 * procs * sizeof(float));
+  send_array = ddtmalloc( DIM1 * procs * sizeof(float));
+  recv_array = ddtmalloc( DIM1 * procs * sizeof(float));
 
   MPI_Comm_rank( local_communicator, &myrank );
 

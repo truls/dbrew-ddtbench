@@ -30,8 +30,8 @@ void timing_fft2d_ddt( int DIM1, int procs, int outer_loop, int inner_loop, int*
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  matrix = malloc( DIM1 * DIM1/procs * 2 * sizeof(double) );
-  recv_array = malloc( DIM1 * DIM1/procs * 2 * sizeof(double) );
+  matrix = ddtmalloc( DIM1 * DIM1/procs * 2 * sizeof(double) );
+  recv_array = ddtmalloc( DIM1 * DIM1/procs * 2 * sizeof(double) );
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -126,8 +126,8 @@ void timing_fft2d_manual( int DIM1, int procs, int outer_loop, int inner_loop, i
   *ptypesize = 0;
 //  typesize = filehandle_debug;
 
-  matrix = malloc( 2 * DIM1 * DIM1/procs * sizeof(double) );
-  recv_buffer = malloc( 2 * DIM1 * DIM1/procs * sizeof(double) );
+  matrix = ddtmalloc( 2 * DIM1 * DIM1/procs * sizeof(double) );
+  recv_buffer = ddtmalloc( 2 * DIM1 * DIM1/procs * sizeof(double) );
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -147,7 +147,7 @@ void timing_fft2d_manual( int DIM1, int procs, int outer_loop, int inner_loop, i
 
   for( i=0 ; i<outer_loop ; i++ ) {
 
-    buffer = malloc( 2 * DIM1 * DIM1/procs * sizeof(double) );
+    buffer = ddtmalloc( 2 * DIM1 * DIM1/procs * sizeof(double) );
 
     if ( myrank == 0 ) {
       timing_record(DDTCreate);
@@ -237,8 +237,8 @@ void timing_fft2d_mpi_pack_ddt( int DIM1, int procs, int outer_loop, int inner_l
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  matrix = malloc( DIM1 * DIM1/procs * 2 * sizeof(double) );
-  recv_buffer = malloc( DIM1 * DIM1/procs * 2 * sizeof(double) );
+  matrix = ddtmalloc( DIM1 * DIM1/procs * 2 * sizeof(double) );
+  recv_buffer = ddtmalloc( DIM1 * DIM1/procs * 2 * sizeof(double) );
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -258,7 +258,7 @@ void timing_fft2d_mpi_pack_ddt( int DIM1, int procs, int outer_loop, int inner_l
 
   for( i=0 ; i<outer_loop ; i++ ) {
 
-    buffer = malloc( 2* DIM1 * DIM1/procs * sizeof(double) );
+    buffer = ddtmalloc( 2* DIM1 * DIM1/procs * sizeof(double) );
     MPI_Type_size( MPI_DOUBLE, &typesize );
     bytes = 2 * DIM1/procs * DIM1/procs * typesize;
 

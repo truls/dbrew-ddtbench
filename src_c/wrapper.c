@@ -455,7 +455,7 @@ void wrapper_timing_lammps_full( int DIM1, int icount, int outer_loop, int inner
 //! those parameter are included for future features
 //  typesize = filehandle_correctness
 
-  list = malloc( icount * outer_loop * sizeof(int) );
+  list = ddtmalloc( icount * outer_loop * sizeof(int) );
 
   if ( strlen(ptestname) == 0 ) {
     snprintf( &testname[0], 50, "LAMMPS_full" );
@@ -500,7 +500,7 @@ void wrapper_timing_lammps_atomic( int DIM1, int icount, int outer_loop, int inn
 //! those parameter are included for future features
 //  typesize = filehandle_correctness
 
-  list = malloc( icount * outer_loop * sizeof(int) );
+  list = ddtmalloc( icount * outer_loop * sizeof(int) );
 
   if ( strlen(ptestname) == 0 ) {
     snprintf( &testname[0], 50, "LAMMPS_atomic" );
@@ -541,7 +541,7 @@ void wrapper_timing_specfem3D_oc( int DIM1, int icount, int outer_loop, int inne
   int nelements, loops, i;
   int* list;
 
-  list = malloc( icount * outer_loop * sizeof(int) );
+  list = ddtmalloc( icount * outer_loop * sizeof(int) );
 
 //! just some statements to prevent compiler warnings of unused variables
 //! those parameter are included for future features
@@ -586,8 +586,8 @@ void wrapper_timing_specfem3D_cm( int DIM2_cm, int DIM2_ic, int icount_cm, int i
   int* list_cm;
   int* list_ic;
 
-  list_cm = malloc( icount_cm * outer_loop * sizeof(int) );
-  list_ic = malloc( icount_ic * outer_loop * sizeof(int) );
+  list_cm = ddtmalloc( icount_cm * outer_loop * sizeof(int) );
+  list_ic = ddtmalloc( icount_ic * outer_loop * sizeof(int) );
 
 //! just some statements to prevent compiler warnings of unused variables
 //! those parameter are included for future features

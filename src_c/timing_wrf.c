@@ -70,9 +70,9 @@ void timing_wrf_manual ( int number_2D, int number_3D, int number_4D, int ims, i
 
 //! allocate all needed arrays first
 
-  array2Ds = malloc( number_2D * sizeof(float*) );
-  array3Ds = malloc( number_3D * sizeof(float*) );
-  array4Ds = malloc( number_4D * sizeof(float*) );
+  array2Ds = ddtmalloc( number_2D * sizeof(float*) );
+  array3Ds = ddtmalloc( number_3D * sizeof(float*) );
+  array4Ds = ddtmalloc( number_4D * sizeof(float*) );
 
 //! allocate and initialize the arrays
 //! compute the number of elements in the arrays
@@ -83,19 +83,19 @@ void timing_wrf_manual ( int number_2D, int number_3D, int number_4D, int ims, i
   base = myrank * counter + 1;
 
   for( m=0 ; m<number_2D ; m++ ) {
-    array2Ds[m] = malloc( dim1 * dim3 * sizeof(float) );
+    array2Ds[m] = ddtmalloc( dim1 * dim3 * sizeof(float) );
     utilities_fill_unique_array_2D_float( array2Ds[m], dim1, dim3, base );
     base = base + dim1 * dim3;
   }
 
   for( m=0 ; m<number_3D ; m++ ) {
-    array3Ds[m] = malloc( dim1 * dim2 * dim3 * sizeof(float) );
+    array3Ds[m] = ddtmalloc( dim1 * dim2 * dim3 * sizeof(float) );
     utilities_fill_unique_array_3D_float( array3Ds[m], dim1, dim2, dim3, base );
     base = base + dim1 * dim2 * dim3;
   }
 
   for( m=0 ; m<number_4D ; m++ ) {
-    array4Ds[m] = malloc( dim1 * dim2 * dim3 * limit_4D_arrays[m] * sizeof(float) );
+    array4Ds[m] = ddtmalloc( dim1 * dim2 * dim3 * limit_4D_arrays[m] * sizeof(float) );
     utilities_fill_unique_array_4D_float( array4Ds[m], dim1, dim2, dim3, limit_4D_arrays[m], base );
     base = base + limit_4D_arrays[m] * dim1 * dim2  * dim3;
   }
@@ -127,7 +127,7 @@ void timing_wrf_manual ( int number_2D, int number_3D, int number_4D, int ims, i
       }
     }
 
-    buffer = malloc( element_number * sizeof(float) );
+    buffer = ddtmalloc( element_number * sizeof(float) );
 
     if ( myrank == 0 ) {
       timing_record(DDTCreate);
@@ -357,9 +357,9 @@ void timing_wrf_vec_ddt ( int number_2D, int number_3D, int number_4D, int ims, 
 //! ================= initialize the arrays =================
 
 //! allocate all needed arrays first
-  array2Ds = malloc( number_2D * sizeof(float*) );
-  array3Ds = malloc( number_3D * sizeof(float*) );
-  array4Ds = malloc( number_4D * sizeof(float*) );
+  array2Ds = ddtmalloc( number_2D * sizeof(float*) );
+  array3Ds = ddtmalloc( number_3D * sizeof(float*) );
+  array4Ds = ddtmalloc( number_4D * sizeof(float*) );
 
 //! allocate and initialize the arrays
 //! compute the number of elements in the arrays
@@ -370,19 +370,19 @@ void timing_wrf_vec_ddt ( int number_2D, int number_3D, int number_4D, int ims, 
   base = myrank * counter + 1;
 
   for( m=0 ; m<number_2D ; m++ ) {
-    array2Ds[m] = malloc( dim1 * dim3 * sizeof(float) );
+    array2Ds[m] = ddtmalloc( dim1 * dim3 * sizeof(float) );
     utilities_fill_unique_array_2D_float( array2Ds[m], dim1, dim3, base );
     base = base + dim1 * dim3;
   }
 
   for( m=0 ; m<number_3D ; m++ ) {
-    array3Ds[m] = malloc( dim1 * dim2 * dim3 * sizeof(float) );
+    array3Ds[m] = ddtmalloc( dim1 * dim2 * dim3 * sizeof(float) );
     utilities_fill_unique_array_3D_float( array3Ds[m], dim1, dim2, dim3, base );
     base = base + dim1 * dim2 * dim3;
   }
 
   for( m=0 ; m<number_4D ; m++ ) {
-    array4Ds[m] = malloc( dim1 * dim2 * dim3 * limit_4D_arrays[m] * sizeof(float) );
+    array4Ds[m] = ddtmalloc( dim1 * dim2 * dim3 * limit_4D_arrays[m] * sizeof(float) );
     utilities_fill_unique_array_4D_float( array4Ds[m], dim1, dim2, dim3, limit_4D_arrays[m], base );
     base = base + limit_4D_arrays[m] * dim1 * dim2 * dim3;
   }
@@ -419,9 +419,9 @@ void timing_wrf_vec_ddt ( int number_2D, int number_3D, int number_4D, int ims, 
       }
     }
 
-    oldtype = malloc( counter * sizeof(MPI_Datatype) );
-    blocklength = malloc( counter * sizeof(int) );
-    displacement = malloc( counter * sizeof(MPI_Aint) );
+    oldtype = ddtmalloc( counter * sizeof(MPI_Datatype) );
+    blocklength = ddtmalloc( counter * sizeof(int) );
+    displacement = ddtmalloc( counter * sizeof(MPI_Aint) );
 
     for( j=0 ; j<counter ; j++) {
       blocklength[j] = 1;
@@ -590,9 +590,9 @@ void timing_wrf_vec_mpi_pack_ddt ( int number_2D, int number_3D, int number_4D, 
 //! ================= initialize the arrays =================
 
 //! allocate all needed arrays first
-  array2Ds = malloc( number_2D * sizeof(float*) );
-  array3Ds = malloc( number_3D * sizeof(float*) );
-  array4Ds = malloc( number_4D * sizeof(float*) );
+  array2Ds = ddtmalloc( number_2D * sizeof(float*) );
+  array3Ds = ddtmalloc( number_3D * sizeof(float*) );
+  array4Ds = ddtmalloc( number_4D * sizeof(float*) );
 
 //! allocate and initialize the arrays
 //! compute the number of elements in the arrays
@@ -603,19 +603,19 @@ void timing_wrf_vec_mpi_pack_ddt ( int number_2D, int number_3D, int number_4D, 
   base = myrank * counter + 1;
 
   for( m=0 ; m<number_2D ; m++ ) {
-    array2Ds[m] = malloc( dim1 * dim3 * sizeof(float) );
+    array2Ds[m] = ddtmalloc( dim1 * dim3 * sizeof(float) );
     utilities_fill_unique_array_2D_float( array2Ds[m], dim1, dim3, base );
     base = base + dim1 * dim3;
   }
 
   for( m=0 ; m<number_3D ; m++ ) {
-    array3Ds[m] = malloc( dim1 * dim2 * dim3 * sizeof(float) );
+    array3Ds[m] = ddtmalloc( dim1 * dim2 * dim3 * sizeof(float) );
     utilities_fill_unique_array_3D_float( array3Ds[m], dim1, dim2, dim3, base );
     base = base + dim1 * dim2 * dim3 ;
   }
 
   for( m=0 ; m<number_4D ; m++ ) {
-    array4Ds[m] = malloc( dim1 * dim2 * dim3 * limit_4D_arrays[m] * sizeof(float) );
+    array4Ds[m] = ddtmalloc( dim1 * dim2 * dim3 * limit_4D_arrays[m] * sizeof(float) );
     utilities_fill_unique_array_4D_float( array4Ds[m], dim1, dim2, dim3, limit_4D_arrays[m], base );
     base = base + limit_4D_arrays[m] * dim1 * dim2 * dim3;
   }
@@ -649,7 +649,7 @@ void timing_wrf_vec_mpi_pack_ddt ( int number_2D, int number_3D, int number_4D, 
       }
     }
 
-    buffer = malloc( element_number * sizeof(float) );
+    buffer = ddtmalloc( element_number * sizeof(float) );
     MPI_Type_size( MPI_FLOAT, &typesize );
     bytes = element_number * typesize;
 
@@ -661,9 +661,9 @@ void timing_wrf_vec_mpi_pack_ddt ( int number_2D, int number_3D, int number_4D, 
       }
     }
 
-    oldtype = malloc( counter * sizeof(MPI_Datatype) );
-    blocklength = malloc( counter * sizeof(int) );
-    displacement = malloc( counter * sizeof(MPI_Aint) );
+    oldtype = ddtmalloc( counter * sizeof(MPI_Datatype) );
+    blocklength = ddtmalloc( counter * sizeof(int) );
+    displacement = ddtmalloc( counter * sizeof(MPI_Aint) );
 
     for( j=0 ; j<counter ; j++ ) {
       blocklength[j] = 1;
@@ -837,9 +837,9 @@ void timing_wrf_sa_ddt ( int number_2D, int number_3D, int number_4D, int ims, i
 //! ================= initialize the arrays =================
 
 //! allocate all needed arrays first
-  array2Ds = malloc( number_2D * sizeof(float*) );
-  array3Ds = malloc( number_3D * sizeof(float*) );
-  array4Ds = malloc( number_4D * sizeof(float*) );
+  array2Ds = ddtmalloc( number_2D * sizeof(float*) );
+  array3Ds = ddtmalloc( number_3D * sizeof(float*) );
+  array4Ds = ddtmalloc( number_4D * sizeof(float*) );
 
 //! allocate and initialize the arrays
 //! compute the number of elements in the arrays
@@ -850,19 +850,19 @@ void timing_wrf_sa_ddt ( int number_2D, int number_3D, int number_4D, int ims, i
   base = myrank * counter + 1;
 
   for( m=0 ; m<number_2D ; m++ ) {
-    array2Ds[m] = malloc( dim1 * dim3 * sizeof(float) );
+    array2Ds[m] = ddtmalloc( dim1 * dim3 * sizeof(float) );
     utilities_fill_unique_array_2D_float( array2Ds[m], dim1, dim3, base );
     base = base + dim1 * dim3;
   }
 
   for( m=0 ; m<number_3D ; m++ ) {
-    array3Ds[m] = malloc( dim1 * dim2 * dim3 * sizeof(float) );
+    array3Ds[m] = ddtmalloc( dim1 * dim2 * dim3 * sizeof(float) );
     utilities_fill_unique_array_3D_float( array3Ds[m], dim1, dim2, dim3, base );
     base = base + dim1 * dim2 * dim3;
   }
 
   for( m=0 ; m<number_4D ; m++ ) {
-    array4Ds[m] = malloc( dim1 * dim2 * dim3 * limit_4D_arrays[m] * sizeof(float) );
+    array4Ds[m] = ddtmalloc( dim1 * dim2 * dim3 * limit_4D_arrays[m] * sizeof(float) );
     utilities_fill_unique_array_4D_float( array4Ds[m], dim1, dim2, dim3, limit_4D_arrays[m], base );
     base = base + limit_4D_arrays[m] * dim1 * dim2 * dim3;
   }
@@ -899,9 +899,9 @@ void timing_wrf_sa_ddt ( int number_2D, int number_3D, int number_4D, int ims, i
       }
     }
 
-    oldtype = malloc( counter * sizeof(MPI_Datatype) );
-    blocklength = malloc( counter * sizeof(int) );
-    displacement = malloc( counter * sizeof(MPI_Aint) );
+    oldtype = ddtmalloc( counter * sizeof(MPI_Datatype) );
+    blocklength = ddtmalloc( counter * sizeof(int) );
+    displacement = ddtmalloc( counter * sizeof(MPI_Aint) );
 
     for( j=0 ; j<counter ; j++ ) {
       blocklength[j] = 1;
@@ -1080,9 +1080,9 @@ void timing_wrf_sa_mpi_pack_ddt ( int number_2D, int number_3D, int number_4D, i
 //! ================= initialize the arrays =================
 
 //! allocate all needed arrays first
-  array2Ds = malloc( number_2D * sizeof(float*) );
-  array3Ds = malloc( number_3D * sizeof(float*) );
-  array4Ds = malloc( number_4D * sizeof(float*) );
+  array2Ds = ddtmalloc( number_2D * sizeof(float*) );
+  array3Ds = ddtmalloc( number_3D * sizeof(float*) );
+  array4Ds = ddtmalloc( number_4D * sizeof(float*) );
 
 //! allocate and initialize the arrays
 //! compute the number of elements in the arrays
@@ -1093,19 +1093,19 @@ void timing_wrf_sa_mpi_pack_ddt ( int number_2D, int number_3D, int number_4D, i
   base = myrank * counter + 1;
 
   for( m=0 ; m<number_2D ; m++ ) {
-    array2Ds[m] = malloc( dim1 * dim3 * sizeof(float) );
+    array2Ds[m] = ddtmalloc( dim1 * dim3 * sizeof(float) );
     utilities_fill_unique_array_2D_float( array2Ds[m], dim1, dim3, base );
     base = base + dim1 * dim3;
   }
 
   for( m=0 ; m<number_3D ; m++ ) {
-    array3Ds[m] = malloc( dim1 * dim2 * dim3 * sizeof(float) );
+    array3Ds[m] = ddtmalloc( dim1 * dim2 * dim3 * sizeof(float) );
     utilities_fill_unique_array_3D_float( array3Ds[m], dim1, dim2, dim3, base );
     base = base + dim1 * dim2 * dim3;
   }
 
   for( m=0 ; m<number_4D ; m++ ) {
-    array4Ds[m] = malloc( dim1 * dim2 * dim3 * limit_4D_arrays[m] * sizeof(float) );
+    array4Ds[m] = ddtmalloc( dim1 * dim2 * dim3 * limit_4D_arrays[m] * sizeof(float) );
     utilities_fill_unique_array_4D_float( array4Ds[m], dim1, dim2, dim3, limit_4D_arrays[m], base );
     base = base + limit_4D_arrays[m] * dim1 * dim2 * dim3;
   }
@@ -1138,7 +1138,7 @@ void timing_wrf_sa_mpi_pack_ddt ( int number_2D, int number_3D, int number_4D, i
       }
     }
 
-    buffer = malloc( element_number * sizeof(float) );
+    buffer = ddtmalloc( element_number * sizeof(float) );
     MPI_Type_size( MPI_FLOAT, &typesize );
     bytes = element_number * typesize;
 
@@ -1151,9 +1151,9 @@ void timing_wrf_sa_mpi_pack_ddt ( int number_2D, int number_3D, int number_4D, i
       }
     }
 
-    oldtype = malloc( counter * sizeof(MPI_Datatype) );
-    blocklength = malloc( counter * sizeof(int) );
-    displacement = malloc( counter * sizeof(MPI_Aint) );
+    oldtype = ddtmalloc( counter * sizeof(MPI_Datatype) );
+    blocklength = ddtmalloc( counter * sizeof(int) );
+    displacement = ddtmalloc( counter * sizeof(MPI_Aint) );
 
     for( j=0 ; j<counter ; j++ ) {
       blocklength[j] = 1;

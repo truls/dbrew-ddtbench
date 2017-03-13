@@ -33,7 +33,7 @@ void timing_milc_su3_zdown_ddt( int DIM2, int DIM3, int DIM4, int DIM5, int oute
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  array = malloc( 2 * 3 * DIM2 * DIM3 * DIM4 * DIM5 * sizeof(float));
+  array = ddtmalloc( 2 * 3 * DIM2 * DIM3 * DIM4 * DIM5 * sizeof(float));
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -114,7 +114,7 @@ void timing_milc_su3_zdown_manual( int DIM2, int DIM3, int DIM4, int DIM5, int o
   *ptypesize = 0;
 //  typesize = filehandle_debug;
 
-  array = malloc( 2 * 3 * DIM2 * DIM3 * DIM4 * DIM5 * sizeof(float) );
+  array = ddtmalloc( 2 * 3 * DIM2 * DIM3 * DIM4 * DIM5 * sizeof(float) );
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -132,7 +132,7 @@ void timing_milc_su3_zdown_manual( int DIM2, int DIM3, int DIM4, int DIM5, int o
 
   for( i=0 ; i<outer_loop ; i++ ) {
     dsize = 2 * DIM5 * DIM2*DIM3/2 * 3 * 2;
-    buffer = malloc(dsize * sizeof(float) );
+    buffer = ddtmalloc(dsize * sizeof(float) );
 
 //! modelling the zdown direction
     if ( myrank == 0 ) {
@@ -238,7 +238,7 @@ void timing_milc_su3_zdown_mpi_pack_ddt( int DIM2, int DIM3, int DIM4, int DIM5,
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  array = malloc( 2 * 3 * DIM2 * DIM3 * DIM4 * DIM5 * sizeof(float) );
+  array = ddtmalloc( 2 * 3 * DIM2 * DIM3 * DIM4 * DIM5 * sizeof(float) );
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -256,7 +256,7 @@ void timing_milc_su3_zdown_mpi_pack_ddt( int DIM2, int DIM3, int DIM4, int DIM5,
 
   for( i=0 ; i<outer_loop ; i++ ) {
     dsize = 2 * DIM5 * DIM2*DIM3/2 * 3 * 2;
-    buffer = malloc( dsize * sizeof(float) );
+    buffer = ddtmalloc( dsize * sizeof(float) );
     MPI_Type_size( MPI_FLOAT, &typesize );
     bytes = dsize * typesize;
 
@@ -344,7 +344,7 @@ void timing_milc_su3_zdown_mpi_pack_ddt_dbrew( int DIM2, int DIM3, int DIM4,
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  array = malloc( 2 * 3 * DIM2 * DIM3 * DIM4 * DIM5 * sizeof(float) );
+  array = ddtmalloc( 2 * 3 * DIM2 * DIM3 * DIM4 * DIM5 * sizeof(float) );
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -366,7 +366,7 @@ void timing_milc_su3_zdown_mpi_pack_ddt_dbrew( int DIM2, int DIM3, int DIM4,
 
   for( i=0 ; i<outer_loop ; i++ ) {
     dsize = 2 * DIM5 * DIM2*DIM3/2 * 3 * 2;
-    buffer = malloc( dsize * sizeof(float) );
+    buffer = ddtmalloc( dsize * sizeof(float) );
     MPI_Type_size( MPI_FLOAT, &typesize );
     bytes = dsize * typesize;
 

@@ -35,7 +35,7 @@ void timing_nas_lu_y_ddt( int DIM2, int DIM3, int outer_loop, int inner_loop, in
   *ptypesize = 0;
   //typesize = filehandle_debug;
 
-  array = malloc( DIM1*(DIM2+2)*(DIM3+2) * sizeof(double) );
+  array = ddtmalloc( DIM1*(DIM2+2)*(DIM3+2) * sizeof(double) );
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -110,7 +110,7 @@ void timing_nas_lu_y_manual( int DIM2, int DIM3, int outer_loop, int inner_loop,
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  array = malloc( DIM1*(DIM2+2)*(DIM3+2) * sizeof(double) );
+  array = ddtmalloc( DIM1*(DIM2+2)*(DIM3+2) * sizeof(double) );
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -128,7 +128,7 @@ void timing_nas_lu_y_manual( int DIM2, int DIM3, int outer_loop, int inner_loop,
 
   for( i=0 ; i<outer_loop ; i++ ) {
 
-    buffer = malloc( DIM1 * DIM3 * sizeof(double));
+    buffer = ddtmalloc( DIM1 * DIM3 * sizeof(double));
 
     if ( myrank == 0 ) {
        timing_record(DDTCreate);
@@ -209,7 +209,7 @@ void timing_nas_lu_y_mpi_pack_ddt( int DIM2, int DIM3, int outer_loop, int inner
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  array = malloc( DIM1 * (DIM2+2) * (DIM3+2) * sizeof(double));
+  array = ddtmalloc( DIM1 * (DIM2+2) * (DIM3+2) * sizeof(double));
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -226,7 +226,7 @@ void timing_nas_lu_y_mpi_pack_ddt( int DIM2, int DIM3, int outer_loop, int inner
   }
 
   for( i=0 ; i<outer_loop ; i++ ) {
-    buffer = malloc( DIM1 * DIM3 * sizeof(double));
+    buffer = ddtmalloc( DIM1 * DIM3 * sizeof(double));
     MPI_Type_size( MPI_DOUBLE, &typesize );
     bytes = DIM1 * DIM3 * typesize;
 
@@ -304,7 +304,7 @@ void timing_nas_lu_y_mpi_pack_ddt_dbrew( int DIM2, int DIM3, int outer_loop, int
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  array = malloc( DIM1 * (DIM2+2) * (DIM3+2) * sizeof(double));
+  array = ddtmalloc( DIM1 * (DIM2+2) * (DIM3+2) * sizeof(double));
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -325,7 +325,7 @@ void timing_nas_lu_y_mpi_pack_ddt_dbrew( int DIM2, int DIM3, int outer_loop, int
   for( i=0 ; i<outer_loop ; i++ ) {
     //printf("Iteration %d: ", i);
 
-    buffer = malloc( DIM1 * DIM3 * sizeof(double));
+    buffer = ddtmalloc( DIM1 * DIM3 * sizeof(double));
     MPI_Type_size( MPI_DOUBLE, &typesize );
     bytes = DIM1 * DIM3 * typesize;
 
@@ -431,7 +431,7 @@ void timing_nas_lu_x_ddt( int DIM2, int DIM3, int outer_loop, int inner_loop, in
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  array = malloc( DIM1 * (DIM2+2) * (DIM3+2) * sizeof(double));
+  array = ddtmalloc( DIM1 * (DIM2+2) * (DIM3+2) * sizeof(double));
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -501,7 +501,7 @@ void timing_nas_lu_x_manual( int DIM2, int DIM3, int outer_loop, int inner_loop,
   *ptypesize = 0;
 //  typesize = filehandle_debug;
 
-  array = malloc( DIM1 * (DIM2+2) * (DIM3+2) * sizeof(double));
+  array = ddtmalloc( DIM1 * (DIM2+2) * (DIM3+2) * sizeof(double));
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -520,7 +520,7 @@ void timing_nas_lu_x_manual( int DIM2, int DIM3, int outer_loop, int inner_loop,
 
   for( i=0 ; i<outer_loop ; i++ ) {
 
-    buffer = malloc(DIM1 * DIM2 * sizeof(double));
+    buffer = ddtmalloc(DIM1 * DIM2 * sizeof(double));
 
     if ( myrank == 0 ) {
       timing_record(DDTCreate);
@@ -602,7 +602,7 @@ void timing_nas_lu_x_mpi_pack_ddt( int DIM2, int DIM3, int outer_loop, int inner
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  array = malloc( DIM1 * (DIM2+2) * (DIM3+2) * sizeof(double));
+  array = ddtmalloc( DIM1 * (DIM2+2) * (DIM3+2) * sizeof(double));
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -620,7 +620,7 @@ void timing_nas_lu_x_mpi_pack_ddt( int DIM2, int DIM3, int outer_loop, int inner
 
   for( i=0 ; i<outer_loop ; i++ ) {
 
-    buffer = malloc( DIM1 * DIM2 * sizeof(double));
+    buffer = ddtmalloc( DIM1 * DIM2 * sizeof(double));
     MPI_Type_size( MPI_DOUBLE, &typesize );
     bytes = DIM1 * DIM2 * typesize;
 
@@ -692,7 +692,7 @@ void timing_nas_lu_x_mpi_pack_ddt_dbrew( int DIM2, int DIM3, int outer_loop, int
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  array = malloc( DIM1 * (DIM2+2) * (DIM3+2) * sizeof(double));
+  array = ddtmalloc( DIM1 * (DIM2+2) * (DIM3+2) * sizeof(double));
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -710,7 +710,7 @@ void timing_nas_lu_x_mpi_pack_ddt_dbrew( int DIM2, int DIM3, int outer_loop, int
 
   for( i=0 ; i<outer_loop ; i++ ) {
 
-    buffer = malloc( DIM1 * DIM2 * sizeof(double));
+    buffer = ddtmalloc( DIM1 * DIM2 * sizeof(double));
     MPI_Type_size( MPI_DOUBLE, &typesize );
     bytes = DIM1 * DIM2 * typesize;
 
@@ -805,7 +805,7 @@ void timing_nas_mg_x_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inne
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  array = malloc( DIM1 * DIM2 * DIM3 * sizeof(double));
+  array = ddtmalloc( DIM1 * DIM2 * DIM3 * sizeof(double));
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -881,7 +881,7 @@ void timing_nas_mg_x_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int i
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  array = malloc( DIM1 * DIM2 * DIM3 * sizeof(double));
+  array = ddtmalloc( DIM1 * DIM2 * DIM3 * sizeof(double));
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -900,7 +900,7 @@ void timing_nas_mg_x_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int i
   for( i=0 ; i<outer_loop ; i++ ) {
 
     psize = (DIM2-2)*(DIM3-2);
-    buffer = malloc( psize * sizeof(double) );
+    buffer = ddtmalloc( psize * sizeof(double) );
 
     if ( myrank == 0 ) {
       timing_record(DDTCreate);
@@ -978,7 +978,7 @@ void timing_nas_mg_x_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop,
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  array = malloc( DIM1 * DIM2 * DIM3 * sizeof(double) );
+  array = ddtmalloc( DIM1 * DIM2 * DIM3 * sizeof(double) );
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -996,7 +996,7 @@ void timing_nas_mg_x_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop,
 
   for( i=0 ; i<outer_loop ; i++ ) {
 
-    buffer = malloc( (DIM2-2) * (DIM3-2) * sizeof(double) );
+    buffer = ddtmalloc( (DIM2-2) * (DIM3-2) * sizeof(double) );
     MPI_Type_size( MPI_DOUBLE, &typesize );
     bytes = (DIM2-2)*(DIM3-2) * typesize;
 
@@ -1073,7 +1073,7 @@ void timing_nas_mg_x_mpi_pack_ddt_dbrew( int DIM1, int DIM2, int DIM3, int outer
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  array = malloc( DIM1 * DIM2 * DIM3 * sizeof(double) );
+  array = ddtmalloc( DIM1 * DIM2 * DIM3 * sizeof(double) );
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -1092,7 +1092,7 @@ void timing_nas_mg_x_mpi_pack_ddt_dbrew( int DIM1, int DIM2, int DIM3, int outer
 
   for( i=0 ; i<outer_loop ; i++ ) {
 
-    buffer = malloc( (DIM2-2) * (DIM3-2) * sizeof(double) );
+    buffer = ddtmalloc( (DIM2-2) * (DIM3-2) * sizeof(double) );
     MPI_Type_size( MPI_DOUBLE, &typesize );
     bytes = (DIM2-2)*(DIM3-2) * typesize;
 
@@ -1183,7 +1183,7 @@ void timing_nas_mg_y_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inne
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  array = malloc( DIM1 * DIM2 * DIM3 * sizeof(double) );
+  array = ddtmalloc( DIM1 * DIM2 * DIM3 * sizeof(double) );
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -1253,7 +1253,7 @@ void timing_nas_mg_y_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int i
  *ptypesize = 0;
 // typesize = filehandle_debug
 
-  array = malloc( DIM1 * DIM2 * DIM3 * sizeof(double) );
+  array = ddtmalloc( DIM1 * DIM2 * DIM3 * sizeof(double) );
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -1272,7 +1272,7 @@ void timing_nas_mg_y_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int i
   for( i=0 ; i<outer_loop ; i++ ) {
 
     psize = (DIM1-2)*(DIM3-2);
-    buffer = malloc( psize * sizeof(double) );
+    buffer = ddtmalloc( psize * sizeof(double) );
 
     if ( myrank == 0 ) {
       timing_record(DDTCreate);
@@ -1350,7 +1350,7 @@ void timing_nas_mg_y_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop,
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  array = malloc( DIM1 * DIM2 * DIM3 * sizeof(double) );
+  array = ddtmalloc( DIM1 * DIM2 * DIM3 * sizeof(double) );
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -1368,7 +1368,7 @@ void timing_nas_mg_y_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop,
 
   for( i=0 ; i<outer_loop ; i++ ) {
 
-    buffer = malloc( (DIM1-2) * (DIM3-2) * sizeof(double) );
+    buffer = ddtmalloc( (DIM1-2) * (DIM3-2) * sizeof(double) );
     MPI_Type_size( MPI_DOUBLE, &typesize );
     bytes = (DIM1-2) * (DIM3-2) * typesize;
 
@@ -1437,7 +1437,7 @@ void timing_nas_mg_y_mpi_pack_ddt_dbrew( int DIM1, int DIM2, int DIM3, int outer
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  array = malloc( DIM1 * DIM2 * DIM3 * sizeof(double) );
+  array = ddtmalloc( DIM1 * DIM2 * DIM3 * sizeof(double) );
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -1457,7 +1457,7 @@ void timing_nas_mg_y_mpi_pack_ddt_dbrew( int DIM1, int DIM2, int DIM3, int outer
 
   for( i=0 ; i<outer_loop ; i++ ) {
 
-    buffer = malloc( (DIM1-2) * (DIM3-2) * sizeof(double) );
+    buffer = ddtmalloc( (DIM1-2) * (DIM3-2) * sizeof(double) );
     MPI_Type_size( MPI_DOUBLE, &typesize );
     bytes = (DIM1-2) * (DIM3-2) * typesize;
 
@@ -1537,7 +1537,7 @@ void timing_nas_mg_z_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inne
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  array = malloc( DIM1 * DIM2 * DIM3 * sizeof(double));
+  array = ddtmalloc( DIM1 * DIM2 * DIM3 * sizeof(double));
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -1606,7 +1606,7 @@ void timing_nas_mg_z_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int i
   *ptypesize = 0;
 //typesize = filehandle_debug
 
-  array = malloc( DIM1 * DIM2 * DIM3 * sizeof(double) );
+  array = ddtmalloc( DIM1 * DIM2 * DIM3 * sizeof(double) );
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -1625,7 +1625,7 @@ void timing_nas_mg_z_manual( int DIM1, int DIM2, int DIM3, int outer_loop, int i
   for( i=0 ; i<outer_loop ; i++ ) {
 
     psize = (DIM1-2) * (DIM2-2);
-    buffer = malloc( psize * sizeof(double) );
+    buffer = ddtmalloc( psize * sizeof(double) );
 
     if ( myrank == 0 ) {
       timing_record(DDTCreate);
@@ -1703,7 +1703,7 @@ void timing_nas_mg_z_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop,
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  array = malloc( DIM1 * DIM2 * DIM3 * sizeof(double) );
+  array = ddtmalloc( DIM1 * DIM2 * DIM3 * sizeof(double) );
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -1721,7 +1721,7 @@ void timing_nas_mg_z_mpi_pack_ddt( int DIM1, int DIM2, int DIM3, int outer_loop,
 
   for( i=0 ; i<outer_loop ; i++ ) {
 
-    buffer = malloc( (DIM1-2) * (DIM2-2) * sizeof(double) );
+    buffer = ddtmalloc( (DIM1-2) * (DIM2-2) * sizeof(double) );
     MPI_Type_size( MPI_DOUBLE, &typesize );
     bytes = (DIM1-2) * (DIM2-2) * typesize;
 
@@ -1790,7 +1790,7 @@ void timing_nas_mg_z_mpi_pack_ddt_dbrew( int DIM1, int DIM2, int DIM3, int outer
   *ptypesize = 0;
 //  typesize = filehandle_debug
 
-  array = malloc( DIM1 * DIM2 * DIM3 * sizeof(double) );
+  array = ddtmalloc( DIM1 * DIM2 * DIM3 * sizeof(double) );
 
   MPI_Comm_rank( local_communicator, &myrank );
 
@@ -1810,7 +1810,7 @@ void timing_nas_mg_z_mpi_pack_ddt_dbrew( int DIM1, int DIM2, int DIM3, int outer
 
   for( i=0 ; i<outer_loop ; i++ ) {
 
-    buffer = malloc( (DIM1-2) * (DIM2-2) * sizeof(double) );
+    buffer = ddtmalloc( (DIM1-2) * (DIM2-2) * sizeof(double) );
     MPI_Type_size( MPI_DOUBLE, &typesize );
     bytes = (DIM1-2) * (DIM2-2) * typesize;
 
