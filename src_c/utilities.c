@@ -234,8 +234,11 @@ Rewriter* get_pack_rewriter(bool verbose)
                                | SRPInt(5) // outcount
                                | SRPInt(6) // position
                                | SPInt(7) // comm
-
                                );
+
+  uintptr_t pack_hvector = dbrew_util_symname_to_ptr(r, "MPIR_Pack_Hvector");
+  dbrew_config_function_setname(r, pack_hvector, "MPIR_Pack_Hvector");
+  dbrew_config_function_setflags(r, pack_hvector, FC_InhibitLoopUnroll);
   setup_rewriter_function(r);
   return r;
 }
