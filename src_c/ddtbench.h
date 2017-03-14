@@ -10,6 +10,9 @@
 
 #ifdef HAVE_DBREW
 #include <dbrew.h>
+#ifdef ENABLE_LLVM
+#include <dbrew-llvm.h>
+#endif
 #endif
 
 #ifndef _DDTBENCH_H_
@@ -57,6 +60,12 @@ typedef int (*MPI_Unpack_t) (void* inbuf,
                              MPI_Datatype datatype,
                              MPI_Comm comm);
 
+#ifdef ENABLE_LLVM
+#define REWRITER_FUN dbrew_llvm_rewrite
+#else
+#define REWRITER_FUN dbrew_rewrite
+#endif
+
 // Macros for setting up and freeing DBrew writer/rewriter instances
 #define INIT_VERIFIER(verifier, rank)             \
     Verifier* v = 0;                              \
@@ -76,8 +85,8 @@ typedef int (*MPI_Unpack_t) (void* inbuf,
   MPI_Pack_t rewritten = 0;                                             \
   if (rank == 0)  {                                                     \
     pos = 0;                                                            \
-    rewritten = (MPI_Pack_t) dbrew_rewrite(rewriter, inbuf, incount,    \
-                                           datatype, outbuf, outsize,   \
+    rewritten = (MPI_Pack_t) REWRITER_FUN(rewriter, inbuf, incount,     \
+                                          datatype, outbuf, outsize,    \
                                            position, comm);             \
     assert(rewritten);                                                  \
   }
@@ -88,7 +97,7 @@ typedef int (*MPI_Unpack_t) (void* inbuf,
   if (rank == 0) {                                                      \
     rewriter = get_unpack_rewriter(verbose);                            \
     pos = 0;                                                            \
-    rewritten = (MPI_Unpack_t) dbrew_rewrite(rewriter, inbuf, insize,   \
+    rewritten = (MPI_Unpack_t) REWRITER_FUN(rewriter, inbuf, insize,    \
                                              position, outbuf,          \
                                              outcount, datatype, comm); \
     assert(rewritten);                                                  \
@@ -101,7 +110,7 @@ typedef int (*MPI_Unpack_t) (void* inbuf,
   if (rank == 0)  {                                                     \
     rewriter = get_pack_rewriter(verbose);                              \
     pos = 0;                                                            \
-    rewritten = (MPI_Pack_t) dbrew_rewrite(rewriter, inbuf, incount,    \
+    rewritten = (MPI_Pack_t) REWRITER_FUN(rewriter, inbuf, incount,     \
                                            datatype, outbuf, outsize,   \
                                            position, comm);             \
     assert(rewritten);                                                  \
@@ -114,7 +123,7 @@ typedef int (*MPI_Unpack_t) (void* inbuf,
   if (rank == 0) {                                                      \
     rewriter = get_unpack_rewriter(verbose);                            \
     pos = 0;                                                            \
-    rewritten = (MPI_Unpack_t) dbrew_rewrite(rewriter, inbuf, insize,   \
+    rewritten = (MPI_Unpack_t) REWRITER_FUN(rewriter, inbuf, insize,    \
                                              position, outbuf,          \
                                              outcount, datatype, comm); \
     assert(rewritten);                                                  \
