@@ -140,7 +140,7 @@ bool verifier_verify(Verifier* v, void* data, size_t size);
 void verifier_report(void* buf1, void* buf2, size_t size, int maxerrs);
 void verifier_test(Verifier* verify);
 
-#ifdef VERIFY_
+#ifdef VERIFY_BUFFERS
 #define PACK_MAYBE_ASSERT_VALID(verifier, rewritten, pos, inbuf,         \
                                 incount, datatype, outbuf, outsize,     \
                                 position, comm)                         \
