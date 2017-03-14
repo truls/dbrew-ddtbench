@@ -208,7 +208,9 @@ void setup_rewriter_function(Rewriter* r) {
   dbrew_config_function_setflags(r, printfptr, FC_BypassEmu | FC_KeepCallInstr);
 
   dbrew_config_function_parcount(r, memcpyptr, 3);
-  dbrew_config_function_setflags(r, memcpyptr, FC_BypassEmu | FC_KeepCallInstr | FC_SetReturnDynamic);
+  dbrew_config_function_setname(r, memcpyptr, "memcpy");
+  dbrew_config_function_setflags(r, memcpyptr, FC_BypassEmu | FC_ReplaceByInstr | FC_SetReturnDynamic);
+  //dbrew_config_function_setflags(r, memcpyptr, FC_BypassEmu | FC_KeepCallInstr | FC_SetReturnDynamic);
 
   dbrew_return_orig_on_fail(r, false);
 }
