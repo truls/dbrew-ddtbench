@@ -371,7 +371,7 @@ void timing_nas_lu_y_mpi_pack_ddt_dbrew( int DIM2, int DIM3, int outer_loop, int
         MPI_Send( &buffer[0], pos, MPI_PACKED, 1, itag, local_communicator );
         MPI_Recv( &buffer[0], bytes, MPI_PACKED, 1, itag, local_communicator, MPI_STATUS_IGNORE );
         timing_record(Comm);
-//! unpack the data
+        //! unpack the data
         pos = 0;
         //MPI_Unpack( &buffer[0], bytes, &pos, &array[idx3D(0,0,1,DIM1,DIM2+2)], 1, dtype_y_t, local_communicator );
         UNPACK_MAYBE_ASSERT_VALID(v, ru, pos, &buffer[0], bytes, &pos, &array[idx3D(0,0,1,DIM1,DIM2+2)], 1, dtype_y_t, local_communicator );
@@ -380,10 +380,10 @@ void timing_nas_lu_y_mpi_pack_ddt_dbrew( int DIM2, int DIM3, int outer_loop, int
         timing_record(Unpack);
       } else {
         MPI_Recv( &buffer[0], bytes, MPI_PACKED, 0, itag, local_communicator, MPI_STATUS_IGNORE );
-//! unpack the data
+        //! unpack the data
         pos = 0;
         MPI_Unpack( &buffer[0], bytes, &pos, &array[idx3D(0,0,1,DIM1,DIM2+2)], 1, dtype_y_t, local_communicator );
-//! pack the data
+        //! pack the data
         pos = 0;
         MPI_Pack( &array[idx3D(0,DIM2,1,DIM1,DIM2+2)], 1, dtype_y_t, &buffer[0], bytes, &pos, local_communicator );
         MPI_Send( &buffer[0], pos, MPI_PACKED, 0, itag, local_communicator );
