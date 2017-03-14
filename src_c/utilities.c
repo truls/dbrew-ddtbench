@@ -212,6 +212,7 @@ void setup_rewriter_function(Rewriter* r) {
   dbrew_config_function_setflags(r, memcpyptr, FC_BypassEmu | FC_ReplaceByInstr | FC_SetReturnDynamic);
   //dbrew_config_function_setflags(r, memcpyptr, FC_BypassEmu | FC_KeepCallInstr | FC_SetReturnDynamic);
 
+  dbrew_keep_large_call_addrs(r, true);
   dbrew_return_orig_on_fail(r, false);
 }
 
