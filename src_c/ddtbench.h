@@ -64,8 +64,35 @@ typedef int (*MPI_Unpack_t) (void* inbuf,
       v = verifier_new()
 #define GET_PACK_REWRITER(rewriter, rank, verbose)                      \
   Rewriter* rewriter = 0;                                               \
+  if (rank == 0)                                                        \
+    rewriter = get_pack_rewriter(verbose)
+#define GET_UNPACK_REWRITER(rewriter, rank, verbose)                    \
+  Rewriter* rewriter = 0;                                               \
+  if (rank == 0)                                                        \
+    rewriter = get_unpack_rewriter(verbose)
+#define REWRITER_REWRITE_PACK(rewriter, rewritten, pos, rank, verbose,  \
+                              inbuf, incount, datatype, outbuf,         \
+                              outsize, position, comm)                  \
+  MPI_Pack_t rewritten = 0;                                             \
+  if (rank == 0)  {                                                     \
+    pos = 0;                                                            \
+    rewritten = (MPI_Pack_t) dbrew_rewrite(rewriter, inbuf, incount,    \
+                                           datatype, outbuf, outsize,   \
+                                           position, comm);             \
+    assert(rewritten);                                                  \
+  }
+#define REWRITER_REWRITE_UNPACK(rewriter, rewritten, pos, rank,         \
+                                verbose, inbuf, insize, position,       \
+                                outbuf, outcount, datatype, comm)       \
+  MPI_Unpack_t rewritten = 0;                                           \
   if (rank == 0) {                                                      \
-  rewriter = get_pack_rewriter(verbose
+    rewriter = get_unpack_rewriter(verbose);                            \
+    pos = 0;                                                            \
+    rewritten = (MPI_Unpack_t) dbrew_rewrite(rewriter, inbuf, insize,   \
+                                             position, outbuf,          \
+                                             outcount, datatype, comm); \
+    assert(rewritten);                                                  \
+  }
 #define REWRITE_PACK(rewriter, rewritten, pos, rank, verbose, inbuf,    \
                      incount, datatype, outbuf, outsize,                \
                      position, comm)                                    \
