@@ -7,6 +7,7 @@
 
 #mesondefine VERIFY_BUFFERS
 #mesondefine HAVE_DBREW
+#mesondefine ENABLE_LLVM
 #mesondefine HAVE_PAPI
 #mesondefine TEST_TYPE
 #mesondefine USE_ALIGNED_MALLOC

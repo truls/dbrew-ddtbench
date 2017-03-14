@@ -17,5 +17,6 @@ option('enable_lammps', type: 'boolean', value: false, description: 'Enable LAMM
 option('enable_all', type: 'boolean', value: false, description: 'Enable all supported benchmark')
 
 option('enable_dbrew', type: 'boolean', value: false, description: 'DBrew rewriting backend')
+option('enable_llvm', type: 'boolean', value: false, description: 'Enable DBrew LLVM pass')
 option('enable_papi', type: 'boolean', value: false, description: 'Enable the PAPI library')
 option('use_aligned_malloc', type: 'boolean', value: false, description: 'Allign memory allocations')
