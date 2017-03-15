@@ -94,6 +94,9 @@ int main( int argc, char **argv) {
 #ifdef HAVE_DBREW
     printf("   * DBrew support\n");
 #endif
+#ifdef ENABLE_LLVM
+    printf("   * LLVM enabled\n");
+#endif
 #ifdef VERIFY_BUFFERS
     printf("   * Buffer verification support\n");
 #endif
