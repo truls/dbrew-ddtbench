@@ -39,16 +39,16 @@ milc = get_option('enable_milc') or enable_all
 nas = get_option('enable_nas') or enable_all
 specfem3d = get_option('enable_specfem3d') or enable_all
 lammps = get_option('enable_lammps') or enable_all
-fft = get_option('enable_fft')
+fft = get_option('enable_fft') or enable_all
 wrf = get_option('enable_wrf')
 
 # Fail if unsupported benchmarks are explicitly enabled on MPI2
-if mpi_ver == 1 and fft
-  error('FFT benchmark requires MPI2 compliant implementation')
-elif mpi_ver == 1 and wrf
+#if mpi_ver == 1 and fft
+#  error('FFT benchmark requires MPI2 compliant implementation')
+if mpi_ver == 1 and wrf
   error('WRF benchmark requires MPI2 compliant implementation')
 elif mpi_ver == 2
-  fft = fft or enable_all
+  #fft = fft or enable_all
   wrf = wrf or enable_all
 endif
 

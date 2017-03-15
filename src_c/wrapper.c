@@ -396,6 +396,8 @@ void wrapper_timing_fft( int DIM1, int outer_loop, int inner_loop, MPI_File file
 
   timing_fft2d_mpi_pack_ddt( DIM1, procs, outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
 
+  timing_fft2d_mpi_pack_ddt_dbrew( DIM1, procs, outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
+
 //! not necessarily correct, since it assumes that a double uses twice
 //! the bytes a real does
   nelements = DIM1/procs*DIM1/procs * 2 * 2;

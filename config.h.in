@@ -21,7 +21,8 @@
 #mesondefine SPECFEM3D
 #mesondefine LAMMPS
 
-#if ((MY_MPI_VERSION == 1)) && ((defined WRF) || (defined FFT))
+//#if ((MY_MPI_VERSION == 1)) && ((defined WRF) || (defined FFT))
+#if ((MY_MPI_VERSION == 1)) && ((defined WRF))
 #error MPI2 compatible implementation not used but tests requiring MPI2 were enabled
 #endif
 
