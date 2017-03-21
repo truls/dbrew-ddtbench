@@ -642,7 +642,13 @@ void timing_lammps_full_mpi_pack_ddt_dbrew( int DIM1, int icount, int* list, int
     }
 
     INIT_VERIFIER(v, myrank);
-    REWRITE_PACK(pr, rp, pos, myrank, true, MPI_BOTTOM, 1, dtype_send_t, &buffer[0], bytes, &pos, local_communicator );
+#ifdef VERIFY_BUFFERS
+    Verifier* vatag = verifier_new();
+    Verifier* vatype = verifier_new();
+    Verifier* vamask = verifier_new();
+    Verifier* vax = verifier_new();
+#endif
+    REWRITE_PACK(pr, rp, pos, myrank, false, MPI_BOTTOM, 1, dtype_send_t, &buffer[0], bytes, &pos, local_communicator );
     REWRITE_UNPACK(ur, ru, pos, myrank, false, &buffer[0], bytes, &pos, MPI_BOTTOM, 1, dtype_recv_t, local_communicator );
     timing_record(Rewrite);
 
@@ -657,8 +663,22 @@ void timing_lammps_full_mpi_pack_ddt_dbrew( int DIM1, int icount, int* list, int
         MPI_Recv( &buffer[0], bytes, MPI_PACKED, 1, itag, local_communicator, MPI_STATUS_IGNORE );
         timing_record(Comm);
         pos = 0;
-        //MPI_Unpack( &buffer[0], bytes, &pos, MPI_BOTTOM, 1, dtype_recv_t, local_communicator );
-        UNPACK_MAYBE_ASSERT_VALID(v, ru, pos, &buffer[0], bytes, &pos, MPI_BOTTOM, 1, dtype_recv_t, local_communicator );
+        MPI_Unpack( &buffer[0], bytes, &pos, MPI_BOTTOM, 1, dtype_recv_t, local_communicator );
+#ifdef VERIFY_BUFFERS
+        verifier_capture(vax, &atag[3*DIM1], 3 * icount * sizeof(double));
+        verifier_capture(vatag, &atag[DIM1], icount * sizeof(double));
+        verifier_capture(vatype, &atype[DIM1], icount * sizeof(double));
+        verifier_capture(vamask, &amask[DIM1], icount * sizeof(double));
+#endif
+        ru( &buffer[0], bytes, &pos, MPI_BOTTOM, 1, dtype_recv_t, local_communicator );
+#ifdef VERIFY_BUFFERS
+        verifier_verify(vax, &atag[3*DIM1], 3 * icount * sizeof(double));
+        verifier_verify(vatag, &atag[DIM1], icount * sizeof(double));
+        verifier_verify(vatype, &atype[DIM1], icount * sizeof(double));
+        verifier_verify(vamask, &amask[DIM1], icount * sizeof(double));
+#endif
+
+        //UNPACK_MAYBE_ASSERT_VALID(v, ru, pos, &buffer[0], bytes, &pos, MPI_BOTTOM, 1, dtype_recv_t, local_communicator );
         timing_record(Unpack);
       } else {
         MPI_Recv( &buffer[0], bytes, MPI_PACKED, 0, itag, local_communicator, MPI_STATUS_IGNORE );
@@ -668,6 +688,12 @@ void timing_lammps_full_mpi_pack_ddt_dbrew( int DIM1, int icount, int* list, int
         MPI_Pack( MPI_BOTTOM, 1, dtype_send_t, &buffer[0], bytes, &pos, local_communicator );
         MPI_Send( &buffer[0], pos, MPI_PACKED, 0, itag, local_communicator );
       }
+#ifdef VERIFY_BUFFERS
+    verifier_reset(vax);
+    verifier_reset(vatag);
+    verifier_reset(vatype);
+    verifier_reset(vamask);
+#endif
 
     } //! inner loop
 
@@ -683,7 +709,12 @@ void timing_lammps_full_mpi_pack_ddt_dbrew( int DIM1, int icount, int* list, int
     dbrew_free(pr);
     dbrew_free(ur);
     verifier_free(v);
-
+#ifdef VERIFY_BUFFERS
+    verifier_free(vax);
+    verifier_free(vatag);
+    verifier_free(vatype);
+    verifier_free(vamask);
+#endif
   } //! outer loop
 
   if ( myrank == 0 ) {
