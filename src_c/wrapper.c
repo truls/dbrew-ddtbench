@@ -612,6 +612,8 @@ void wrapper_timing_specfem3D_cm( int DIM2_cm, int DIM2_ic, int icount_cm, int i
 
   timing_specfem3D_cm_mpi_pack_ddt( DIM2_cm, DIM2_ic, icount_cm, icount_ic, &list_cm[0], &list_ic[0], outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
 
+  timing_specfem3D_cm_mpi_pack_ddt_dbrew( DIM2_cm, DIM2_ic, icount_cm, icount_ic, &list_cm[0], &list_ic[0], outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
+
   nelements = (icount_cm+icount_ic) * 3;
   loops = outer_loop * inner_loop;
   timing_basic_ping_pong_nelements( nelements, loops, &testname[0], local_communicator );

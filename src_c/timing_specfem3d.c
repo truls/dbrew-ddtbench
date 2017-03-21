@@ -892,6 +892,197 @@ void timing_specfem3D_cm_mpi_pack_ddt( int DIM2_cm, int DIM2_ic, int icount_cm, 
 
 }
 
+void timing_specfem3D_cm_mpi_pack_ddt_dbrew( int DIM2_cm, int DIM2_ic, int icount_cm, int icount_ic, int* list_cm, int* list_ic, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
+
+  float* array_cm;
+  float* array_ic;
+
+  float* buffer;
+
+  int i, j, base, bytes, typesize, isize;
+  int myrank, maximum, pos;
+
+  char method[50];
+
+//! variables for the MPI derived datatypes
+  MPI_Aint struct_displacement[2];
+  MPI_Datatype dtype_temp_t[2], dtype_indexed_t;
+  int blocklength[2];
+
+  int* displacement;
+  int* temp_displacement_ic;
+  int* temp_displacement_cm;
+
+//! just some statements to prevent compiler warnings of unused variables
+//! those parameter are included for future features
+  *correct_flag = 0;
+  *ptypesize = 0;
+//  typesize = filehandle_debug
+
+  array_cm = ddtmalloc( 3 * DIM2_cm * sizeof(float) );
+  array_ic = ddtmalloc( 3 * DIM2_ic * sizeof(float) );
+
+// fortran to c conversion
+  temp_displacement_cm = ddtmalloc( icount_cm * outer_loop * sizeof(int) );
+  temp_displacement_ic = ddtmalloc( icount_ic * outer_loop * sizeof(int) );
+  for( i=0 ; i<outer_loop ; i++ ) {
+    for( j=0 ; j<icount_cm ; j++ ) {
+      temp_displacement_cm[idx2D(j,i,icount_cm)] = list_cm[idx2D(j,i,icount_cm)] - 1;
+    }
+    for( j=0 ; j<icount_ic ; j++ ) {
+      temp_displacement_ic[idx2D(j,i,icount_ic)] = list_ic[idx2D(j,i,icount_ic)] - 1;
+    }
+  }
+
+  MPI_Comm_rank( local_communicator, &myrank );
+
+//! ================= initialize the arrays =================
+  base = myrank * (DIM2_cm+DIM2_ic) * 3 + 1;
+  utilities_fill_unique_array_2D_float( &array_cm[0], 3, DIM2_cm, base );
+  base = base + DIM2_cm * 3;
+  utilities_fill_unique_array_2D_float( &array_ic[0], 3, DIM2_ic, base );
+
+  if ( myrank == 0 ) {
+    snprintf(method, 50, "mpi_pack_ddt_dbrew" );
+
+    MPI_Type_size( MPI_FLOAT, &typesize );
+    bytes = (icount_cm + icount_ic) * 3 * typesize;
+
+    timing_init( testname, &method[0], bytes );
+  }
+
+  for( i=0 ; i < outer_loop ; i++ ) {
+    isize = (DIM2_cm+DIM2_ic) * 3;
+    MPI_Type_size( MPI_FLOAT, &typesize );
+    bytes = isize * typesize;
+
+    buffer = ddtmalloc( isize * sizeof(float) );
+
+//! ========== building the MPI derived datatype ============
+    if (icount_cm < icount_ic) {
+      maximum = icount_ic;
+    } else {
+      maximum = icount_cm;
+    }
+
+    displacement = ddtmalloc( maximum * sizeof(int) );
+
+    MPI_Get_address( &array_cm[0], &struct_displacement[0] );
+    MPI_Get_address( &array_ic[0], &struct_displacement[1] );
+
+    blocklength[0] = 1;
+    blocklength[1] = 1;
+
+    for( j = 0 ; j < icount_cm ; j++ ) {
+      displacement[j] = temp_displacement_cm[idx2D(j,i,icount_cm)] * 3;
+    }
+    MPI_Type_create_indexed_block( icount_cm, 3, &displacement[0], MPI_FLOAT, &dtype_temp_t[0] );
+
+    for( j = 0 ; j < icount_ic ; j++ ) {
+      displacement[j] = temp_displacement_ic[idx2D(j,i,icount_ic)] * 3;
+    }
+    MPI_Type_create_indexed_block(icount_ic, 3, &displacement[0], MPI_FLOAT, &dtype_temp_t[1] );
+
+    MPI_Type_create_struct( 2, &blocklength[0], &struct_displacement[0], &dtype_temp_t[0], &dtype_indexed_t );
+    MPI_Type_commit( &dtype_indexed_t );
+
+    MPI_Type_free( &dtype_temp_t[0] );
+    MPI_Type_free( &dtype_temp_t[1] );
+
+    free( displacement );
+
+    if ( myrank == 0 ) {
+      timing_record(DDTCreate);
+    }
+
+    INIT_VERIFIER(v, myrank);
+#ifdef VERIFY_BUFFERS
+    Verifier* vcm = verifier_new();
+    Verifier* vic = verifier_new();
+#endif
+    REWRITE_PACK(pr, rp, pos, myrank, false,  MPI_BOTTOM, 1, dtype_indexed_t, &buffer[0], bytes, &pos, local_communicator);
+    REWRITE_UNPACK(ur, ru, pos, myrank, false,  &buffer[0], bytes, &pos, MPI_BOTTOM, 1, dtype_indexed_t, local_communicator);
+    timing_record(Rewrite);
+
+//! =============== ping pong communication =================
+
+    for( j=0 ; j<inner_loop ; j++ ) {
+      if ( myrank == 0 ) {
+//! pack the buffer
+        pos = 0;
+        //MPI_Pack( MPI_BOTTOM, 1, dtype_indexed_t, &buffer[0], bytes, &pos, local_communicator );
+        PACK_MAYBE_ASSERT_VALID(v, rp, pos, MPI_BOTTOM, 1, dtype_indexed_t, &buffer[0], bytes, &pos, local_communicator );
+        timing_record(Pack);
+//! send the data from rank 0 to rank 1
+        MPI_Send( &buffer[0], pos, MPI_PACKED, 1, itag, local_communicator );
+//! receive the data from rank 1 back
+        MPI_Recv( &buffer[0], bytes, MPI_PACKED, 1, itag, local_communicator, MPI_STATUS_IGNORE );
+        timing_record(Comm);
+//! unpack the data
+        pos = 0;
+        MPI_Unpack( &buffer[0], bytes, &pos, MPI_BOTTOM, 1, dtype_indexed_t, local_communicator );
+#ifdef VERIFY_BUFFERS
+        verifier_capture(vcm, &array_cm[0],  3 * DIM2_cm * sizeof(float));
+        verifier_capture(vic, &array_ic[0],  3 * DIM2_ic * sizeof(float));
+#endif
+        pos = 0;
+        ru( &buffer[0], bytes, &pos, MPI_BOTTOM, 1, dtype_indexed_t, local_communicator );
+#ifdef VERIFY_BUFFERS
+        verifier_verify(vcm, &array_cm[0],  3 * DIM2_cm * sizeof(float));
+        verifier_verify(vic, &array_ic[0],  3 * DIM2_ic * sizeof(float));
+#endif
+        timing_record(Unpack);
+//! now for rank 1
+      } else {
+//! receive the data from rank 0
+        MPI_Recv( &buffer[0], bytes, MPI_PACKED, 0, itag, local_communicator, MPI_STATUS_IGNORE );
+//! unpack the data
+        pos = 0;
+        MPI_Unpack( &buffer[0], bytes, &pos, MPI_BOTTOM, 1, dtype_indexed_t, local_communicator );
+//! pack the data
+        pos = 0;
+        MPI_Pack( MPI_BOTTOM, 1, dtype_indexed_t, &buffer[0], bytes, &pos, local_communicator );
+//! send the data back to rank 0
+        MPI_Send( &buffer[0], pos, MPI_PACKED, 0, itag, local_communicator );
+      }
+
+#ifdef VERIFY_BUFFERS
+      verifier_reset(vcm);
+      verifier_reset(vic);
+#endif
+  } //! inner loop
+
+//! ======================= clean up ========================
+    MPI_Type_free( &dtype_indexed_t );
+
+    free( buffer );
+
+    if ( myrank == 0 ) {
+    timing_record(DDTFree);
+    }
+
+    dbrew_free(pr);
+    dbrew_free(ur);
+    verifier_free(v);
+#ifdef VERIFY_BUFFERS
+    verifier_free(vcm);
+    verifier_free(vic);
+#endif
+
+  } //! outer loop
+
+  if ( myrank == 0 ) {
+    timing_print( 1 );
+  }
+
+  free( array_cm );
+  free( array_ic );
+
+  free( temp_displacement_cm );
+  free( temp_displacement_ic );
+
+}
+
 void timing_specfem3d_mt_ddt( int DIM1, int DIM2, int DIM3, int outer_loop, int inner_loop, int* correct_flag, int* ptypesize, char* testname, MPI_File filehandle_debug __attribute__((unused)), MPI_Comm local_communicator ) {
 
   float* send_array;
