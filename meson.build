@@ -27,6 +27,7 @@ endif
 
 conf.set('USE_ALIGNED_MALLOC', get_option('use_aligned_malloc'))
 conf.set('ENABLE_LLVM', get_option('enable_llvm'))
+conf.set('FULL_UNROLL', get_option('full_unroll'))
 
 verify_buffers = get_option('verify_buffers')
 conf.set('VERIFY_BUFFERS', verify_buffers)

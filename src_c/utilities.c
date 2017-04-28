@@ -246,6 +246,27 @@ Rewriter* get_pack_rewriter(bool verbose)
   uintptr_t pack_hvector = dbrew_util_symname_to_ptr(r, "MPIR_Pack_Hvector");
   dbrew_config_function_setname(r, pack_hvector, "MPIR_Pack_Hvector");
   dbrew_config_function_setflags(r, pack_hvector, FC_InhibitLoopUnroll);
+#ifndef FULL_UNROLL
+  dbrew_config_force_unknown(r, 3);
+  dbrew_config_force_unknown(r, 4);
+  dbrew_config_force_unknown(r, 5);
+  dbrew_config_force_unknown(r, 6);
+#endif
+  uintptr_t pack2 = dbrew_util_symname_to_ptr(r, "MPIR_Pack2");
+  assert(pack2);
+  dbrew_config_function_setname(r, pack2, "MPIR_Pack2");
+  dbrew_config_function_parmap(r, pack2, 9, DPInt(1) |
+                               SPInt(2) |
+                               DPInt(3) |
+                               DPInt(4) |
+                               DPInt(5) |
+                               DPInt(6) |
+                               DRPInt(7) |
+                               DRPInt(8) |
+                               DRPInt(9));
+  dbrew_config_function_recdepth(r, pack2, 2);
+
+
   setup_rewriter_function(r);
   return r;
 }
@@ -270,7 +291,26 @@ Rewriter* get_unpack_rewriter(bool verbose)
                                | SPInt(6) // datatype;
                                | SPInt(7) // comm
                                );
+#ifndef FULL_UNROLL
+  //dbrew_config_force_unknown(r, 3);
+  dbrew_config_force_unknown(r, 4);
+  dbrew_config_force_unknown(r, 5);
+  dbrew_config_force_unknown(r, 6);
+#endif
 
+  uintptr_t unpack2 = dbrew_util_symname_to_ptr(r, "MPIR_Unpack2");
+  assert(unpack2);
+  dbrew_config_function_setname(r, unpack2, "MPIR_Unpack2");
+  dbrew_config_function_parmap(r, unpack2, 9, DPInt(1) |
+                               DPInt(2) |
+                               DPInt(3) |
+                               DPInt(4) |
+                               DPInt(5) |
+                               DPInt(6) |
+                               DPInt(7) |
+                               DRPInt(8) |
+                               DRPInt(9));
+  dbrew_config_function_recdepth(r, unpack2, 2);
 
   setup_rewriter_function(r);
 

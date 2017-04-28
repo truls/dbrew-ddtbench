@@ -11,6 +11,7 @@
 #mesondefine HAVE_PAPI
 #mesondefine TEST_TYPE
 #mesondefine USE_ALIGNED_MALLOC
+#mesondefine FULL_UNROLL
 
 #mesondefine MY_MPI_VERSION
 

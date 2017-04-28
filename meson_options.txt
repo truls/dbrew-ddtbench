@@ -20,3 +20,4 @@ option('enable_dbrew', type: 'boolean', value: false, description: 'DBrew rewrit
 option('enable_llvm', type: 'boolean', value: false, description: 'Enable DBrew LLVM pass')
 option('enable_papi', type: 'boolean', value: false, description: 'Enable the PAPI library')
 option('use_aligned_malloc', type: 'boolean', value: false, description: 'Allign memory allocations')
+option('full_unroll', type: 'boolean', value: false, description: 'Enable full unrolling')

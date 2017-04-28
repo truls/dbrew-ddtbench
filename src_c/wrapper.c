@@ -475,7 +475,7 @@ void wrapper_timing_lammps_full( int DIM1, int icount, int outer_loop, int inner
 
   timing_lammps_full_mpi_pack_ddt( DIM1, icount, list, outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
 
-  //timing_lammps_full_mpi_pack_ddt_dbrew( DIM1, icount, list, outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
+  timing_lammps_full_mpi_pack_ddt_dbrew( DIM1, icount, list, outer_loop, inner_loop, &correct_flag, &typesize, &testname[0], filehandle_debug, local_communicator );
 
 //! not necessarily correct, since it assumes that a double uses twice
 //! the bytes a real does
