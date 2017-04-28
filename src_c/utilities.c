@@ -209,6 +209,20 @@ void setup_rewriter_function(Rewriter* r) {
 
   dbrew_config_function_parcount(r, memcpyptr, 3);
   dbrew_config_function_setname(r, memcpyptr, "memcpy");
+  uintptr_t get_blocklen_ptr = dbrew_util_symname_to_ptr(r, "get_blocklen");
+  uintptr_t get_length_ptr = dbrew_util_symname_to_ptr(r, "get_length");
+  assert(get_blocklen_ptr);
+  assert(get_length_ptr);
+
+  dbrew_config_function_setname(r, get_length_ptr, "get_length");
+  dbrew_config_function_parmap(r, get_length_ptr, 2, SPInt(1) | SPInt(2));
+  dbrew_config_function_setflags(r, get_length_ptr,
+                                 FC_BypassEmu | FC_SetRetKnownViral | FC_RetValueHint);
+
+  dbrew_config_function_setname(r, get_blocklen_ptr, "get_blocklen");
+  dbrew_config_function_parmap(r, get_blocklen_ptr, 2, SPInt(1) | DPInt(2));
+  dbrew_config_function_setflags(r, get_blocklen_ptr,
+  FC_BypassEmu | FC_SetRetKnownViral | FC_RetValueHint);
 #ifdef ENABLE_LLVM
   dbrew_config_function_setflags(r, memcpyptr, FC_BypassEmu | FC_IntrinsicHint | FC_SetReturnDynamic);
 #else
