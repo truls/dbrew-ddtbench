@@ -6,19 +6,19 @@ library("reshape");
 data <- read.table("ddtbench.out", header=TRUE);
 
 ## exclude some tests
-data <- data[data$testname != "FFT2",];
-data <- data[data$testname != "NAS_LU_x",];
+#data <- data[data$testname != "FFT2",];
+#data <- data[data$testname != "NAS_LU_x",];
 ##data <- data[data$testname != "NAS_LU_y",];
-data <- data[data$testname != "NAS_MG_x",];
-data <- data[data$testname != "NAS_MG_y",];
-data <- data[data$testname != "NAS_MG_z",];
+#data <- data[data$testname != "NAS_MG_x",];
+#data <- data[data$testname != "NAS_MG_y",];
+#data <- data[data$testname != "NAS_MG_z",];
 data <- data[data$testname != "WRF_x_vec",];
 data <- data[data$testname != "WRF_y_vec",];
 ##data <- data[data$testname != "LAMMPS_atomic",];
 ##data <- data[data$testname != "LAMMPS_full",];
 ##data <- data[data$testname != "SPECFEM3D_cm",];
 data <- data[data$testname != "SPECFEM3D_oc",];
-data <- data[data$testname != "SPECFEM3d_mt",];
+#data <- data[data$testname != "SPECFEM3d_mt",];
 ##data <- data[data$testname != "MILC_su3_zd",];
 
 ## helper functions
@@ -86,7 +86,8 @@ newdf <- data.frame(testname, packMethod, bytes, value);
 labels_map <- c("manual" = "Manual Packing",
                 "mpi_ddt" = "MPI DDTs",
                 "mpi_pack_ddt" = "MPI DDT Pack/Unpack",
-                "mpi_pack_ddt_dbrew" = "MPI DDT Pack/Unpack with DBrew")
+                "mpi_pack_ddt_dbrew" = "MPI DDT Pack/Unpack with DBrew",
+                "mpi_pack_ddt_dbrew_llvm" = "MPI DDT P/U with DBrew/LLVM")
 
 m <- ggplot(newdf, aes(x=bytes, y=value, color=testname, shape=testname)) +
     facet_grid(. ~ packMethod, scales="free", labeller=as_labeller(labels_map)) +
@@ -123,18 +124,22 @@ mndata <- mndata[mndata$packMethod != "manual", ];
 ##mndata <- mndata[(mndata$packMethod != "mpi_ddt") | (mndata$id != "unpack"),];
                                         #
 ## Remove DBrew rewriting timing... Should be amortized ;)
+mndata <- mndata[(mndata$packMethod != "mpi_pack_ddt") | (mndata$id != "dbrew_rewrite"),];
 mndata <- mndata[(mndata$packMethod != "mpi_pack_ddt_dbrew") | (mndata$id != "dbrew_rewrite"),];
+mndata <- mndata[(mndata$packMethod != "mpi_pack_ddt_dbrew_llvm") | (mndata$id != "dbrew_rewrite"),];
 
 ## We aren't interested in DDT create/free overheads at the moment.
 mndata <- mndata[(mndata$id != "ddt_create_overhead"),];
 mndata <- mndata[(mndata$id != "ddt_free_overhead"),];
 
+print(mndata);
+
 
 makeplot <- function(name) {
     print(name);
     m <- ggplot(mndata[mndata$testname == name,], aes(x=bytes, y=value, color=id, shape=id)) +
-        facet_grid(. ~ packMethod, labeller=as_labeller(labels_map)) +
         geom_line() +
+        facet_grid(. ~ packMethod, labeller=as_labeller(labels_map)) +
         geom_point(size=4) +
         labs(title=name) +
         scale_x_continuous('Datasize [Byte]', labels=si_vec) +
@@ -145,7 +150,7 @@ makeplot <- function(name) {
         scale_color_manual(name="Phase", breaks=c("communication", "ddt_create_overhead", "ddt_free_overhead", "pack", "unpack", "dbrew_rewrite"),
                            labels=c("Communication RTT\n (incl. Packing, excl. DDT create)", "DDT Create", "DDT Free", "Pack", "Unpack", "Rewriting"),
                            values=c(2:7)) +
-        theme(axis.text.x = element_text(angle=90));
+        theme(axis.text.x = element_text(angle=90), legend.position="bottom");
     print(m);
     return(m);
 }
