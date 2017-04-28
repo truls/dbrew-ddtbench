@@ -448,7 +448,8 @@ bool verifier_verify(Verifier* v, void* data, size_t size) {
   assert(v->captureState == StateCompare);
   if (memcmp(data, v->captured, size) != 0) {
     //print_vectors(data, v->captured, size);
-    verifier_report(data, v->captured, size, 100000000);
+    //verifier_report(data, v->captured, size, 100000000);
+    verifier_report(data, v->captured, size, 100);
     return false;
   } else {
     return true;
