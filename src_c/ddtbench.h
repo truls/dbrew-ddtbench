@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include <stdbool.h>
 
 #ifdef HAVE_DBREW
 #include <dbrew.h>
@@ -85,10 +86,13 @@ typedef int (*MPI_Unpack_t) (void* inbuf,
   MPI_Pack_t rewritten = 0;                                             \
   if (rank == 0)  {                                                     \
     pos = 0;                                                            \
-    rewritten = (MPI_Pack_t) REWRITER_FUN(rewriter, inbuf, incount,     \
+   dbrew_config_set_memrange(rewriter, "outsize par", true,             \
+                             (uint64_t) position,                       \
+                             sizeof(typeof(*position)));                \
+   rewritten = (MPI_Pack_t) REWRITER_FUN(rewriter, inbuf, incount,      \
                                           datatype, outbuf, outsize,    \
                                            position, comm);             \
-    assert(rewritten);                                                  \
+   assert(rewritten);                                                   \
   }
 #define REWRITER_REWRITE_UNPACK(rewriter, rewritten, pos, rank,         \
                                 verbose, inbuf, insize, position,       \
@@ -97,9 +101,12 @@ typedef int (*MPI_Unpack_t) (void* inbuf,
   if (rank == 0) {                                                      \
     rewriter = get_unpack_rewriter(verbose);                            \
     pos = 0;                                                            \
+    dbrew_config_set_memrange(rewriter, "outsize par", true,            \
+                              (uint64_t) position,                      \
+                              sizeof(typeof(*position)));               \
     rewritten = (MPI_Unpack_t) REWRITER_FUN(rewriter, inbuf, insize,    \
-                                             position, outbuf,          \
-                                             outcount, datatype, comm); \
+                                            position, outbuf,           \
+                                            outcount, datatype, comm);  \
     assert(rewritten);                                                  \
   }
 #define REWRITE_PACK(rewriter, rewritten, pos, rank, verbose, inbuf,    \
@@ -111,10 +118,14 @@ typedef int (*MPI_Unpack_t) (void* inbuf,
     rewriter = get_pack_rewriter(verbose);                              \
     pos = 0;                                                            \
     rewritten = (MPI_Pack_t) REWRITER_FUN(rewriter, inbuf, incount,     \
-                                           datatype, outbuf, outsize,   \
-                                           position, comm);             \
+                                          datatype, outbuf, outsize,    \
+                                          position, comm);              \
     assert(rewritten);                                                  \
   }
+    /* dbrew_config_set_memrange(rewriter, "outsize par", true,            \ */
+    /*                           (uint64_t) position,                      \ */
+    /*                           sizeof(typeof(*position)));               \ */
+
 #define REWRITE_UNPACK(rewriter, rewritten, pos, rank, verbose, inbuf,  \
                        insize, position, outbuf, outcount,              \
                        datatype, comm)                                  \
@@ -123,6 +134,9 @@ typedef int (*MPI_Unpack_t) (void* inbuf,
   if (rank == 0) {                                                      \
     rewriter = get_unpack_rewriter(verbose);                            \
     pos = 0;                                                            \
+    dbrew_config_set_memrange(rewriter, "outsize par", true,            \
+                              (uint64_t) position,                      \
+                              sizeof(typeof(*position)));               \
     rewritten = (MPI_Unpack_t) REWRITER_FUN(rewriter, inbuf, insize,    \
                                              position, outbuf,          \
                                              outcount, datatype, comm); \
@@ -141,7 +155,7 @@ void verifier_report(void* buf1, void* buf2, size_t size, int maxerrs);
 void verifier_test(Verifier* verify);
 
 #ifdef VERIFY_BUFFERS
-#define PACK_MAYBE_ASSERT_VALID(verifier, rewritten, pos, inbuf,         \
+#define PACK_MAYBE_ASSERT_VALID(verifier, rewritten, pos, inbuf,        \
                                 incount, datatype, outbuf, outsize,     \
                                 position, comm)                         \
   do {                                                                  \
@@ -151,15 +165,15 @@ void verifier_test(Verifier* verify);
     MPI_Pack(inbuf, incount, datatype, outbuf,                          \
              outsize, position, comm);                                  \
     /*verifier_report(outbuf, outbuf, outsize, 100000);*/               \
-    /*printf("outbuf after1: %p\n", outsize);*/                         \
-    verifier_capture(verifier, outbuf, outsize);                        \
+    printf("outbuf after1: %d\n", pos);                                 \
+    verifier_capture(verifier, outbuf, pos);                        \
     memset(outbuf, 0, outsize);                                         \
     pos = 0;                                                            \
     rewritten(inbuf, incount, datatype, outbuf,                         \
               outsize, position, comm);                                 \
     /*verifier_report(outbuf, outbuf, outsize, 100000);*/               \
-    /*printf("outbuf after2: %p\n", pos);*/                             \
-    assert(verifier_verify(verifier, outbuf, outsize));                 \
+    printf("outbuf after2: %d\n", pos);                                 \
+    assert(verifier_verify(verifier, outbuf, pos));                 \
     verifier_reset(verifier);                                           \
   } while(0)
 #define UNPACK_MAYBE_ASSERT_VALID(verifier, rewritten, pos, inbuf,      \
@@ -197,6 +211,7 @@ void verifier_test(Verifier* verify);
 #endif
 
 #ifdef USE_ALIGNED_MALLOC
+#error hard disabled
 #define ddtmalloc(size) aligned_alloc(32, ((size_t) size + 0x1f) & (((size_t) (-1)) - 0x1f))
 #else
 #define ddtmalloc(size) malloc(size);

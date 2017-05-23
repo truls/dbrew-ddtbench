@@ -178,7 +178,7 @@ void utilities_fill_unique_array_3D_double( double* array, int DIM1, int DIM2, i
 static
 void setup_rewriter_function(Rewriter* r) {
 
-  uintptr_t mpirtp = dbrew_util_symname_to_ptr(r, "MPIR_ToPointer");
+  //uintptr_t mpirtp = dbrew_util_symname_to_ptr(r, "MPIR_ToPointer");
   //assert(mpirtp_dir == mpirtp);
   //uintptr_t printfptr = (uintptr_t) &printf;
   uintptr_t printfptr = dbrew_util_symname_to_ptr(r, "printf@plt");
@@ -191,9 +191,11 @@ void setup_rewriter_function(Rewriter* r) {
   //uintptr_t mpierrsm_dir = (uintptr_t) &MPIR_Err_setmsg;
   //uintptr_t mpierrsm = (uintptr_t) &MPIR_Err_setmsg;
   uintptr_t mpierrsm = dbrew_util_symname_to_ptr(r, "MPIR_Err_setmsg");
+  //dbrew_config_function_parcount(r, mpirtp, 1);
 
-  dbrew_config_function_parcount(r, mpirtp, 1);
-  dbrew_config_function_par_setname(r, mpirtp, 0, "MPIR_ToPointer arg1");
+  uintptr_t mpirtp = dbrew_util_symname_to_ptr(r, "MPIR_ToPointer");
+  dbrew_config_function_par_setname(r, mpirtp, 0, "MPIR_ToPointer");
+  dbrew_config_function_parmap(r, mpirtp, 1, SPInt(1));
   dbrew_config_function_setname(r, mpirtp, "MPIR_ToPointer");
   dbrew_config_function_setflags(r, mpirtp,
                                  FC_BypassEmu | FC_SetRetKnownViral | FC_RetValueHint);
@@ -209,6 +211,8 @@ void setup_rewriter_function(Rewriter* r) {
 
   dbrew_config_function_parcount(r, memcpyptr, 3);
   dbrew_config_function_setname(r, memcpyptr, "memcpy");
+
+  //#ifdef STATIVAL_HACK
   uintptr_t get_blocklen_ptr = dbrew_util_symname_to_ptr(r, "get_blocklen");
   uintptr_t get_length_ptr = dbrew_util_symname_to_ptr(r, "get_length");
   assert(get_blocklen_ptr);
@@ -223,15 +227,19 @@ void setup_rewriter_function(Rewriter* r) {
   dbrew_config_function_parmap(r, get_blocklen_ptr, 2, SPInt(1) | DPInt(2));
   dbrew_config_function_setflags(r, get_blocklen_ptr,
   FC_BypassEmu | FC_SetRetKnownViral | FC_RetValueHint);
+
+  //#endif
+
 #ifdef ENABLE_LLVM
   dbrew_config_function_setflags(r, memcpyptr, FC_BypassEmu | FC_IntrinsicHint | FC_SetReturnDynamic);
 #else
-  dbrew_config_function_setflags(r, memcpyptr, FC_BypassEmu | FC_KeepCallInstr | FC_SetReturnDynamic);
+  //dbrew_config_function_setflags(r, memcpyptr, FC_BypassEmu | FC_KeepCallInstr | FC_SetReturnDynamic);
 #endif
 
 
-  dbrew_keep_large_call_addrs(r, true);
+  //dbrew_keep_large_call_addrs(r, true);
   dbrew_return_orig_on_fail(r, false);
+  //dbrew_optverbose(r, true);
 }
 
 Rewriter* get_pack_rewriter(bool verbose)
@@ -247,8 +255,12 @@ Rewriter* get_pack_rewriter(bool verbose)
     dbrew_verbose(r, 1, 1, 1);
     dbrew_optverbose(r, 1);
   }
+  //dbrew_optverbose(r, 1);
+
   dbrew_colorful_output(r, true);
   dbrew_config_function_setname(r, (uint64_t) pack, "MPI_Pack");
+
+#ifdef FULL_UNROLL
   dbrew_config_function_parmap(r, (uint64_t) pack, 7,
                                SPInt(2) // incount
                                | SPInt(3) // datatype
@@ -256,16 +268,23 @@ Rewriter* get_pack_rewriter(bool verbose)
                                | SRPInt(6) // position
                                | SPInt(7) // comm
                                );
-
-  uintptr_t pack_hvector = dbrew_util_symname_to_ptr(r, "MPIR_Pack_Hvector");
-  dbrew_config_function_setname(r, pack_hvector, "MPIR_Pack_Hvector");
-  dbrew_config_function_setflags(r, pack_hvector, FC_InhibitLoopUnroll);
-#ifndef FULL_UNROLL
+#else
+  dbrew_config_function_parmap(r, (uint64_t) pack, 7,
+                               SPInt(2) // incount
+                               | SPInt(3) // datatype
+                               | SRPInt(5) // outcount
+                               | DRPInt(6) // position
+                               | SPInt(7) // comm
+                               );
   dbrew_config_force_unknown(r, 3);
   dbrew_config_force_unknown(r, 4);
   dbrew_config_force_unknown(r, 5);
   dbrew_config_force_unknown(r, 6);
 #endif
+  //uintptr_t pack_hvector = dbrew_util_symname_to_ptr(r, "MPIR_Pack_Hvector");
+  //dbrew_config_function_setname(r, pack_hvector, "MPIR_Pack_Hvector");
+  //dbrew_config_function_setflags(r, pack_hvector, FC_InhibitLoopUnroll);
+
   uintptr_t pack2 = dbrew_util_symname_to_ptr(r, "MPIR_Pack2");
   assert(pack2);
   dbrew_config_function_setname(r, pack2, "MPIR_Pack2");
@@ -398,10 +417,10 @@ void verifier_report(void* buf1, void* buf2, size_t size, int maxerrs) {
   for (unsigned i = 0; i < size; i ++) {
     if (bb1[i] != bb2[i]) {
       printf("First mismatch found at pos %d, %d != %d\n", i, bb1[i], bb2[i]);
+      break;
     }
   }
-  printf("Comparison successful\n");
-
+  
   // Check if either buffer is all zero
   for (size_t i = 0; i < size; i++) {
     if (fb1[i] != 0.0) {

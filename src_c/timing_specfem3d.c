@@ -387,7 +387,7 @@ void timing_specfem3D_oc_mpi_pack_ddt_dbrew( int DIM1, int icount, int* list, in
     MPI_Type_commit( &dtype_indexed_t );
 
     INIT_VERIFIER(v, myrank);
-    REWRITE_PACK(pr, rp, pos, myrank, true, &array[0], 1, dtype_indexed_t,
+    REWRITE_PACK(pr, rp, pos, myrank, false, &array[0], 1, dtype_indexed_t,
                  &buffer[0], bytes, &pos, local_communicator);
 
     REWRITE_UNPACK(ur, ru, pos, myrank, false,&buffer[0], bytes, &pos, &array[0],
